@@ -5,18 +5,7 @@ description: "Mantener y mejorar Artify en código, interfaz, editor de imágene
 
 # Artify
 
-## Preparar El Trabajo
-
-Resolver todas las rutas desde la raíz del repositorio Artify, no desde la copia instalada del skill. Confirmar la raíz por la presencia conjunta de `CONTEXT.md`, `README.md`, `frontend/` y `backend/`; pedir la ubicación antes de modificar archivos si no está disponible.
-
-Leer siempre `CONTEXT.md` para conocer estructura, decisiones vigentes y estado real. Leer `README.md` para instalación, uso o navegación documental, y `docs/tecnica/coding-standards.md` para estilo o convenciones. No duplicar en el skill endpoints, cifras de pruebas, estructura completa ni datos volátiles que deban consultarse en el repositorio.
-
-Antes de modificar:
-
-1. Revisar `git status` y, en archivos coincidentes, el diff existente.
-2. Distinguir los cambios preexistentes del usuario de los cambios propios de la tarea.
-3. Preservar los cambios ajenos: no restaurarlos, sobrescribirlos, reformatearlos ni incorporarlos automáticamente al alcance.
-4. Realizar ediciones mínimas compatibles; consultar si no es posible separar con seguridad cambios coincidentes.
+Aplicar primero las reglas permanentes de `AGENTS.md`. Usar este skill para clasificar la tarea, resolver ambigüedad y cargar bajo demanda los procedimientos especializados, sin duplicar aquí el estado vigente del repositorio.
 
 ## Clasificar Y Enrutar
 
@@ -40,19 +29,6 @@ Ante una solicitud amplia, breve o incompleta:
 4. Elegir la interpretación más conservadora que cumpla la intención sin ampliar materialmente el alcance.
 5. Consultar al usuario solo si las alternativas producen comportamientos sustancialmente diferentes, requieren nueva autoridad o implican una decisión de producto no recuperable del repositorio.
 
-## Reglas Transversales
-
-- Mantener HTML, CSS y JavaScript Vanilla en frontend; Node.js con Express en backend; PostgreSQL mediante `pg`; y `pnpm` en `backend/`.
-- No introducir frameworks frontend, TypeScript, bundlers, ORMs ni cambios grandes de arquitectura sin aprobación explícita.
-- Preservar la separación entre `frontend/`, `backend/`, `database/`, `docs/`, `scripts/` y `skills/`.
-- Usar nombres y textos en español cuando el archivo existente esté en español.
-- Hacer cambios pequeños, trazables y enfocados; evitar reescrituras amplias.
-- Validar siempre en backend aunque el frontend también valide, y renderizar de forma segura los datos externos.
-- Mantener implementado y futuro separados; no presentar funciones planeadas como existentes.
-- Actualizar `CONTEXT.md` cuando cambie el estado real. Actualizar el índice documental de `README.md` solo al agregar, eliminar o reubicar documentos relevantes.
-- Contrastar código, pruebas y documentación cuando cambie un comportamiento; modificar únicamente las fuentes cuya información quede desactualizada.
-- No ejecutar `git commit` ni `git push` salvo solicitud explícita.
-
 ## Comprobar El Impacto
 
 Antes de finalizar, reclasificar el cambio y comprobar como mínimo:
@@ -67,4 +43,4 @@ Aplicar la validación y el cierre descritos en `references/validacion-cierre.md
 
 ## Mantener El Skill
 
-Tratar `skills/artify/` como fuente de verdad versionada. Después de modificarla, ejecutar el validador oficial, comprobar `agents/openai.yaml`, sincronizar la copia instalada en `${CODEX_HOME:-$HOME/.codex}/skills/artify/` cuando exista y verificar que ambas carpetas sean idénticas. Solicitar autorización si la copia instalada está fuera de las rutas editables.
+Tratar `.agents/skills/artify/` como única fuente de verdad versionada. Después de modificarla, ejecutar el validador oficial, comprobar `agents/openai.yaml` y verificar sus referencias. No mantener otra copia global con el mismo nombre, porque Codex no combina skills duplicados.

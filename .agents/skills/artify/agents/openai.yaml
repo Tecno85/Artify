@@ -1,0 +1,4 @@
+interface:
+  display_name: "Artify"
+  short_description: "Guía operativa para mantener Artify con seguridad"
+  default_prompt: "Usa $artify y las reglas de AGENTS.md para trabajar en Artify, cargando solo las referencias necesarias y manteniendo coherentes código, pruebas y documentación."
