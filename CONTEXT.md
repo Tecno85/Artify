@@ -57,17 +57,28 @@ El backend valida `TOKEN_SECRET` y `CORS_ORIGIN` antes de abrir PostgreSQL o esc
 artify/
 ├── README.md
 ├── CONTEXT.md
+├── AGENTS.md
 ├── .env.example
+├── .agents/
+│   └── skills/
+│       └── artify/
+│           ├── SKILL.md
+│           ├── agents/
+│           └── references/
+│
 ├── .github/
 │   └── workflows/
 │       ├── backend-tests.yml
-│       └── deploy-pages.yml
+│       ├── deploy-pages.yml
+│       └── monitor-public.yml
 │
 ├── frontend/
 │   ├── index.html
 │   ├── tests/
 │   │   ├── accesibilidad.test.js
 │   │   ├── auth.test.js
+│   │   ├── contraste.test.js
+│   │   ├── editor-image.test.js
 │   │   ├── editor-session.test.js
 │   │   ├── login.test.js
 │   │   ├── renderizado-seguro.test.js
@@ -92,6 +103,7 @@ artify/
 │       │   ├── modal.js
 │       │   ├── registro.js
 │       │   └── admin.js
+│       ├── fonts/
 │       ├── icons/
 │       └── images/
 │
@@ -121,6 +133,7 @@ artify/
 │
 ├── scripts/
 │   ├── ejecutar-migraciones.js
+│   ├── generar-actas-entrega-docx.py
 │   ├── medir-rendimiento.js
 │   ├── setup.sh
 │   ├── validar-despliegue.js
@@ -128,7 +141,7 @@ artify/
 │   ├── write-frontend-config.js
 │   └── lib/
 │
-├── docs/
+└── docs/
 │   ├── proyecto/
 │   └── tecnica/
 │       ├── despliegue.md
@@ -136,9 +149,6 @@ artify/
 │       ├── plan-mantenimiento-soporte-artify.md
 │       ├── plan-migracion-postgresql.md
 │       └── documentos técnicos y evidencias
-│
-└── skills/
-    └── artify/
 ```
 
 ---
