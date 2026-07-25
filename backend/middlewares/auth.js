@@ -1,7 +1,9 @@
+// ========== DEPENDENCIAS ==========
 const db = require('../config/db');
 const { verificarToken } = require('../utils/token');
 const { normalizarIdEntero } = require('../utils/validacion');
 
+// ========== RESPUESTAS DE AUTORIZACIÓN ==========
 function responder401(res, mensaje = 'Token ausente, inválido o expirado') {
   return res.status(401).json({ mensaje });
 }
@@ -10,6 +12,7 @@ function responder403(res, mensaje = 'No tienes permisos para esta acción') {
   return res.status(403).json({ mensaje });
 }
 
+// ========== EXTRACCIÓN Y VALIDACIÓN DEL TOKEN ==========
 function extraerToken(req) {
   const authHeader = req.headers.authorization || '';
 
@@ -42,6 +45,8 @@ function autenticarToken(req, res, next) {
     return responder401(res);
   }
 
+  // El token prueba la identidad inicial, pero el estado y el rol pueden cambiar.
+  // Consultarlos en cada ruta privada invalida cuentas suspendidas o permisos antiguos.
   const query = `
     SELECT usr_id_usuario, usr_correo, usr_rol, usr_estado_usuario
     FROM USUARIO
@@ -71,6 +76,7 @@ function autenticarToken(req, res, next) {
   });
 }
 
+// ========== AUTORIZACIÓN POR ROL Y PROPIEDAD ==========
 function requiereAdmin(req, res, next) {
   if (req.auth?.rol !== 'admin') {
     return responder403(res, 'Se requieren permisos de administrador');
@@ -111,6 +117,7 @@ function autorizarUsuarioPorBody(nombreCampo = 'idUsuario') {
   };
 }
 
+// ========== EXPORTACIÓN ==========
 module.exports = {
   autenticarToken,
   requiereAdmin,

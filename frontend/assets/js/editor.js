@@ -550,8 +550,6 @@ window.addEventListener('DOMContentLoaded', () => {
         habilitarHerramientas();
         actualizarPropiedades(file, img);
         actualizarEstado('Listo', 'success');
-        // Notificación removida
-
         // Limpiar historial anterior y guardar estado inicial
         operationsHistory.forEach((op) => URL.revokeObjectURL(op.imageUrl));
         operationsHistory = [];
@@ -1323,7 +1321,6 @@ window.addEventListener('DOMContentLoaded', () => {
     if (filterStatus) filterStatus.textContent = 'Aplicando cambios...';
 
     sincronizarImagenYCanvas(() => {
-      // Notificación removida
       actualizarEstado('Listo', 'success');
       guardarEstadoEnHistorial(`Filtro: ${nombreFiltro} (${valorFormateado})`);
       // Registrar filtro en PostgreSQL
@@ -1472,7 +1469,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
       sincronizarImagenYCanvas(() => {
         actualizarDimensionesDisplay();
-        // Notificación removida
         actualizarEstado('Listo', 'success');
         guardarEstadoEnHistorial(`Redimensionar: ${newWidth}x${newHeight}`);
       });
@@ -1540,7 +1536,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     sincronizarImagenYCanvas(() => {
       actualizarDimensionesDisplay();
-      // Notificación removida
       actualizarEstado('Listo', 'success');
       guardarEstadoEnHistorial(`Rotar: ${angle}°`);
     });
@@ -1583,7 +1578,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ========== FUNCIONES DE RECORTE CORREGIDAS ==========
+  // ========== CÁLCULO Y REPRESENTACIÓN DEL RECORTE ==========
 
   function iniciarRecorte(e) {
     if (!cropMode) return;
@@ -1775,8 +1770,8 @@ window.addEventListener('DOMContentLoaded', () => {
     ctx.lineTo(cropArea.x + cropArea.width, cropArea.y + tercioAlto * 2);
     ctx.stroke();
 
-    // ===== ESQUINAS DECORATIVAS (opcional pero profesional) =====
-    ctx.strokeStyle = '#28FFCE'; // Color cyan de tu tema
+    // ===== ESQUINAS DE CONTROL =====
+    ctx.strokeStyle = '#28FFCE'; // Resaltar los tiradores sobre fondos claros u oscuros.
     ctx.lineWidth = 3;
     ctx.setLineDash([]); // Líneas sólidas para las esquinas
 
@@ -1863,7 +1858,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     sincronizarImagenYCanvas(() => {
       actualizarDimensionesDisplay();
-      // Notificación removida
       actualizarEstado('Listo', 'success');
       guardarEstadoEnHistorial('Recortar imagen');
     });
@@ -1944,7 +1938,6 @@ window.addEventListener('DOMContentLoaded', () => {
       actualizarDimensionesDisplay();
       actualizarBotonesHistorial();
       actualizarContadorOperaciones();
-      // Notificación removida
       actualizarEstado('Listo', 'success');
     };
     img.src = estado.imageUrl;
@@ -1972,7 +1965,6 @@ window.addEventListener('DOMContentLoaded', () => {
       actualizarDimensionesDisplay();
       actualizarBotonesHistorial();
       actualizarContadorOperaciones();
-      // Notificación removida
       actualizarEstado('Listo', 'success');
     };
     img.src = estado.imageUrl;

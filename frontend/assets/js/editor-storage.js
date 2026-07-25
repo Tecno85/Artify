@@ -1,3 +1,4 @@
+// ========== AUTOGUARDADO LOCAL DEL EDITOR ==========
 window.ArtifyEditorStorage = (() => {
   const RESPALDO_LOCAL_KEY = 'artify_backup_v1';
   const RESPALDO_EXPIRACION_MS = 7 * 24 * 60 * 60 * 1000;
@@ -10,7 +11,9 @@ window.ArtifyEditorStorage = (() => {
     [RESPALDO_LOCAL_KEY, ...RESPALDO_LEGACY_KEYS].forEach((clave) => {
       try {
         localStorage.removeItem(clave);
-      } catch {}
+      } catch {
+        // El navegador puede bloquear localStorage; el editor debe seguir funcionando.
+      }
     });
   }
 
@@ -35,6 +38,7 @@ window.ArtifyEditorStorage = (() => {
         return false;
       }
 
+      // Vincular el respaldo al usuario evita recuperar imágenes desde otra cuenta.
       const respaldo = {
         version: 1,
         idUsuario,
@@ -63,7 +67,9 @@ window.ArtifyEditorStorage = (() => {
     RESPALDO_LEGACY_KEYS.forEach((clave) => {
       try {
         localStorage.removeItem(clave);
-      } catch {}
+      } catch {
+        // Las claves antiguas no deben impedir la recuperación del formato vigente.
+      }
     });
 
     try {
@@ -81,6 +87,7 @@ window.ArtifyEditorStorage = (() => {
         /^data:image\/(png|jpeg|webp);base64,/.test(respaldo.dataUrl) &&
         ['png', 'jpeg', 'webp'].includes(respaldo.formato);
 
+      // Eliminar respaldos ajenos, vencidos o alterados en lugar de intentar cargarlos.
       if (!esValido) {
         eliminarRespaldoLocal();
         return null;
@@ -93,6 +100,7 @@ window.ArtifyEditorStorage = (() => {
     }
   }
 
+  // Mantener la persistencia detrás de este API facilita probarla sin acoplarla al Canvas.
   return {
     eliminarRespaldoLocal,
     guardarRespaldoLocal,

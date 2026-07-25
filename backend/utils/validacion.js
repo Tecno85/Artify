@@ -1,4 +1,5 @@
 // ========== VALIDACIONES COMPARTIDAS ==========
+// ========== NORMALIZACIÓN ==========
 function esTexto(valor, minimo = 1, maximo = 255) {
   return (
     typeof valor === 'string' &&
@@ -29,6 +30,9 @@ function normalizarDatosUsuario(datos = {}) {
   };
 }
 
+// ========== CONTRASEÑAS ==========
+// El login solo comprueba la longitud para no invalidar cuentas históricas.
+// Las contraseñas nuevas también deben cumplir la política de complejidad.
 function esPassword(valor) {
   return typeof valor === 'string' && valor.length >= 8 && valor.length <= 128;
 }
@@ -67,6 +71,7 @@ function normalizarIdEntero(valor) {
   return null;
 }
 
+// ========== CONTRATOS DE ENTRADA ==========
 function validarCredenciales({ correo, password }) {
   if (!esCorreo(normalizarCorreo(correo))) {
     return 'Ingresa un correo válido';
@@ -165,6 +170,7 @@ function validarConfiguracion({
   return null;
 }
 
+// ========== EXPORTACIÓN ==========
 module.exports = {
   normalizarCorreo,
   normalizarDatosUsuario,

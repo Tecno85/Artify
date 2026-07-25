@@ -8,6 +8,8 @@ const API =
 // ========== TOKEN Y SESIÓN ==========
 const CLAVES_AUTH = ['artifyAdmin', 'artifyUser', 'artifyToken'];
 
+// Buscar primero en sessionStorage conserva el modo temporal; localStorage se usa
+// únicamente cuando la persona selecciona recordar su sesión.
 function obtenerValorAuth(clave) {
   return sessionStorage.getItem(clave) || localStorage.getItem(clave);
 }
@@ -33,6 +35,8 @@ function obtenerUsuarioAuth() {
 }
 
 function obtenerPayloadTokenAuth(token) {
+  // El frontend solo lee la expiración para mejorar la navegación. La firma y los
+  // permisos siempre se validan nuevamente en el backend.
   try {
     const partes = String(token || '').split('.');
     if (partes.length !== 3) {

@@ -14,6 +14,7 @@ async function iniciarSesionEdicion(req, res) {
   console.log('📨 Iniciando sesión de edición');
 
   try {
+    // Crear la sesión y reflejar su estado en USUARIO como una sola operación lógica.
     await dbPromise.beginTransaction();
 
     const [resultado] = await dbPromise.query(
@@ -89,6 +90,7 @@ async function cerrarSesionEdicion(req, res) {
         .json({ mensaje: 'No puedes cerrar sesiones de otro usuario' });
     }
 
+    // COALESCE conserva la primera hora de cierre si el cliente repite la solicitud.
     await dbPromise.query(
       `
         UPDATE SESION_EDICION
@@ -103,6 +105,7 @@ async function cerrarSesionEdicion(req, res) {
       [idSesion]
     );
 
+    // Recalcular el indicador permite mantenerlo activo si existe otra sesión abierta.
     await dbPromise.query(
       `
         UPDATE USUARIO

@@ -1,4 +1,6 @@
 // ========== LIMITADOR SIMPLE DE INTENTOS FALLIDOS ==========
+// El registro vive en memoria y limita credenciales por IP, ruta y correo.
+// Una instancia distribuida requeriría un almacén compartido para aplicar el mismo criterio.
 function limitarIntentos({
   ventanaMs = 15 * 60 * 1000,
   maxIntentos = 10,
@@ -37,6 +39,7 @@ function limitarIntentos({
     }
 
     const correo = String(req.body?.correo || '').trim().toLowerCase();
+    // Separar por ruta y correo evita que un intento sobre una cuenta bloquee otras.
     const clave = `${req.ip}:${req.originalUrl}:${correo}`;
     let registro = intentos.get(clave);
 
@@ -54,6 +57,8 @@ function limitarIntentos({
       return res.status(429).json({ mensaje });
     }
 
+    // Contabilizar al terminar permite distinguir un rechazo de credenciales (401)
+    // de una autenticación correcta, que limpia los intentos acumulados.
     res.on('finish', () => {
       if (res.statusCode === 401) {
         const momento = Date.now();

@@ -92,6 +92,7 @@
 
     if (evento.key !== 'Tab') return;
 
+    // Mantener el foco dentro del diálogo evita navegar hacia contenido oculto.
     const enfocables = obtenerElementosEnfocables(modal);
     if (enfocables.length === 0) {
       evento.preventDefault();

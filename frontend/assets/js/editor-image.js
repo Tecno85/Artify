@@ -1,4 +1,6 @@
+// ========== VALIDACIÓN SEGURA DE IMÁGENES ==========
 window.ArtifyEditorImage = (() => {
+  // Los límites protegen la memoria del navegador antes de procesar la imagen en Canvas.
   const TIPOS_IMAGEN_VALIDOS = ['image/jpeg', 'image/png', 'image/webp'];
   const TAMANO_MAXIMO_ARCHIVO = 10 * 1024 * 1024;
   const MAXIMO_PIXELES_IMAGEN = 16_000_000;
@@ -26,6 +28,8 @@ window.ArtifyEditorImage = (() => {
     return { valido: true };
   }
 
+  // Esta validación se realiza después de decodificar el archivo, cuando ya se
+  // conocen sus dimensiones reales y no solo el tamaño declarado por el navegador.
   function validarDimensionesImagen(ancho, alto) {
     if (
       !Number.isSafeInteger(ancho) ||
@@ -58,6 +62,7 @@ window.ArtifyEditorImage = (() => {
       .replace('jpg', 'jpeg');
   }
 
+  // Exponer un API pequeño evita que editor.js duplique reglas de validación.
   return {
     normalizarFormatoImagen,
     validarArchivoImagen,

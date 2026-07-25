@@ -433,6 +433,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-07-21] Simplificación del registro público a los datos necesarios para crear la cuenta.
 - [2026-07-23] Aplicación de minimización de datos en todo el sistema: panel, API y esquema almacenan solo nombres, apellidos, correo y datos operativos de la cuenta.
 - [2026-07-24] Incorporación del plan de capacitación y los modelos de actas de satisfacción y entrega para la evidencia GA10-220501097-AA13-EV01.
+- [2026-07-25] Mejora de la documentación interna del código con comentarios selectivos sobre compatibilidad PostgreSQL, seguridad, validaciones, editor, almacenamiento y transacciones.
 
 ---
 

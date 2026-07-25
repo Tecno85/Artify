@@ -3,6 +3,8 @@ const db = require('../config/db');
 
 // ========== ANALYTICS: FILTROS ==========
 function filtrosPopulares(req, res) {
+  // Preferir el nombre estructurado del filtro y usar la descripción como respaldo
+  // mantiene compatibles las operaciones registradas antes de incorporar parámetros.
   const query = `
     SELECT
       COALESCE(
@@ -62,6 +64,8 @@ function filtrosPopulares(req, res) {
 
 // ========== ANALYTICS: HORARIOS ==========
 function horariosEdicion(req, res) {
+  // El porcentaje se calcula sobre todas las operaciones completadas; NULLIF
+  // permite responder cero cuando todavía no existen datos.
   const query = `
     SELECT
       EXTRACT(HOUR FROM opr_fecha_hora)::int as hora,
@@ -105,6 +109,8 @@ function horariosEdicion(req, res) {
 
 // ========== ANALYTICS: FORMATOS ==========
 function formatosPreferidos(req, res) {
+  // Una fecha de modificación identifica imágenes descargadas y evita contar
+  // cargas que todavía no produjeron un archivo final.
   const query = `
     SELECT
       img_formato as formato,
@@ -151,6 +157,7 @@ function formatosPreferidos(req, res) {
 
 // ========== ANALYTICS: CONVERSIÓN ==========
 function tasaConversion(req, res) {
+  // La conversión representa sesiones finalizadas que guardaron al menos un resultado.
   const query = `
     SELECT
       COALESCE(

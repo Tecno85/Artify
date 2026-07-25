@@ -1,3 +1,5 @@
+// ========== ORÍGENES CORS ==========
+// La variable admite una lista separada por comas para desarrollo y despliegue.
 function normalizarOrigenesCors(valor) {
   return (valor || '')
     .split(',')
@@ -17,6 +19,7 @@ function obtenerOrigenesPermitidos() {
   return origenes;
 }
 
+// ========== EXPORTACIÓN ==========
 module.exports = {
   normalizarOrigenesCors,
   obtenerOrigenesPermitidos,

@@ -1,6 +1,9 @@
 // ========== DEPENDENCIAS ==========
 const { Pool } = require('pg');
 
+// ========== CAPA DE COMPATIBILIDAD SQL ==========
+// Los controladores conservan consultas heredadas con ? y tablas sin comillas.
+// Esta capa las adapta a PostgreSQL sin modificar literales, comentarios ni bloques dollar-quoted.
 const tablas = ['USUARIO', 'CONFIGURACION', 'IMAGEN', 'SESION_EDICION', 'OPERACION'];
 const MAXIMO_CONEXIONES_POOL = 10;
 const TIMEOUT_CONEXION_MS = 10_000;
@@ -38,6 +41,8 @@ function prepararConsulta(sql) {
     segmentoNormal = '';
   }
 
+  // Recorrer la consulta como una máquina de estados evita reemplazar signos ?
+  // o nombres de tablas que formen parte de texto SQL y no de la consulta ejecutable.
   for (let i = 0; i < sql.length; i++) {
     const actual = sql[i];
     const siguiente = sql[i + 1];
@@ -149,6 +154,8 @@ function normalizarResultado(resultado) {
   const primeraFila = resultado.rows?.[0] || {};
   const primerValor = Object.values(primeraFila)[0];
 
+  // Mantener estos alias permite que los controladores usen una interfaz uniforme
+  // mientras PostgreSQL entrega rowCount y filas mediante pg.
   return {
     affectedRows: resultado.rowCount,
     rowCount: resultado.rowCount,
@@ -188,6 +195,7 @@ pool
   });
 
 const db = {
+  // Aceptar callback o promesa conserva ambos estilos usados por el backend.
   query(sql, params, callback) {
     let valores = params;
     let cb = callback;
@@ -220,6 +228,8 @@ const db = {
         return [normalizarResultado(resultado)];
       },
       async beginTransaction() {
+        // Reservar un mismo cliente garantiza que BEGIN, consultas y cierre
+        // pertenezcan a una sola conexión del pool.
         clienteTransaccion = await pool.connect();
         await clienteTransaccion.query('BEGIN');
       },

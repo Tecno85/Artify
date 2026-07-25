@@ -92,7 +92,7 @@ async function registrarOperacion(req, res) {
   try {
     await dbPromise.beginTransaction();
 
-    // Verificar que la sesión usada para registrar la operación pertenezca al usuario
+    // Bloquear la sesión evita que dos solicitudes concurrentes asignen el mismo orden.
     const [sesiones] = await dbPromise.query(
       `
         SELECT ses_id_sesion, ses_usr_id_usuario, ses_estado_sesion
@@ -121,6 +121,7 @@ async function registrarOperacion(req, res) {
       return res.status(400).json({ mensaje: 'La sesión no está activa' });
     }
 
+    // El orden secuencial conserva la cronología de deshacer y rehacer por sesión.
     const [ordenes] = await dbPromise.query(
       `
         SELECT COALESCE(MAX(opr_orden_secuencial), 0) + 1 AS siguiente
@@ -254,6 +255,7 @@ async function registrarImagen(req, res) {
   try {
     await dbPromise.beginTransaction();
 
+    // Bloquear la sesión mantiene coordinados el registro de imagen y el estado guardado.
     const [sesiones] = await dbPromise.query(
       `
         SELECT ses_id_sesion, ses_usr_id_usuario, ses_estado_sesion
@@ -302,6 +304,7 @@ async function registrarImagen(req, res) {
       ]
     );
 
+    // Marcar cambios guardados alimenta la métrica de conversión de analytics.
     await dbPromise.query(
       `
         UPDATE SESION_EDICION
