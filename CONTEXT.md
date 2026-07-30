@@ -444,7 +444,8 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-07-23] Aplicación de minimización de datos en todo el sistema: panel, API y esquema almacenan solo nombres, apellidos, correo y datos operativos de la cuenta.
 - [2026-07-24] Incorporación del plan de capacitación y los modelos de actas de satisfacción y entrega para la evidencia GA10-220501097-AA13-EV01.
 - [2026-07-25] Mejora de la documentación interna del código con comentarios selectivos sobre compatibilidad PostgreSQL, seguridad, validaciones, editor, almacenamiento y transacciones.
-- [2026-07-30] Diseño de instrumentos de calidad de software para la evidencia GA11-220501098-AA1-EV02, con aplicación documentada en Artify y entrega en Markdown y PDF.
+- [2026-07-30] Diseño de instrumentos de calidad de software para la evidencia GA11-220501098-AA1-EV02, con aplicación documentada en Artify y entrega en Markdown.
+- [2026-07-30] Diligenciamiento de los ocho instrumentos de calidad para la evidencia GA11-220501098-AA1-EV03, con resultados reales de sintaxis, pruebas frontend, inspección técnica y registro PSP en Markdown.
 
 ---
 

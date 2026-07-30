@@ -178,7 +178,7 @@ pnpm exec playwright install chromium
 pnpm run test:e2e
 ```
 
-GitHub Actions ejecuta automáticamente 28 pruebas del backend, 22 pruebas
+GitHub Actions ejecuta automáticamente 28 pruebas del backend, 26 pruebas
 frontend con cobertura nativa y cuatro pruebas E2E en cada `push` a `main` y en
 los pull requests. También carga el esquema y valida las migraciones
 incrementales sobre PostgreSQL temporal.
@@ -229,7 +229,8 @@ Cada `push` a `main` publica el contenido de `frontend/` mediante GitHub Actions
 
 ### Documentación académica
 
-- [Instrumentos de calidad de software GA11-220501098-AA1-EV02](./docs/proyecto/instrumentos-calidad-software.md) ([PDF](./docs/proyecto/instrumentos-calidad-software.pdf))
+- [Instrumentos de calidad diligenciados GA11-220501098-AA1-EV03](./docs/proyecto/instrumentos-calidad-software-diligenciados.md)
+- [Instrumentos de calidad de software GA11-220501098-AA1-EV02](./docs/proyecto/instrumentos-calidad-software.md)
 - [Infografía de procesos de desarrollo del software GA11-220501098-AA1-EV01](./docs/proyecto/infografia-procesos-desarrollo-software.md) ([PDF](./docs/proyecto/infografia-procesos-desarrollo-software.pdf))
 - [Plan de capacitación y actas de entrega GA10-220501097-AA13-EV01](./docs/proyecto/plan-capacitacion-actas-entrega-artify.md) ([Word](./docs/proyecto/plan-capacitacion-actas-entrega-artify.docx) · [PDF](./docs/proyecto/plan-capacitacion-actas-entrega-artify.pdf))
 - [Guía del usuario operativo GA10-220501097-AA11-EV01](./docs/proyecto/guia-usuario-operativo-artify.md)
