@@ -229,6 +229,7 @@ Cada `push` a `main` publica el contenido de `frontend/` mediante GitHub Actions
 
 ### Documentación académica
 
+- [Instrumentos de calidad de software GA11-220501098-AA1-EV02](./docs/proyecto/instrumentos-calidad-software.md) ([PDF](./docs/proyecto/instrumentos-calidad-software.pdf))
 - [Infografía de procesos de desarrollo del software GA11-220501098-AA1-EV01](./docs/proyecto/infografia-procesos-desarrollo-software.md) ([PDF](./docs/proyecto/infografia-procesos-desarrollo-software.pdf))
 - [Plan de capacitación y actas de entrega GA10-220501097-AA13-EV01](./docs/proyecto/plan-capacitacion-actas-entrega-artify.md) ([Word](./docs/proyecto/plan-capacitacion-actas-entrega-artify.docx) · [PDF](./docs/proyecto/plan-capacitacion-actas-entrega-artify.pdf))
 - [Guía del usuario operativo GA10-220501097-AA11-EV01](./docs/proyecto/guia-usuario-operativo-artify.md)

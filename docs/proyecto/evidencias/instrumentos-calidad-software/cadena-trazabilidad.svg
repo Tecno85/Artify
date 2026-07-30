@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" role="img" aria-labelledby="title desc">
+  <title id="title">Cadena de trazabilidad</title>
+  <desc id="desc">Requisito, criterio, prueba, defecto, corrección y evidencia se conectan en una sola cadena.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#111111"/></marker></defs>
+  <rect width="1000" height="420" fill="#ffffff"/>
+  <g stroke="#111111" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M175 200 H190"/><path d="M335 200 H350"/><path d="M495 200 H510"/><path d="M655 200 H670"/><path d="M815 200 H830"/>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle" fill="#111111" font-size="21" font-weight="700">
+    <rect x="30" y="155" width="145" height="90" fill="#dce6f2" stroke="#111111" stroke-width="2"/><text x="102" y="208">Requisito</text>
+    <rect x="190" y="155" width="145" height="90" fill="#eef3f8" stroke="#111111" stroke-width="2"/><text x="262" y="208">Criterio</text>
+    <rect x="350" y="155" width="145" height="90" fill="#dce6f2" stroke="#111111" stroke-width="2"/><text x="422" y="208">Prueba</text>
+    <rect x="510" y="155" width="145" height="90" fill="#f1e4e4" stroke="#111111" stroke-width="2"/><text x="582" y="208">Defecto</text>
+    <rect x="670" y="155" width="145" height="90" fill="#eef3f8" stroke="#111111" stroke-width="2"/><text x="742" y="208">Corrección</text>
+    <rect x="830" y="155" width="140" height="90" fill="#dce6f2" stroke="#111111" stroke-width="2"/><text x="900" y="208">Evidencia</text>
+  </g>
+  <text x="500" y="325" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="21" font-style="italic">Un identificador estable conecta toda la historia del cambio.</text>
+</svg>

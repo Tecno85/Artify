@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa de referentes de calidad aplicados a Artify</title>
+  <desc id="desc">Cinco grupos de referentes se conectan con la calidad de Artify.</desc>
+  <rect width="1000" height="520" fill="#ffffff"/>
+  <g fill="none" stroke="#111111" stroke-width="2">
+    <path d="M500 260 L205 105"/><path d="M500 260 L795 105"/>
+    <path d="M500 260 L205 385"/><path d="M500 260 L795 385"/>
+    <path d="M500 260 L500 438"/>
+  </g>
+  <circle cx="500" cy="260" r="82" fill="#dce6f2" stroke="#111111" stroke-width="2"/>
+  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle" fill="#111111">
+    <text x="500" y="253" font-size="28" font-weight="700">CALIDAD</text>
+    <text x="500" y="286" font-size="23">Artify</text>
+    <g>
+      <rect x="75" y="55" width="260" height="100" fill="#eef3f8" stroke="#111111" stroke-width="2"/>
+      <text x="205" y="97" font-size="25" font-weight="700">ISO 25010</text><text x="205" y="128" font-size="20">Producto</text>
+      <rect x="665" y="55" width="260" height="100" fill="#eef3f8" stroke="#111111" stroke-width="2"/>
+      <text x="795" y="97" font-size="25" font-weight="700">ISO 12207</text><text x="795" y="128" font-size="20">Proceso</text>
+      <rect x="75" y="335" width="260" height="100" fill="#eef3f8" stroke="#111111" stroke-width="2"/>
+      <text x="205" y="377" font-size="25" font-weight="700">PSP</text><text x="205" y="408" font-size="20">Medición personal</text>
+      <rect x="665" y="335" width="260" height="100" fill="#eef3f8" stroke="#111111" stroke-width="2"/>
+      <text x="795" y="377" font-size="25" font-weight="700">OWASP</text><text x="795" y="408" font-size="20">Seguridad web</text>
+      <rect x="365" y="415" width="270" height="85" fill="#eef3f8" stroke="#111111" stroke-width="2"/>
+      <text x="500" y="450" font-size="24" font-weight="700">Scrum y CMMI</text><text x="500" y="479" font-size="19">Inspección y mejora</text>
+    </g>
+  </g>
+</svg>
