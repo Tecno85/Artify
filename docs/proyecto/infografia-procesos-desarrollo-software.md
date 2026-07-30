@@ -2,7 +2,7 @@
 
 ## Evidencia GA11-220501098-AA1-EV01
 
-**Calidad en el proceso y modelos de referencia**
+**Calidad en el proceso, ciclo de vida y modelos de referencia**
 
 Iván Darío Madrid Daza<br>
 Análisis y Desarrollo de Software<br>
