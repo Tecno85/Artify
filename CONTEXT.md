@@ -300,7 +300,7 @@ La versión PostgreSQL fue validada con:
   base terminada en `_test` y autorización adicional para hosts remotos.
 - Resultado de pruebas automatizadas backend: 28/28 correctas.
 - Suite frontend con `node:test`: 26/26 correctas para autenticación temporal y recordada, redirección automática por rol, expiración de tokens, sesión del editor, validación de imágenes, renderizado seguro y semántica accesible.
-- Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 40,70 % en líneas y 63,04 % en funciones sobre los archivos instrumentados.
+- Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Cuatro pruebas E2E en Chromium: login y redirección de usuario al editor, login y redirección de administrador al panel, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas.
@@ -312,7 +312,7 @@ La versión PostgreSQL fue validada con:
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
 - Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido.
-- Auditoría de dependencias de producción sin vulnerabilidades conocidas.
+- Auditoría de dependencias de producción del 30 de julio de 2026: una vulnerabilidad baja y transitiva en `body-parser` (`GHSA-v422-hmwv-36x6`), pendiente de actualización; el límite actual de Express usa el valor válido `64kb`.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
 - GitHub Actions también valida el ejecutor de migraciones incrementales sobre la base temporal de CI.
@@ -345,7 +345,7 @@ Enfoque recomendado:
 
 ### Despliegue público validado
 
-Última validación técnica automatizada realizada el 17 de julio de 2026:
+Última validación técnica automatizada realizada el 30 de julio de 2026:
 
 | Servicio | URL |
 | --- | --- |
@@ -446,6 +446,8 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-07-25] Mejora de la documentación interna del código con comentarios selectivos sobre compatibilidad PostgreSQL, seguridad, validaciones, editor, almacenamiento y transacciones.
 - [2026-07-30] Diseño de instrumentos de calidad de software para la evidencia GA11-220501098-AA1-EV02, con aplicación documentada en Artify y entrega en Markdown.
 - [2026-07-30] Diligenciamiento de los ocho instrumentos de calidad para la evidencia GA11-220501098-AA1-EV03, con resultados reales de sintaxis, pruebas frontend, inspección técnica y registro PSP en Markdown.
+- [2026-07-30] Revisión integral de la documentación, con actualización de cifras de pruebas, cobertura frontend, auditoría de dependencias y validación pública de nueve comprobaciones.
+- [2026-07-30] Consolidación de la bitácora de procesos documentados para la evidencia GA11-220501098-AA1-EV04, con 15 hitos trazables, obstáculos, decisiones, resultados y acciones de mejora en Markdown.
 
 ---
 

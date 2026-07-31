@@ -229,6 +229,7 @@ Cada `push` a `main` publica el contenido de `frontend/` mediante GitHub Actions
 
 ### Documentación académica
 
+- [Bitácora de procesos documentados GA11-220501098-AA1-EV04](./docs/proyecto/bitacora-procesos-documentados-artify.md)
 - [Instrumentos de calidad diligenciados GA11-220501098-AA1-EV03](./docs/proyecto/instrumentos-calidad-software-diligenciados.md)
 - [Instrumentos de calidad de software GA11-220501098-AA1-EV02](./docs/proyecto/instrumentos-calidad-software.md)
 - [Infografía de procesos de desarrollo del software GA11-220501098-AA1-EV01](./docs/proyecto/infografia-procesos-desarrollo-software.md) ([PDF](./docs/proyecto/infografia-procesos-desarrollo-software.pdf))

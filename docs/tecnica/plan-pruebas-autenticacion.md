@@ -440,7 +440,7 @@ Actualmente ejecuto 28 pruebas automatizadas que cubren las siguientes validacio
 - Respuesta JSON uniforme con estado `404` para rutas inexistentes bajo `/api`.
 - Normalización y reglas personales comunes para registro, creación administrativa y edición de usuarios.
 
-También ejecuto 22 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 26 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
@@ -450,9 +450,9 @@ pnpm run test:frontend
 Estas pruebas comprueban el almacenamiento y la limpieza de sesión, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la redirección según el rol, el inicio no bloqueante de la sesión de edición, las validaciones de imagen, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
-Las tres pruebas no amplían los casos de autenticación del backend: comprueban
-en Chromium los ingresos y redirecciones por rol, el flujo principal del
-editor y la respuesta de los modales al teclado.
+Las cuatro pruebas no amplían los casos de autenticación del backend: comprueban
+en Chromium los ingresos y redirecciones por rol, la persistencia de la sesión
+recordada, el flujo principal del editor y la respuesta de los modales al teclado.
 
 Antes de ejecutar la suite creo una base local exclusiva cuyo nombre termine en
 `_test` y cargo allí el esquema y los datos iniciales:
@@ -496,9 +496,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 28 pruebas ejecutadas y aprobadas
-Frontend: 22 pruebas ejecutadas y aprobadas
+Frontend: 26 pruebas ejecutadas y aprobadas
 E2E: 4 pruebas ejecutadas y aprobadas
-Total: 47 pruebas automatizadas aprobadas
+Total: 58 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

@@ -307,7 +307,7 @@ Esta salida confirma que Express está escuchando en el puerto configurado y que
 
 ![Dependencias y pruebas del backend verificadas](./evidencias/configuracion-servicios/dependencias-pruebas.svg)
 
-*Descripción:* En esta evidencia muestro que el lockfile y las dependencias se encuentran al día y que la sintaxis y las pruebas automatizadas finalizaron correctamente. El estado reproducible actual conserva 28 pruebas backend, 22 frontend y cuatro E2E en Chromium.
+*Descripción:* En esta evidencia muestro que el lockfile permite una instalación reproducible y que la sintaxis y las pruebas automatizadas finalizaron correctamente. El estado actual conserva 28 pruebas backend, 26 frontend y cuatro E2E en Chromium.
 
 #### Imagen 6. Backend conectado y API disponible
 
@@ -422,7 +422,7 @@ Desde `backend/` ejecuto la suite frontend, que no necesita PostgreSQL:
 pnpm run test:frontend
 ```
 
-El resultado actual es de 22 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, inicio no bloqueante del editor, validaciones de imagen, renderizado seguro y semántica accesible.
+El resultado actual es de 26 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, inicio no bloqueante del editor, validaciones de imagen, contraste, minimización de datos, renderizado seguro y semántica accesible.
 
 ### 11.4 Prueba E2E del editor
 
@@ -459,9 +459,9 @@ El frontend respondió con estado HTTP `200` y mostró correctamente la interfaz
 | Servicio PostgreSQL | Proceso activo y conexión autenticada. | Evidencia 2 | Verificado |
 | Base de datos | `artify_db` seleccionada y objetos disponibles. | Evidencia 3 | Verificado |
 | Variables de entorno | Archivo local completo y valores sensibles protegidos. | Evidencia 4 | Verificado |
-| Dependencias | Lockfile consistente y paquetes al día. | Evidencia 5 | Verificado |
+| Dependencias | Lockfile consistente y resultado de seguridad documentado. | Evidencia 5 y `pnpm audit --prod` | En seguimiento |
 | Sintaxis del backend | `pnpm run check` finaliza sin errores. | Evidencia 5 | Verificado |
-| Pruebas automatizadas | 28 pruebas backend, 22 frontend y 4 E2E aprobadas, con cero fallos. | Evidencia 5 y resultado reproducible | Verificado |
+| Pruebas automatizadas | 28 pruebas backend, 26 frontend y 4 E2E aprobadas, con cero fallos. | Evidencia 5 y resultado reproducible | Verificado |
 | Servidor de aplicaciones | Express activo en el puerto `3000`. | Evidencia 6 | Verificado |
 | Conexión backend-PostgreSQL | Mensaje de conexión correcta al iniciar. | Evidencia 6 | Verificado |
 | Endpoint de salud | Respuesta HTTP `200` y JSON válido en `/health`. | Evidencia 6 | Verificado |
@@ -498,8 +498,10 @@ Durante la configuración aplico las siguientes medidas:
 - Oculto `DB_USER`, `DB_PASSWORD`, `DATABASE_URL` y `TOKEN_SECRET` en las evidencias.
 - Uso un `TOKEN_SECRET` largo, aleatorio y diferente para cada entorno.
 - Verifico que las contraseñas de usuarios se almacenen mediante hash de bcryptjs.
-- Mantengo Node.js, pnpm, PostgreSQL y dependencias en versiones compatibles y actualizadas.
+- Reviso periódicamente la compatibilidad y los avisos de seguridad de Node.js, pnpm, PostgreSQL y las dependencias.
 - No publico puertos de desarrollo directamente en Internet.
+
+La auditoría `pnpm audit --prod` ejecutada el 30 de julio de 2026 informó una vulnerabilidad baja y transitiva en `body-parser` (`GHSA-v422-hmwv-36x6`). El servidor configura el límite de solicitudes con el valor válido `64kb`, pero el aviso permanece en seguimiento hasta que la dependencia afectada se actualice a una versión corregida. Este resultado no modifica la reproducibilidad del lockfile y evita presentar como resuelto un riesgo todavía registrado por el auditor.
 
 El repositorio incluye `database/postgresql/app-role.sql` para crear un rol PostgreSQL exclusivo de Artify con permisos de lectura, escritura y secuencias, sin privilegios de propietario. El procedimiento se verificó en una restauración local temporal. Antes de usarlo en Neon debo comprobar las capacidades del plan, crear un respaldo y actualizar `DATABASE_URL` en Render sin exponer la contraseña.
 
