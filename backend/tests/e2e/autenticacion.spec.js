@@ -23,6 +23,12 @@ async function prepararApi(page, usuario, opciones = {}) {
         token: crearTokenPrueba(usuario),
         usuario,
       };
+    } else if (url.pathname === '/api/registro') {
+      body = {
+        mensaje: 'Registro exitoso',
+        token: crearTokenPrueba(usuario),
+        usuario,
+      };
     } else if (url.pathname === '/api/sesion/iniciar') {
       body = { mensaje: 'Sesión iniciada', idSesion: 101 };
     } else if (url.pathname.startsWith('/api/configuracion/')) {
@@ -69,6 +75,55 @@ test('usuario inicia sesión, conserva el token y entra al editor', async ({
       }))
     )
     .toEqual({ token: crearTokenPrueba(usuario), usuario });
+});
+
+test('usuario se registra, acepta términos y entra al editor', async ({
+  page,
+}) => {
+  const usuario = {
+    id: 22,
+    nombres: 'Ana',
+    apellidos: 'Operadora',
+    correo: 'ana.operadora@artify.local',
+    rol: 'usuario',
+  };
+
+  await prepararApi(page, usuario);
+  await page.goto('/pages/registro.html');
+
+  await page.locator('#nombres').fill(usuario.nombres);
+  await page.locator('#apellidos').fill(usuario.apellidos);
+  await page.locator('#email').fill(usuario.correo);
+  await page.locator('#password').fill('ClaveSegura1');
+  await page.locator('#confirmPassword').fill('ClaveSegura1');
+  await page.locator('#registroForm button[type="submit"]').click();
+
+  await expect(page.locator('#terminos-error')).toHaveText(
+    'Debes aceptar los términos y condiciones'
+  );
+  await expect(page.locator('#terminos')).toHaveAttribute(
+    'aria-invalid',
+    'true'
+  );
+
+  await page.locator('#terminos').check();
+  await page.locator('#registroForm button[type="submit"]').click();
+  await page.waitForURL('**/pages/editor.html');
+
+  await expect(page.locator('#userName')).toHaveText('Ana Operadora');
+  await expect
+    .poll(() =>
+      page.evaluate(() => ({
+        token: sessionStorage.getItem('artifyToken'),
+        usuario: JSON.parse(sessionStorage.getItem('artifyUser')),
+        tokenRecordado: localStorage.getItem('artifyToken'),
+      }))
+    )
+    .toEqual({
+      token: crearTokenPrueba(usuario),
+      usuario,
+      tokenRecordado: null,
+    });
 });
 
 test('administrador inicia sesión y entra al panel administrativo', async ({

@@ -301,7 +301,7 @@ La versión PostgreSQL fue validada con:
 - Resultado de pruebas automatizadas backend: 28/28 correctas.
 - Suite frontend con `node:test`: 26/26 correctas para autenticación temporal y recordada, redirección automática por rol, expiración de tokens, sesión del editor, validación de imágenes, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
-- Cinco pruebas E2E en Chromium: login y redirección de usuario al editor, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
+- Seis pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas.
 - Cobertura de autorización por rol, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics.
@@ -451,6 +451,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics y CORS con nueve comprobaciones correctas.
 - [2026-08-03] Corrección de la vulnerabilidad transitiva `GHSA-v422-hmwv-36x6` mediante override de `body-parser@2.3.0`; `pnpm audit --prod` queda sin vulnerabilidades conocidas.
 - [2026-08-03] Ampliación E2E del panel administrativo para comprobar que la cuenta autenticada muestra `Cuenta actual` y no puede eliminarse desde la interfaz.
+- [2026-08-03] Ampliación E2E del registro público para comprobar aceptación obligatoria de términos, sesión temporal y redirección al editor.
 
 ---
 

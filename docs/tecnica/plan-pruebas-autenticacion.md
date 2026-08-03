@@ -497,8 +497,8 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 ```text
 Backend: 28 pruebas ejecutadas y aprobadas
 Frontend: 26 pruebas ejecutadas y aprobadas
-E2E: 5 pruebas ejecutadas y aprobadas
-Total: 59 pruebas automatizadas aprobadas
+E2E: 6 pruebas ejecutadas y aprobadas
+Total: 60 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 
