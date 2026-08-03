@@ -298,7 +298,7 @@ La versión PostgreSQL fue validada con:
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 28/28 correctas.
+- Resultado de pruebas automatizadas backend: 30/30 correctas.
 - Suite frontend con `node:test`: 26/26 correctas para autenticación temporal y recordada, redirección automática por rol, expiración de tokens, sesión del editor, validación de imágenes, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
@@ -453,6 +453,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Ampliación E2E del panel administrativo para comprobar que la cuenta autenticada muestra `Cuenta actual` y no puede eliminarse desde la interfaz.
 - [2026-08-03] Ampliación E2E del registro público para comprobar aceptación obligatoria de términos, sesión temporal y redirección al editor.
 - [2026-08-03] Ampliación E2E de autorización frontend para comprobar que un usuario operativo no permanece en `admin.html` y es redirigido al editor.
+- [2026-08-03] Ampliación de pruebas backend puras para validar identificadores enteros seguros y preferencias de configuración antes de consultar PostgreSQL.
 
 ---
 

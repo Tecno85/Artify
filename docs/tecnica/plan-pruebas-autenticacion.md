@@ -402,7 +402,7 @@ Esta suite también se ejecuta en GitHub Actions mediante:
 .github/workflows/backend-tests.yml
 ```
 
-Actualmente ejecuto 28 pruebas automatizadas que cubren las siguientes validaciones:
+Actualmente ejecuto 30 pruebas automatizadas que cubren las siguientes validaciones:
 
 - Disponibilidad del proceso Express y de PostgreSQL mediante `/health` y `/ready`, con respuestas sin caché.
 - Contrato de respuesta de los cuatro endpoints públicos de analytics.
@@ -439,6 +439,8 @@ Actualmente ejecuto 28 pruebas automatizadas que cubren las siguientes validacio
 - Normalización de `CORS_ORIGIN` y rechazo de una configuración vacía en producción.
 - Respuesta JSON uniforme con estado `404` para rutas inexistentes bajo `/api`.
 - Normalización y reglas personales comunes para registro, creación administrativa y edición de usuarios.
+- Rechazo unitario de identificadores no positivos, inseguros o malformados antes de consultar PostgreSQL.
+- Validación unitaria de calidades, formatos y preferencias booleanas de configuración.
 
 También ejecuto 26 pruebas frontend sin dependencias adicionales mediante:
 
@@ -450,7 +452,7 @@ pnpm run test:frontend
 Estas pruebas comprueban el almacenamiento y la limpieza de sesión, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la redirección según el rol, el inicio no bloqueante de la sesión de edición, las validaciones de imagen, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
-Las cuatro pruebas no amplían los casos de autenticación del backend: comprueban
+Las siete pruebas no amplían los casos de autenticación del backend: comprueban
 en Chromium los ingresos y redirecciones por rol, la persistencia de la sesión
 recordada, el flujo principal del editor y la respuesta de los modales al teclado.
 
@@ -495,10 +497,10 @@ NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
-Backend: 28 pruebas ejecutadas y aprobadas
+Backend: 30 pruebas ejecutadas y aprobadas
 Frontend: 26 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 61 pruebas automatizadas aprobadas
+Total: 63 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 
