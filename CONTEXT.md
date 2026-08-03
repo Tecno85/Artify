@@ -1,7 +1,7 @@
 # CONTEXT.md — Proyecto Artify
 
 > Archivo de contexto para continuar el desarrollo.
-> Última actualización: Julio 2026
+> Última actualización: Agosto 2026
 
 ---
 
@@ -345,7 +345,7 @@ Enfoque recomendado:
 
 ### Despliegue público validado
 
-Última validación técnica automatizada realizada el 30 de julio de 2026:
+Última validación técnica automatizada realizada el 3 de agosto de 2026:
 
 | Servicio | URL |
 | --- | --- |
@@ -448,6 +448,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-07-30] Diligenciamiento de los ocho instrumentos de calidad para la evidencia GA11-220501098-AA1-EV03, con resultados reales de sintaxis, pruebas frontend, inspección técnica y registro PSP en Markdown.
 - [2026-07-30] Revisión integral de la documentación, con actualización de cifras de pruebas, cobertura frontend, auditoría de dependencias y validación pública de nueve comprobaciones.
 - [2026-07-30] Consolidación de la bitácora de procesos documentados para la evidencia GA11-220501098-AA1-EV04, con 15 hitos trazables, obstáculos, decisiones, resultados y acciones de mejora en Markdown.
+- [2026-08-03] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics y CORS con nueve comprobaciones correctas.
 
 ---
 
