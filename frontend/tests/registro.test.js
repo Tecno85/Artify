@@ -5,9 +5,12 @@ const {
   crearContextoFrontend,
   crearElemento,
   ejecutarScript,
+  esperarPromesas,
 } = require('./helpers/frontend-vm');
 
-function crearEscenarioRegistro() {
+function crearEscenarioRegistro(
+  respuestaFetch = { mensaje: 'Registro exitoso' }
+) {
   let manejadorDOMContentLoaded;
   const botonSubmit = crearElemento({ textContent: 'Registrarse' });
   const registroForm = crearElemento({
@@ -33,8 +36,11 @@ function crearEscenarioRegistro() {
     'strength-text': crearElemento(),
   };
   const solicitudes = [];
+  const body = crearElemento();
+  body.appendChild = (elemento) => body.append(elemento);
+
   const document = {
-    body: crearElemento(),
+    body,
     addEventListener(tipo, manejador) {
       if (tipo === 'DOMContentLoaded') {
         manejadorDOMContentLoaded = manejador;
@@ -65,7 +71,11 @@ function crearEscenarioRegistro() {
     location: { pathname: '/pages/registro.html' },
     fetch: async (url, options) => {
       solicitudes.push({ url, options });
-      return { json: async () => ({ mensaje: 'Registro exitoso' }) };
+      return { json: async () => respuestaFetch };
+    },
+    setTimeout: (callback) => {
+      callback();
+      return 1;
     },
   });
 
@@ -123,4 +133,52 @@ test('registro valida datos y términos antes de consultar el backend', () => {
     escenario.elementos['terminos-error'].textContent,
     'Debes aceptar los términos y condiciones'
   );
+});
+
+test('registro exitoso guarda sesión temporal y redirige al editor', async () => {
+  const usuario = {
+    id: 15,
+    nombres: 'Laura',
+    apellidos: 'Prueba',
+    correo: 'laura@artify.local',
+    rol: 'usuario',
+  };
+  const escenario = crearEscenarioRegistro({
+    mensaje: 'Registro exitoso',
+    usuario,
+    token: 'token-registro',
+  });
+  escenario.elementos.nombres.value = usuario.nombres;
+  escenario.elementos.apellidos.value = usuario.apellidos;
+  escenario.elementos.email.value = usuario.correo;
+  escenario.elementos.password.value = 'Password123';
+  escenario.elementos.confirmPassword.value = 'Password123';
+  escenario.elementos.terminos.checked = true;
+
+  assert.equal(enviarFormulario(escenario), true);
+  await esperarPromesas();
+
+  assert.equal(escenario.solicitudes.length, 1);
+  assert.equal(
+    escenario.solicitudes[0].url,
+    'http://api.artify.test/api/registro'
+  );
+  assert.deepEqual(JSON.parse(escenario.solicitudes[0].options.body), {
+    nombres: usuario.nombres,
+    apellidos: usuario.apellidos,
+    correo: usuario.correo,
+    password: 'Password123',
+  });
+  assert.equal(
+    escenario.sessionStorage.getItem('artifyToken'),
+    'token-registro'
+  );
+  assert.deepEqual(
+    JSON.parse(escenario.sessionStorage.getItem('artifyUser')),
+    usuario
+  );
+  assert.equal(escenario.localStorage.getItem('artifyToken'), null);
+  assert.equal(escenario.window.location.href, './editor.html');
+  assert.equal(escenario.botonSubmit.disabled, false);
+  assert.equal(escenario.botonSubmit.textContent, 'Registrarse');
 });

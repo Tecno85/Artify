@@ -442,7 +442,7 @@ Actualmente ejecuto 30 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo unitario de identificadores no positivos, inseguros o malformados antes de consultar PostgreSQL.
 - Validación unitaria de calidades, formatos y preferencias booleanas de configuración.
 
-También ejecuto 27 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 28 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
@@ -498,9 +498,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 30 pruebas ejecutadas y aprobadas
-Frontend: 27 pruebas ejecutadas y aprobadas
+Frontend: 28 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 64 pruebas automatizadas aprobadas
+Total: 65 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 
