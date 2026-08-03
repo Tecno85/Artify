@@ -151,3 +151,78 @@ test('notificaciones muestran mensajes como texto y no como HTML ejecutable', ()
   assert.match(editor, /URL\.revokeObjectURL\(estado\.imageUrl\)/);
   assert.doesNotMatch(editor, /maxima:\s*1\.0/);
 });
+
+test('admin redirige accesos no autorizados sin mostrar el panel', () => {
+  const crearEscenarioAdmin = ({ usuario, token }) => {
+    const elementos = new Map();
+    let manejadorDOMContentLoaded;
+    let sesionLimpiada = false;
+    const document = {
+      addEventListener(tipo, manejador) {
+        if (tipo === 'DOMContentLoaded') {
+          manejadorDOMContentLoaded = manejador;
+        }
+      },
+      getElementById(id) {
+        if (!elementos.has(id)) {
+          elementos.set(
+            id,
+            crearElemento({
+              dataset: {},
+              style: {},
+            })
+          );
+        }
+
+        return elementos.get(id);
+      },
+      querySelectorAll() {
+        return [];
+      },
+    };
+    const contextoFrontend = crearContextoFrontend({ document });
+    contextoFrontend.contexto.API = 'http://api.artify.test';
+    contextoFrontend.contexto.fetchAuth = async () => ({
+      json: async () => ({ mensaje: 'ok', usuarios: [] }),
+    });
+    contextoFrontend.contexto.obtenerTokenAuth = () => token;
+    contextoFrontend.contexto.obtenerUsuarioAuth = () => usuario;
+    contextoFrontend.contexto.limpiarSesionAuth = () => {
+      sesionLimpiada = true;
+    };
+    ejecutarScript(contextoFrontend.contexto, 'admin.js');
+
+    return {
+      ...contextoFrontend,
+      elementos,
+      ejecutarDOMContentLoaded: manejadorDOMContentLoaded,
+      sesionFueLimpiada: () => sesionLimpiada,
+    };
+  };
+
+  const usuarioOperativo = crearEscenarioAdmin({
+    usuario: { id: 8, rol: 'usuario' },
+    token: 'token-usuario',
+  });
+  usuarioOperativo.ejecutarDOMContentLoaded();
+
+  assert.equal(usuarioOperativo.window.location.href, './editor.html');
+  assert.equal(usuarioOperativo.sesionFueLimpiada(), false);
+  assert.notEqual(
+    usuarioOperativo.elementos.get('adminPanel')?.style.display,
+    'block'
+  );
+
+  const visitante = crearEscenarioAdmin({
+    usuario: null,
+    token: null,
+  });
+  visitante.ejecutarDOMContentLoaded();
+
+  assert.equal(visitante.window.location.href, './login.html');
+  assert.equal(visitante.sesionFueLimpiada(), true);
+  assert.notEqual(
+    visitante.elementos.get('adminPanel')?.style.display,
+    'block'
+  );
+});
