@@ -126,6 +126,39 @@ test('usuario se registra, acepta términos y entra al editor', async ({
     });
 });
 
+test('usuario operativo no permanece en el panel administrativo', async ({
+  page,
+}) => {
+  const usuario = {
+    id: 31,
+    nombres: 'Usuario',
+    apellidos: 'Operativo',
+    correo: 'operativo.e2e@artify.local',
+    rol: 'usuario',
+  };
+
+  await prepararApi(page, usuario);
+  await page.addInitScript(
+    ({ token, usuarioActual }) => {
+      sessionStorage.setItem('artifyToken', token);
+      sessionStorage.setItem('artifyUser', JSON.stringify(usuarioActual));
+    },
+    {
+      token: crearTokenPrueba(usuario),
+      usuarioActual: usuario,
+    }
+  );
+
+  await page.goto('/pages/admin.html');
+  await page.waitForURL('**/pages/editor.html');
+
+  await expect(page.locator('#adminPanel')).toHaveCount(0);
+  await expect(page.locator('#userName')).toHaveText('Usuario Operativo');
+  await expect
+    .poll(() => page.evaluate(() => sessionStorage.getItem('artifyToken')))
+    .toBe(crearTokenPrueba(usuario));
+});
+
 test('administrador inicia sesión y entra al panel administrativo', async ({
   page,
 }) => {
