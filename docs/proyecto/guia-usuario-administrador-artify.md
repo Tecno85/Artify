@@ -19,6 +19,7 @@ Julio de 2026
 | Documento | Guía del usuario administrador de Artify |
 | Versión | 1.0 |
 | Fecha | Julio de 2026 |
+| Última revisión de coherencia | Agosto de 2026 |
 | Autor | Iván Darío Madrid Daza |
 | Rol destinatario | Usuario administrador |
 | Aplicación | Artify |
@@ -42,7 +43,7 @@ Julio de 2026
 
 ## 1. Introducción
 
-Artify incorpora un panel protegido para administrar las cuentas registradas. Esta guía presenta las funciones disponibles para el usuario administrador, identificado internamente con el rol `admin`. Las instrucciones corresponden al comportamiento implementado en julio de 2026.
+Artify incorpora un panel protegido para administrar las cuentas registradas. Esta guía presenta las funciones disponibles para el usuario administrador, identificado internamente con el rol `admin`. Las instrucciones corresponden al comportamiento implementado en julio de 2026 y fueron revisadas contra la interfaz vigente en agosto de 2026.
 
 El documento explica el acceso al panel, la consulta y búsqueda de usuarios, la creación de cuentas operativas, la actualización de datos y estados, la eliminación controlada y el cierre de sesión. Debido al impacto de estas acciones, también establece responsabilidades y precauciones de seguridad.
 

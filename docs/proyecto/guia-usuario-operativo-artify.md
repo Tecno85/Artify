@@ -19,6 +19,7 @@ Julio de 2026
 | Documento | Guía del usuario operativo de Artify |
 | Versión | 1.0 |
 | Fecha | Julio de 2026 |
+| Última revisión de coherencia | Agosto de 2026 |
 | Autor | Iván Darío Madrid Daza |
 | Rol destinatario | Usuario operativo |
 | Aplicación | Artify |
@@ -43,7 +44,7 @@ Julio de 2026
 
 ## 1. Introducción
 
-Artify es una aplicación web que permite cargar, transformar y descargar imágenes desde un navegador. Esta guía explica el uso del sistema para el usuario operativo, denominado `usuario` dentro de la aplicación. Las instrucciones corresponden a las funciones implementadas en julio de 2026.
+Artify es una aplicación web que permite cargar, transformar y descargar imágenes desde un navegador. Esta guía explica el uso del sistema para el usuario operativo, denominado `usuario` dentro de la aplicación. Las instrucciones corresponden a las funciones implementadas en julio de 2026 y fueron revisadas contra la interfaz vigente en agosto de 2026.
 
 La guía presenta el registro, el inicio de sesión, los componentes del editor y los procedimientos necesarios para recortar, redimensionar, rotar, filtrar, convertir y descargar una imagen. También explica el historial, el zoom, las preferencias, el autoguardado, el perfil y el cierre seguro de la sesión.
 
