@@ -52,7 +52,7 @@ El alcance actual de Artify incluye:
 - Persistencia de usuarios, configuraciones, sesiones, operaciones e imágenes en PostgreSQL.
 - Panel de administración protegido por rol.
 - API REST para funcionalidades internas y endpoints de analíticas.
-- Cincuenta y ocho pruebas automatizadas: 28 del backend para autenticación, sesiones, configuración, imágenes, analíticas, administración y seguridad HTTP; 26 del frontend para sesión, login por rol, inicio del editor, validaciones de imagen, contraste, renderizado seguro y accesibilidad básica; y 4 E2E en Chromium para flujos reales de autenticación, sesión recordada y editor.
+- Cincuenta y nueve pruebas automatizadas: 28 del backend para autenticación, sesiones, configuración, imágenes, analíticas, administración y seguridad HTTP; 26 del frontend para sesión, login por rol, inicio del editor, validaciones de imagen, contraste, renderizado seguro y accesibilidad básica; y 5 E2E en Chromium para flujos reales de autenticación, protección administrativa, sesión recordada y editor.
 - Documentación del proyecto y documentación técnica separadas en la carpeta `docs/`.
 - Despliegue del frontend en GitHub Pages, del backend en Render y de PostgreSQL en Neon.
 
@@ -124,7 +124,7 @@ Desde el punto de vista académico, el proyecto permite evidenciar el proceso de
 
 ## 10. Estado Actual
 
-El proyecto se encuentra en estado activo y desplegado. Actualmente cuenta con frontend funcional en GitHub Pages, backend modularizado en Render, base de datos PostgreSQL en Neon, autenticación real, panel administrativo, 58 pruebas automatizadas entre backend, frontend y E2E en Chromium, y documentación organizada en:
+El proyecto se encuentra en estado activo y desplegado. Actualmente cuenta con frontend funcional en GitHub Pages, backend modularizado en Render, base de datos PostgreSQL en Neon, autenticación real, panel administrativo, 59 pruebas automatizadas entre backend, frontend y E2E en Chromium, y documentación organizada en:
 
 - `docs/proyecto/`: documentación funcional y académica.
 - `docs/tecnica/`: documentación técnica y manual técnico.

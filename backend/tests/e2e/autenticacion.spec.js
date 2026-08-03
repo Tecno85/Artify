@@ -12,7 +12,7 @@ function crearTokenPrueba(usuario) {
   return `e30.${payload}.firma-prueba`;
 }
 
-async function prepararApi(page, usuario) {
+async function prepararApi(page, usuario, opciones = {}) {
   await page.route('http://127.0.0.1:3000/**', async (route) => {
     const url = new URL(route.request().url());
     let body = { mensaje: 'ok' };
@@ -28,7 +28,7 @@ async function prepararApi(page, usuario) {
     } else if (url.pathname.startsWith('/api/configuracion/')) {
       body = { mensaje: 'ok', configuracion: null };
     } else if (url.pathname === '/api/admin/usuarios') {
-      body = { mensaje: 'ok', usuarios: [] };
+      body = { mensaje: 'ok', usuarios: opciones.usuariosAdmin || [] };
     }
 
     await route.fulfill({ json: body });
@@ -89,6 +89,64 @@ test('administrador inicia sesión y entra al panel administrativo', async ({
   await expect
     .poll(() => page.evaluate(() => sessionStorage.getItem('artifyToken')))
     .toBe(crearTokenPrueba(usuario));
+});
+
+test('administrador no puede eliminar su propia cuenta desde el panel', async ({
+  page,
+}) => {
+  const usuario = {
+    id: 1,
+    nombres: 'Laura',
+    apellidos: 'Administradora',
+    correo: 'laura.admin@artify.local',
+    rol: 'admin',
+  };
+
+  const usuariosAdmin = [
+    {
+      usr_id_usuario: 1,
+      usr_nombres: 'Laura',
+      usr_apellidos: 'Administradora',
+      usr_correo: 'laura.admin@artify.local',
+      usr_fecha_registro: '2026-07-10T00:00:00.000Z',
+      usr_estado_usuario: 'activo',
+      usr_rol: 'admin',
+    },
+    {
+      usr_id_usuario: 2,
+      usr_nombres: 'Carlos',
+      usr_apellidos: 'Operador',
+      usr_correo: 'carlos.operador@artify.local',
+      usr_fecha_registro: '2026-07-15T00:00:00.000Z',
+      usr_estado_usuario: 'activo',
+      usr_rol: 'usuario',
+    },
+  ];
+
+  await prepararApi(page, usuario, { usuariosAdmin });
+  await page.goto('/pages/login.html');
+  await page.locator('#email').fill(usuario.correo);
+  await page.locator('#password').fill('ClaveSegura1');
+  await page.locator('#loginForm button[type="submit"]').click();
+  await page.waitForURL('**/pages/admin.html');
+
+  const filaCuentaActual = page
+    .locator('#tablaBody tr')
+    .filter({ hasText: 'Laura Administradora' });
+  await expect(filaCuentaActual).toContainText('Cuenta actual');
+  await expect(filaCuentaActual.locator('.btn-eliminar-row')).toBeDisabled();
+  await expect(filaCuentaActual.locator('.btn-eliminar-row')).toHaveAttribute(
+    'title',
+    'No puedes eliminar tu propia cuenta administrativa'
+  );
+
+  const filaOtroUsuario = page
+    .locator('#tablaBody tr')
+    .filter({ hasText: 'Carlos Operador' });
+  await expect(filaOtroUsuario.locator('.btn-eliminar-row')).toBeEnabled();
+  await expect(filaOtroUsuario.locator('.btn-eliminar-row')).toHaveText(
+    /Eliminar/
+  );
 });
 
 test('recordar sesión mantiene el acceso al abrir el editor en otra pestaña', async ({
