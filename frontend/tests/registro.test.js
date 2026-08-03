@@ -182,3 +182,31 @@ test('registro exitoso guarda sesión temporal y redirige al editor', async () =
   assert.equal(escenario.botonSubmit.disabled, false);
   assert.equal(escenario.botonSubmit.textContent, 'Registrarse');
 });
+
+test('registro muestra error de backend sin guardar sesión', async () => {
+  const escenario = crearEscenarioRegistro({
+    mensaje: 'El correo ya está registrado',
+  });
+  escenario.elementos.nombres.value = 'Laura';
+  escenario.elementos.apellidos.value = 'Prueba';
+  escenario.elementos.email.value = 'laura@artify.local';
+  escenario.elementos.password.value = 'Password123';
+  escenario.elementos.confirmPassword.value = 'Password123';
+  escenario.elementos.terminos.checked = true;
+
+  assert.equal(enviarFormulario(escenario), true);
+  await esperarPromesas();
+
+  assert.equal(escenario.solicitudes.length, 1);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
+  assert.equal(escenario.sessionStorage.getItem('artifyUser'), null);
+  assert.equal(escenario.localStorage.getItem('artifyToken'), null);
+  assert.equal(escenario.window.location.href, '');
+  assert.equal(escenario.botonSubmit.disabled, false);
+  assert.equal(escenario.botonSubmit.textContent, 'Registrarse');
+  assert.equal(escenario.elementos.email.classList.contains('error'), true);
+  assert.equal(
+    escenario.elementos['email-error'].textContent,
+    'El correo ya está registrado'
+  );
+});
