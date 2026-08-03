@@ -459,7 +459,7 @@ El frontend respondió con estado HTTP `200` y mostró correctamente la interfaz
 | Servicio PostgreSQL | Proceso activo y conexión autenticada. | Evidencia 2 | Verificado |
 | Base de datos | `artify_db` seleccionada y objetos disponibles. | Evidencia 3 | Verificado |
 | Variables de entorno | Archivo local completo y valores sensibles protegidos. | Evidencia 4 | Verificado |
-| Dependencias | Lockfile consistente y resultado de seguridad documentado. | Evidencia 5 y `pnpm audit --prod` | En seguimiento |
+| Dependencias | Lockfile consistente y auditoría de producción sin vulnerabilidades conocidas. | Evidencia 5 y `pnpm audit --prod` | Verificado |
 | Sintaxis del backend | `pnpm run check` finaliza sin errores. | Evidencia 5 | Verificado |
 | Pruebas automatizadas | 28 pruebas backend, 26 frontend y 4 E2E aprobadas, con cero fallos. | Evidencia 5 y resultado reproducible | Verificado |
 | Servidor de aplicaciones | Express activo en el puerto `3000`. | Evidencia 6 | Verificado |
@@ -501,7 +501,7 @@ Durante la configuración aplico las siguientes medidas:
 - Reviso periódicamente la compatibilidad y los avisos de seguridad de Node.js, pnpm, PostgreSQL y las dependencias.
 - No publico puertos de desarrollo directamente en Internet.
 
-La auditoría `pnpm audit --prod` ejecutada el 30 de julio de 2026 informó una vulnerabilidad baja y transitiva en `body-parser` (`GHSA-v422-hmwv-36x6`). El servidor configura el límite de solicitudes con el valor válido `64kb`, pero el aviso permanece en seguimiento hasta que la dependencia afectada se actualice a una versión corregida. Este resultado no modifica la reproducibilidad del lockfile y evita presentar como resuelto un riesgo todavía registrado por el auditor.
+La auditoría `pnpm audit --prod` ejecutada el 3 de agosto de 2026 no reportó vulnerabilidades conocidas. El aviso bajo y transitivo `GHSA-v422-hmwv-36x6` quedó corregido al fijar `body-parser` en la versión `2.3.0` mediante override de pnpm, conservando Express como dependencia principal del backend.
 
 El repositorio incluye `database/postgresql/app-role.sql` para crear un rol PostgreSQL exclusivo de Artify con permisos de lectura, escritura y secuencias, sin privilegios de propietario. El procedimiento se verificó en una restauración local temporal. Antes de usarlo en Neon debo comprobar las capacidades del plan, crear un respaldo y actualizar `DATABASE_URL` en Render sin exponer la contraseña.
 

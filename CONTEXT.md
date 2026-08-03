@@ -312,7 +312,7 @@ La versión PostgreSQL fue validada con:
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
 - Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido.
-- Auditoría de dependencias de producción del 30 de julio de 2026: una vulnerabilidad baja y transitiva en `body-parser` (`GHSA-v422-hmwv-36x6`), pendiente de actualización; el límite actual de Express usa el valor válido `64kb`.
+- Auditoría de dependencias de producción del 3 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
 - GitHub Actions también valida el ejecutor de migraciones incrementales sobre la base temporal de CI.
@@ -449,6 +449,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-07-30] Revisión integral de la documentación, con actualización de cifras de pruebas, cobertura frontend, auditoría de dependencias y validación pública de nueve comprobaciones.
 - [2026-07-30] Consolidación de la bitácora de procesos documentados para la evidencia GA11-220501098-AA1-EV04, con 15 hitos trazables, obstáculos, decisiones, resultados y acciones de mejora en Markdown.
 - [2026-08-03] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics y CORS con nueve comprobaciones correctas.
+- [2026-08-03] Corrección de la vulnerabilidad transitiva `GHSA-v422-hmwv-36x6` mediante override de `body-parser@2.3.0`; `pnpm audit --prod` queda sin vulnerabilidades conocidas.
 
 ---
 

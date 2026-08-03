@@ -346,10 +346,10 @@ Los referentes se aplican de manera complementaria y proporcional. Su uso en est
 | Actividades | Se contrastaron README, CONTEXT, documentos técnicos, rutas, esquema, versiones, pruebas y enlaces. Se ejecutaron sintaxis backend, 26 pruebas frontend con cobertura, `pnpm audit --prod` y el smoke público de nueve comprobaciones. |
 | Resultado | Sintaxis aprobada; 26/26 pruebas frontend aprobadas; cobertura de 25,58 % en líneas y 50,00 % en funciones; enlaces locales existentes; nueve comprobaciones públicas correctas. Se actualizaron cifras, cobertura, auditoría y fecha de despliegue. |
 | Obstáculo u observación | Algunos documentos conservaban 22 pruebas frontend, una cobertura anterior y la validación pública del 17 de julio. La auditoría reportó una vulnerabilidad baja y transitiva en `body-parser`. |
-| Decisión | Corregir primero las fuentes documentales y registrar el aviso `GHSA-v422-hmwv-36x6` como pendiente. El servidor conserva el límite válido `64kb`, pero no se declara el riesgo como resuelto. |
+| Decisión | Corregir primero las fuentes documentales y registrar en esa fecha el aviso `GHSA-v422-hmwv-36x6` como pendiente. El servidor conserva el límite válido `64kb`, pero no se declara el riesgo como resuelto hasta actualizar la dependencia. |
 | Buena práctica | OWASP: componentes y configuración; PSP: revisión posterior; MinTIC: seguimiento y mejora. |
 | Evidencia | `CONTEXT.md`, `README.md`, documentos de pruebas y despliegue; salidas de los comandos ejecutados el 30/07/2026. |
-| Estado y siguiente acción | Parcialmente cerrado. Queda pendiente actualizar la dependencia transitiva afectada y repetir la auditoría. |
+| Estado y siguiente acción | Cerrado con seguimiento posterior. El 03/08/2026 se actualizó la dependencia transitiva afectada mediante override de `body-parser@2.3.0` y `pnpm audit --prod` quedó sin vulnerabilidades conocidas. |
 
 ## 7. Resumen por procesos del ciclo de vida
 
@@ -376,13 +376,13 @@ Los referentes se aplican de manera complementaria y proporcional. Su uso en est
 | Formularios con datos innecesarios | Aplicar minimización en todas las capas | La privacidad debe reflejarse en interfaz, API y base de datos. |
 | Diagramas deformados | Verificar proporciones y páginas antes de entregar | La presentación también forma parte de la calidad documental. |
 | Métricas desactualizadas | Ejecutar y contrastar antes de documentar | Una cifra sin fecha ni fuente pierde valor rápidamente. |
-| Vulnerabilidad transitiva baja | Registrar el aviso y mantener seguimiento | Un riesgo mitigado por configuración no equivale a una dependencia corregida. |
+| Vulnerabilidad transitiva baja | Registrar el aviso, actualizar la dependencia afectada y repetir auditoría | Un riesgo mitigado por configuración no equivale a una dependencia corregida; el cierre requiere evidencia nueva del auditor. |
 
 ## 9. Acciones de mejora y seguimiento
 
 | Prioridad | Acción | Responsable | Criterio de cierre | Estado |
 | --- | --- | --- | --- | --- |
-| Alta | Actualizar la dependencia transitiva afectada por `GHSA-v422-hmwv-36x6` | Iván Darío Madrid Daza | `pnpm audit --prod` sin el aviso y suites aplicables aprobadas | Pendiente |
+| Alta | Actualizar la dependencia transitiva afectada por `GHSA-v422-hmwv-36x6` | Iván Darío Madrid Daza | `pnpm audit --prod` sin el aviso y suites aplicables aprobadas | Aplicada el 03/08/2026 |
 | Media | Ampliar cobertura en las funciones de mayor riesgo del editor y administración | Iván Darío Madrid Daza | Nuevos casos relevantes, no solo aumento porcentual | En seguimiento |
 | Media | Mantener sincronizadas las cifras de pruebas en documentos vigentes | Iván Darío Madrid Daza | Búsqueda global sin cifras anteriores | Aplicada en esta revisión |
 | Media | Repetir el smoke público después de cambios de despliegue | Iván Darío Madrid Daza | Nueve comprobaciones correctas | Control periódico |
@@ -407,11 +407,11 @@ El proyecto avanzó desde la consolidación con PostgreSQL hasta un sistema desp
 
 Las buenas prácticas seleccionadas aportaron criterios complementarios. ISO/IEC/IEEE 12207 ayudó a organizar los procesos; ISO/IEC 25010 permitió relacionarlos con atributos del producto; MinTIC apoyó la trazabilidad; PSP y Scrum orientaron la revisión y mejora; y OWASP permitió registrar riesgos web sin presentar la revisión como una certificación.
 
-El cierre también evidencia que la calidad no significa ausencia absoluta de pendientes. La vulnerabilidad transitiva de severidad baja queda documentada con una acción verificable, mientras las cifras de pruebas, cobertura y despliegue se actualizaron con resultados del 30 de julio de 2026. Esta transparencia convierte la bitácora en una herramienta útil para continuar el proyecto.
+El cierre también evidencia que la calidad no significa ausencia absoluta de pendientes. La vulnerabilidad transitiva de severidad baja quedó documentada con una acción verificable y posteriormente se cerró el 3 de agosto de 2026 al fijar `body-parser@2.3.0` y repetir `pnpm audit --prod` sin vulnerabilidades conocidas. Esta transparencia convierte la bitácora en una herramienta útil para continuar el proyecto.
 
 ## Referencias
 
-GitHub Advisory Database. (s. f.). *GHSA-v422-hmwv-36x6: body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement*. Consultado el 30 de julio de 2026. https://github.com/advisories/GHSA-v422-hmwv-36x6
+GitHub Advisory Database. (s. f.). *GHSA-v422-hmwv-36x6: body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement*. Consultado el 3 de agosto de 2026. https://github.com/advisories/GHSA-v422-hmwv-36x6
 
 Humphrey, W. S. (2000). *The Personal Software Process (PSP)* (CMU/SEI-2000-TR-022). Software Engineering Institute, Carnegie Mellon University. https://doi.org/10.1184/R1/6585197.v1
 
