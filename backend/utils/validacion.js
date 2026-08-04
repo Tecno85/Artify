@@ -71,6 +71,10 @@ function normalizarIdEntero(valor) {
   return null;
 }
 
+function esRolPermitido(valor) {
+  return ['usuario', 'admin'].includes(valor);
+}
+
 // ========== CONTRATOS DE ENTRADA ==========
 function validarCredenciales({ correo, password }) {
   if (!esCorreo(normalizarCorreo(correo))) {
@@ -172,6 +176,7 @@ function validarConfiguracion({
 
 // ========== EXPORTACIÓN ==========
 module.exports = {
+  esRolPermitido,
   normalizarCorreo,
   normalizarDatosUsuario,
   normalizarIdEntero,

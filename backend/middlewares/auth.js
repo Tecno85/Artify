@@ -1,7 +1,10 @@
 // ========== DEPENDENCIAS ==========
 const db = require('../config/db');
 const { verificarToken } = require('../utils/token');
-const { normalizarIdEntero } = require('../utils/validacion');
+const {
+  esRolPermitido,
+  normalizarIdEntero,
+} = require('../utils/validacion');
 
 // ========== RESPUESTAS DE AUTORIZACIÓN ==========
 function responder401(res, mensaje = 'Token ausente, inválido o expirado') {
@@ -60,7 +63,11 @@ function autenticarToken(req, res, next) {
     }
 
     const usuario = usuarios[0];
-    if (!usuario || usuario.usr_estado_usuario !== 'activo') {
+    if (
+      !usuario ||
+      usuario.usr_estado_usuario !== 'activo' ||
+      !esRolPermitido(usuario.usr_rol)
+    ) {
       return responder401(res);
     }
 

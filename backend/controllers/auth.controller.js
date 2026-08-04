@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const { crearToken } = require('../utils/token');
 const {
+  esRolPermitido,
   normalizarCorreo,
   normalizarDatosUsuario,
   validarCredenciales,
@@ -51,7 +52,10 @@ function login(req, res) {
 
     const usuario = results[0];
 
-    if (usuario.usr_estado_usuario !== 'activo') {
+    if (
+      usuario.usr_estado_usuario !== 'activo' ||
+      !esRolPermitido(usuario.usr_rol)
+    ) {
       return res.status(401).json({ mensaje: MENSAJE_CREDENCIALES_INVALIDAS });
     }
 

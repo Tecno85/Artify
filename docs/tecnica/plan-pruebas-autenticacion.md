@@ -402,7 +402,7 @@ Esta suite también se ejecuta en GitHub Actions mediante:
 .github/workflows/backend-tests.yml
 ```
 
-Actualmente ejecuto 33 pruebas automatizadas que cubren las siguientes validaciones:
+Actualmente ejecuto 38 pruebas automatizadas que cubren las siguientes validaciones:
 
 - Disponibilidad del proceso Express y de PostgreSQL mediante `/health` y `/ready`, con respuestas sin caché.
 - Contrato de respuesta de los cuatro endpoints públicos de analytics.
@@ -441,6 +441,8 @@ Actualmente ejecuto 33 pruebas automatizadas que cubren las siguientes validacio
 - Respuesta JSON uniforme con estado `404` para rutas inexistentes bajo `/api`.
 - Normalización y reglas personales comunes para registro, creación administrativa y edición de usuarios.
 - Rechazo unitario de identificadores no positivos, inseguros o malformados antes de consultar PostgreSQL.
+- Rechazo unitario de roles no permitidos antes de emitir tokens o continuar rutas autenticadas.
+- Autorización unitaria por rol administrador y por propiedad del recurso.
 - Validación unitaria de calidades, formatos y preferencias booleanas de configuración.
 - Tolerancia ante configuración avanzada inválida o ya parseada al responder preferencias.
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.
@@ -500,10 +502,10 @@ NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
-Backend: 33 pruebas ejecutadas y aprobadas
+Backend: 38 pruebas ejecutadas y aprobadas
 Frontend: 36 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 76 pruebas automatizadas aprobadas
+Total: 81 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

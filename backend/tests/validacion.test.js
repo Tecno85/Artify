@@ -5,6 +5,7 @@ const {
   parsearConfiguracionAvanzada,
 } = require('../utils/configuracion');
 const {
+  esRolPermitido,
   normalizarDatosUsuario,
   normalizarIdEntero,
   validarConfiguracion,
@@ -94,6 +95,15 @@ test('identificadores enteros aceptan solo valores positivos seguros', () => {
     undefined,
   ]) {
     assert.equal(normalizarIdEntero(valor), null);
+  }
+});
+
+test('roles de usuario aceptan únicamente perfiles autorizados', () => {
+  assert.equal(esRolPermitido('usuario'), true);
+  assert.equal(esRolPermitido('admin'), true);
+
+  for (const valor of ['moderador', 'root', '', null, undefined, 1]) {
+    assert.equal(esRolPermitido(valor), false);
   }
 });
 

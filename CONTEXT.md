@@ -298,13 +298,13 @@ La versión PostgreSQL fue validada con:
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 33/33 correctas.
+- Resultado de pruebas automatizadas backend: 38/38 correctas.
 - Suite frontend con `node:test`: 36/36 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, respaldos locales, modales accesibles, validación de imágenes, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas.
-- Cobertura de autorización por rol, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics.
+- Cobertura de autorización por rol, rechazo de roles no permitidos, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics.
 - Validación previa de tamaño, megapíxeles y dimensiones antes de asignar una imagen al Canvas.
 - Validación backend de identificadores en consultas de actividad y de metadatos de imagen con los límites de 10 MB y 8192 px del editor.
 - Bloqueo transaccional de la sesión al registrar operaciones o imágenes para conservar el orden y el estado ante solicitudes concurrentes.
@@ -465,6 +465,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Ampliación de pruebas backend puras para comprobar tolerancia ante configuración avanzada inválida o ya parseada.
 - [2026-08-03] Ampliación de pruebas frontend para comprobar que el editor rechaza respaldos locales no válidos y archivos o dimensiones inválidas.
 - [2026-08-03] Ampliación de pruebas frontend para comprobar limpieza de usuario corrupto y rol desconocido antes de redirigir sesiones.
+- [2026-08-03] Endurecimiento backend para rechazar roles no permitidos en login y rutas autenticadas, con pruebas unitarias de controlador, middleware y autorización por propietario.
 
 ---
 
