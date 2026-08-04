@@ -422,7 +422,7 @@ Desde `backend/` ejecuto la suite frontend, que no necesita PostgreSQL:
 pnpm run test:frontend
 ```
 
-El resultado actual es de 37 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, inicio no bloqueante del editor, respaldos locales, modales accesibles, validaciones de imagen, contraste, minimización de datos, renderizado seguro y semántica accesible.
+El resultado actual es de 37 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, inicio no bloqueante del editor, respaldos locales con imagen base64 coherente, modales accesibles, validaciones de imagen, contraste, minimización de datos, renderizado seguro y semántica accesible.
 
 ### 11.4 Prueba E2E del editor
 

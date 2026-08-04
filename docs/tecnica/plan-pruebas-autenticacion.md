@@ -457,7 +457,7 @@ cd backend
 pnpm run test:frontend
 ```
 
-Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la recuperación segura de respaldos locales, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
+Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la recuperación segura de respaldos locales con imagen base64 coherente, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
 Las siete pruebas no amplían los casos de autenticación del backend: comprueban

@@ -6,6 +6,8 @@ window.ArtifyEditorStorage = (() => {
     'artify_backup_image',
     'artify_backup_timestamp',
   ];
+  const RESPALDO_DATA_URL_REGEX =
+    /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/]+={0,2})$/;
 
   function eliminarRespaldoLocal() {
     [RESPALDO_LOCAL_KEY, ...RESPALDO_LEGACY_KEYS].forEach((clave) => {
@@ -31,9 +33,7 @@ window.ArtifyEditorStorage = (() => {
       if (
         !Number.isSafeInteger(idUsuario) ||
         idUsuario <= 0 ||
-        typeof dataUrl !== 'string' ||
-        !/^data:image\/(png|jpeg|webp);base64,/.test(dataUrl) ||
-        !['png', 'jpeg', 'webp'].includes(formatoNormalizado)
+        !esDataUrlImagenValido(dataUrl, formatoNormalizado)
       ) {
         return false;
       }
@@ -83,9 +83,7 @@ window.ArtifyEditorStorage = (() => {
         Number.isFinite(respaldo.timestamp) &&
         respaldo.timestamp <= ahora &&
         ahora - respaldo.timestamp <= RESPALDO_EXPIRACION_MS &&
-        typeof respaldo.dataUrl === 'string' &&
-        /^data:image\/(png|jpeg|webp);base64,/.test(respaldo.dataUrl) &&
-        ['png', 'jpeg', 'webp'].includes(respaldo.formato);
+        esDataUrlImagenValido(respaldo.dataUrl, respaldo.formato);
 
       // Eliminar respaldos ajenos, vencidos o alterados en lugar de intentar cargarlos.
       if (!esValido) {
@@ -98,6 +96,19 @@ window.ArtifyEditorStorage = (() => {
       eliminarRespaldoLocal();
       return null;
     }
+  }
+
+  function esDataUrlImagenValido(dataUrl, formato) {
+    if (typeof dataUrl !== 'string') return false;
+
+    const formatoNormalizado = String(formato || '').toLowerCase();
+    const coincidencia = dataUrl.match(RESPALDO_DATA_URL_REGEX);
+
+    return Boolean(
+      coincidencia &&
+        coincidencia[1] === formatoNormalizado &&
+        coincidencia[2].length % 4 === 0
+    );
   }
 
   // Mantener la persistencia detrás de este API facilita probarla sin acoplarla al Canvas.

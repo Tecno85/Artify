@@ -167,6 +167,20 @@ test('editor elimina respaldos vencidos o alterados antes de recuperarlos', () =
     null
   );
   assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.localStorage.setItem(
+    'artify_backup_v1',
+    JSON.stringify({
+      ...respaldoVencido,
+      timestamp: ahora,
+      dataUrl: 'data:image/png;base64,AAAA<script>',
+    })
+  );
+  assert.equal(
+    evaluar(escenario.contexto, `leerRespaldoLocalParaUsuario(7, ${ahora})`),
+    null
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
 });
 
 test('editor no guarda respaldos locales con datos no válidos', () => {
@@ -198,6 +212,21 @@ test('editor no guarda respaldos locales con datos no válidos', () => {
     evaluar(
       escenario.contexto,
       'guardarRespaldoLocal(respaldoFormatoInvalido)'
+    ),
+    false
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.contexto.respaldoMimeIncoherente = {
+    dataUrl: 'data:image/jpeg;base64,AAAA',
+    formato: 'png',
+    nombreOriginal: 'incoherente.png',
+    tamanoBytes: 128,
+  };
+  assert.equal(
+    evaluar(
+      escenario.contexto,
+      'guardarRespaldoLocal(respaldoMimeIncoherente)'
     ),
     false
   );
