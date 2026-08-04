@@ -8,7 +8,7 @@ const {
 const {
   autenticarToken,
   autorizarUsuarioPorParametro,
-  autorizarUsuarioPorBody,
+  autorizarPropietarioPorBody,
 } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.get(
 router.post(
   '/configuracion',
   autenticarToken,
-  autorizarUsuarioPorBody('idUsuario'),
+  autorizarPropietarioPorBody('idUsuario'),
   guardarConfiguracion
 );
 

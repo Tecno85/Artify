@@ -304,7 +304,7 @@ La versión PostgreSQL fue validada con:
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas.
-- Cobertura de autorización por rol, rechazo de roles no permitidos, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics, con filtros públicos normalizados a nombres reconocidos.
+- Cobertura de autorización por rol, rechazo de roles no permitidos, propietario exacto en escrituras de autoservicio, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics, con filtros públicos normalizados a nombres reconocidos.
 - Validación previa de tamaño, megapíxeles y dimensiones antes de asignar una imagen al Canvas.
 - Validación backend de cuerpos JSON no objeto, identificadores en consultas de actividad y metadatos de imagen con los límites de 10 MB y 8192 px del editor.
 - Bloqueo transaccional de la sesión al registrar operaciones o imágenes para conservar el orden y el estado ante solicitudes concurrentes.

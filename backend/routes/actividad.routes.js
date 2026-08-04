@@ -10,7 +10,7 @@ const {
 const {
   autenticarToken,
   autorizarUsuarioPorParametro,
-  autorizarUsuarioPorBody,
+  autorizarPropietarioPorBody,
 } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -31,13 +31,13 @@ router.get(
 router.post(
   '/operacion',
   autenticarToken,
-  autorizarUsuarioPorBody('idUsuario'),
+  autorizarPropietarioPorBody('idUsuario'),
   registrarOperacion
 );
 router.post(
   '/imagen',
   autenticarToken,
-  autorizarUsuarioPorBody('idUsuario'),
+  autorizarPropietarioPorBody('idUsuario'),
   registrarImagen
 );
 

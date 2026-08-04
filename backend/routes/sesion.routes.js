@@ -7,7 +7,7 @@ const {
 } = require('../controllers/sesion.controller');
 const {
   autenticarToken,
-  autorizarUsuarioPorBody,
+  autorizarPropietarioPorBody,
 } = require('../middlewares/auth');
 
 const router = express.Router();
@@ -16,7 +16,7 @@ const router = express.Router();
 router.post(
   '/sesion/iniciar',
   autenticarToken,
-  autorizarUsuarioPorBody('idUsuario'),
+  autorizarPropietarioPorBody('idUsuario'),
   iniciarSesionEdicion
 );
 router.post('/sesion/cerrar', autenticarToken, cerrarSesionEdicion);

@@ -426,7 +426,7 @@ Actualmente ejecuto 45 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo de rutas protegidas sin token.
 - Rechazo de rutas protegidas con token inválido.
 - Rechazo de rutas protegidas con token expirado.
-- Rechazo de acceso a recursos de otro usuario.
+- Rechazo de acceso a recursos de otro usuario y de escrituras de autoservicio con propietario ajeno.
 - Rechazo de identificadores malformados en rutas protegidas.
 - Autenticación de administrador.
 - Rechazo del panel administrativo para usuarios sin el rol necesario.
@@ -445,7 +445,7 @@ Actualmente ejecuto 45 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo unitario de identificadores no positivos, inseguros o malformados antes de consultar PostgreSQL.
 - Rechazo unitario de cuerpos JSON no objeto antes de consultar PostgreSQL.
 - Rechazo unitario de roles no permitidos antes de emitir tokens o continuar rutas autenticadas.
-- Autorización unitaria por rol administrador y por propiedad del recurso.
+- Autorización unitaria por rol administrador, propiedad del recurso y propietario exacto en escrituras personales.
 - Validación unitaria de calidades, formatos y preferencias booleanas de configuración.
 - Tolerancia ante configuración avanzada inválida o ya parseada al responder preferencias.
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.

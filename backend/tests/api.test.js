@@ -1101,14 +1101,15 @@ test('admin puede autenticarse desde el login principal y listar usuarios', asyn
   assert.equal(usuarios.body.mensaje, 'ok');
   assert.ok(Array.isArray(usuarios.body.usuarios));
 
-  const configuracionUsuarioInexistente = await request('/api/configuracion', {
+  const idOtroUsuario = idUsuario + 1_000_000;
+  const configuracionAjena = await request('/api/configuracion', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${login.body.token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      idUsuario: idUsuario + 1_000_000,
+      idUsuario: idOtroUsuario,
       calidadExportacion: 'alta',
       notificaciones: true,
       formatoDefecto: 'png',
@@ -1116,10 +1117,68 @@ test('admin puede autenticarse desde el login principal y listar usuarios', asyn
     }),
   });
 
-  assert.equal(configuracionUsuarioInexistente.response.status, 404);
+  assert.equal(configuracionAjena.response.status, 403);
   assert.equal(
-    configuracionUsuarioInexistente.body.mensaje,
-    'Usuario no encontrado'
+    configuracionAjena.body.mensaje,
+    'No puedes modificar recursos de otro usuario'
+  );
+
+  const sesionAjena = await request('/api/sesion/iniciar', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${login.body.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idUsuario: idOtroUsuario }),
+  });
+
+  assert.equal(sesionAjena.response.status, 403);
+  assert.equal(
+    sesionAjena.body.mensaje,
+    'No puedes modificar recursos de otro usuario'
+  );
+
+  const operacionAjena = await request('/api/operacion', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${login.body.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idUsuario: idOtroUsuario,
+      idSesion: idSesion || 1,
+      tipo: 'prueba_admin_ajena',
+      descripcion: 'Intento de escritura ajena',
+    }),
+  });
+
+  assert.equal(operacionAjena.response.status, 403);
+  assert.equal(
+    operacionAjena.body.mensaje,
+    'No puedes modificar recursos de otro usuario'
+  );
+
+  const imagenAjena = await request('/api/imagen', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${login.body.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      idUsuario: idOtroUsuario,
+      idSesion: idSesion || 1,
+      nombreOriginal: 'ajena.png',
+      formatoOriginal: 'png',
+      tamanoOriginal: 1024,
+      anchoOriginal: 640,
+      altoOriginal: 480,
+    }),
+  });
+
+  assert.equal(imagenAjena.response.status, 403);
+  assert.equal(
+    imagenAjena.body.mensaje,
+    'No puedes modificar recursos de otro usuario'
   );
 
   const editarIdInvalido = await request('/api/admin/usuario/abc', {

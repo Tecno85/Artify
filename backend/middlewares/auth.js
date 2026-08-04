@@ -124,12 +124,25 @@ function autorizarUsuarioPorBody(nombreCampo = 'idUsuario') {
   };
 }
 
+function autorizarPropietarioPorBody(nombreCampo = 'idUsuario') {
+  return (req, res, next) => {
+    const valor = normalizarIdEntero(req.body?.[nombreCampo]);
+
+    if (valor === null || valor !== req.auth?.id) {
+      return responder403(res, 'No puedes modificar recursos de otro usuario');
+    }
+
+    return next();
+  };
+}
+
 // ========== EXPORTACIÓN ==========
 module.exports = {
   autenticarToken,
   requiereAdmin,
   autorizarUsuarioPorParametro,
   autorizarUsuarioPorBody,
+  autorizarPropietarioPorBody,
   responder401,
   responder403,
 };

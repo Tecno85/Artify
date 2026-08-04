@@ -113,6 +113,7 @@ test('autorización por propietario rechaza IDs malformados o ajenos', () => {
   const {
     autorizarUsuarioPorParametro,
     autorizarUsuarioPorBody,
+    autorizarPropietarioPorBody,
   } = cargarAuthConDb({ query() {} });
 
   const casos = [
@@ -129,6 +130,11 @@ test('autorización por propietario rechaza IDs malformados o ajenos', () => {
     {
       middleware: autorizarUsuarioPorBody('idUsuario'),
       req: { auth: { id: 7, rol: 'usuario' }, body: { idUsuario: '8' } },
+      mensaje: 'No puedes modificar recursos de otro usuario',
+    },
+    {
+      middleware: autorizarPropietarioPorBody('idUsuario'),
+      req: { auth: { id: 7, rol: 'admin' }, body: { idUsuario: '8' } },
       mensaje: 'No puedes modificar recursos de otro usuario',
     },
   ];
