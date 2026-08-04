@@ -450,14 +450,14 @@ Actualmente ejecuto 45 pruebas automatizadas que cubren las siguientes validacio
 - Tolerancia ante configuración avanzada inválida o ya parseada al responder preferencias.
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.
 
-También ejecuto 36 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 37 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
 pnpm run test:frontend
 ```
 
-Estas pruebas comprueban el almacenamiento, la limpieza de sesión y el descarte de sesiones inválidas, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la recuperación segura de respaldos locales, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
+Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la recuperación segura de respaldos locales, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
 Las siete pruebas no amplían los casos de autenticación del backend: comprueban
@@ -506,9 +506,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 45 pruebas ejecutadas y aprobadas
-Frontend: 36 pruebas ejecutadas y aprobadas
+Frontend: 37 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 88 pruebas automatizadas aprobadas
+Total: 89 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

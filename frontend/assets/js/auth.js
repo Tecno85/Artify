@@ -26,7 +26,24 @@ function obtenerUsuarioAuth() {
   }
 
   try {
-    return JSON.parse(usuarioGuardado);
+    const usuario = JSON.parse(usuarioGuardado);
+    const payload = obtenerPayloadTokenAuth(obtenerTokenAuth());
+    const idUsuario = Number(usuario?.id);
+    const idToken = Number(payload?.id);
+
+    if (
+      payload &&
+      (
+        usuario?.rol !== payload.rol ||
+        !Number.isSafeInteger(idUsuario) ||
+        idUsuario !== idToken
+      )
+    ) {
+      limpiarSesionAuth();
+      return null;
+    }
+
+    return usuario;
   } catch {
     sessionStorage.removeItem('artifyUser');
     localStorage.removeItem('artifyUser');

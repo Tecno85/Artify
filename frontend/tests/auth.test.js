@@ -203,6 +203,32 @@ test('auth descarta sesiones con rol desconocido antes de redirigir', () => {
   assert.deepEqual(contextoFrontend.reemplazos, []);
 });
 
+test('auth descarta sesiones si el usuario almacenado no coincide con el token', () => {
+  const token = crearTokenPrueba({
+    id: 7,
+    rol: 'usuario',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+  });
+  const sessionStorage = new AlmacenamientoSimulado({
+    artifyUser: JSON.stringify({ id: 7, rol: 'admin' }),
+    artifyToken: token,
+  });
+  const contextoFrontend = crearContextoFrontend({
+    sessionStorage,
+    location: { pathname: '/pages/login.html' },
+  });
+  ejecutarScript(contextoFrontend.contexto, 'auth.js');
+
+  assert.equal(evaluar(contextoFrontend.contexto, 'obtenerUsuarioAuth()'), null);
+  assert.equal(sessionStorage.getItem('artifyUser'), null);
+  assert.equal(sessionStorage.getItem('artifyToken'), null);
+  assert.equal(
+    evaluar(contextoFrontend.contexto, 'redirigirSesionAuth()'),
+    false
+  );
+  assert.deepEqual(contextoFrontend.reemplazos, []);
+});
+
 test('auth limpia todos los datos locales relacionados con la sesión', () => {
   const sessionStorage = new AlmacenamientoSimulado({
     artifyAdmin: '{}',
