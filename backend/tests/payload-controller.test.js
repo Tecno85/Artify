@@ -56,6 +56,44 @@ function crearDbSinConsultas() {
   };
 }
 
+function crearDbConSesionAjena() {
+  const eventos = [];
+  const dbPromise = {
+    async beginTransaction() {
+      eventos.push('begin');
+    },
+    async query(_consulta, params) {
+      eventos.push(['query', params]);
+      return [
+        [
+          {
+            ses_id_sesion: 91,
+            ses_usr_id_usuario: 99,
+            ses_estado_sesion: 'activa',
+          },
+        ],
+      ];
+    },
+    async rollback() {
+      eventos.push('rollback');
+    },
+    async commit() {
+      eventos.push('commit');
+    },
+  };
+
+  return {
+    db: {
+      promise() {
+        return dbPromise;
+      },
+    },
+    obtenerEventos() {
+      return eventos;
+    },
+  };
+}
+
 function crearRespuesta() {
   return {
     statusCode: 200,
@@ -103,7 +141,7 @@ test('configuración rechaza arrays antes de guardar preferencias', () => {
   }
 });
 
-test('sesión de edición rechaza cuerpos no objeto antes de abrir transacción', async () => {
+test('sesión de edición rechaza cuerpos no objeto y cierres ajenos', async () => {
   const dbMock = crearDbSinConsultas();
   const { sesion } = cargarControladoresConDb(dbMock.db);
   const inicio = crearRespuesta();
@@ -121,9 +159,33 @@ test('sesión de edición rechaza cuerpos no objeto antes de abrir transacción'
   } finally {
     limpiarControladores();
   }
+
+  const dbSesionAjena = crearDbConSesionAjena();
+  const { sesion: sesionConDb } = cargarControladoresConDb(dbSesionAjena.db);
+  const cierreAjeno = crearRespuesta();
+
+  try {
+    await sesionConDb.cerrarSesionEdicion(
+      {
+        auth: { id: 7, rol: 'usuario' },
+        body: { idSesion: 91 },
+      },
+      cierreAjeno
+    );
+
+    assert.equal(cierreAjeno.statusCode, 404);
+    assert.equal(cierreAjeno.body.mensaje, 'Sesión no encontrada');
+    assert.deepEqual(dbSesionAjena.obtenerEventos(), [
+      'begin',
+      ['query', [91]],
+      'rollback',
+    ]);
+  } finally {
+    limpiarControladores();
+  }
 });
 
-test('actividad rechaza operación e imagen no objeto antes de consultar sesión', async () => {
+test('actividad rechaza payloads inválidos y sesiones ajenas', async () => {
   const dbMock = crearDbSinConsultas();
   const { actividad } = cargarControladoresConDb(dbMock.db);
   const operacion = crearRespuesta();
@@ -138,6 +200,69 @@ test('actividad rechaza operación e imagen no objeto antes de consultar sesión
     assert.equal(imagen.statusCode, 400);
     assert.equal(imagen.body.mensaje, 'Datos de imagen inválidos');
     assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+
+  const dbOperacionAjena = crearDbConSesionAjena();
+  const { actividad: actividadOperacion } = cargarControladoresConDb(
+    dbOperacionAjena.db
+  );
+  const operacionAjena = crearRespuesta();
+
+  try {
+    await actividadOperacion.registrarOperacion(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          tipo: 'filtro',
+          descripcion: 'Intento con sesión ajena',
+        },
+      },
+      operacionAjena
+    );
+
+    assert.equal(operacionAjena.statusCode, 404);
+    assert.equal(operacionAjena.body.mensaje, 'Sesión no encontrada');
+    assert.deepEqual(dbOperacionAjena.obtenerEventos(), [
+      'begin',
+      ['query', [91]],
+      'rollback',
+    ]);
+  } finally {
+    limpiarControladores();
+  }
+
+  const dbImagenAjena = crearDbConSesionAjena();
+  const { actividad: actividadImagen } = cargarControladoresConDb(
+    dbImagenAjena.db
+  );
+  const imagenAjena = crearRespuesta();
+
+  try {
+    await actividadImagen.registrarImagen(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          nombreOriginal: 'ajena.png',
+          formatoOriginal: 'png',
+          tamanoOriginal: 1024,
+          anchoOriginal: 640,
+          altoOriginal: 480,
+        },
+      },
+      imagenAjena
+    );
+
+    assert.equal(imagenAjena.statusCode, 404);
+    assert.equal(imagenAjena.body.mensaje, 'Sesión no encontrada');
+    assert.deepEqual(dbImagenAjena.obtenerEventos(), [
+      'begin',
+      ['query', [91]],
+      'rollback',
+    ]);
   } finally {
     limpiarControladores();
   }

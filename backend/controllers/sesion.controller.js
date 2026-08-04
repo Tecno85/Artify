@@ -5,6 +5,10 @@ const {
   normalizarIdEntero,
 } = require('../utils/validacion');
 
+function responderSesionNoDisponible(res) {
+  return res.status(404).json({ mensaje: 'Sesión no encontrada' });
+}
+
 // ========== SESIONES DE EDICIÓN ==========
 async function iniciarSesionEdicion(req, res) {
   const cuerpo = normalizarCuerpoEntrada(req.body);
@@ -83,7 +87,7 @@ async function cerrarSesionEdicion(req, res) {
 
     if (sesiones.length === 0) {
       await dbPromise.rollback();
-      return res.status(404).json({ mensaje: 'Sesión no encontrada' });
+      return responderSesionNoDisponible(res);
     }
 
     const sesion = sesiones[0];
@@ -92,9 +96,7 @@ async function cerrarSesionEdicion(req, res) {
 
     if (!puedeCerrar) {
       await dbPromise.rollback();
-      return res
-        .status(403)
-        .json({ mensaje: 'No puedes cerrar sesiones de otro usuario' });
+      return responderSesionNoDisponible(res);
     }
 
     // COALESCE conserva la primera hora de cierre si el cliente repite la solicitud.

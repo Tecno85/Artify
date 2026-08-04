@@ -426,7 +426,7 @@ Actualmente ejecuto 45 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo de rutas protegidas sin token.
 - Rechazo de rutas protegidas con token inválido.
 - Rechazo de rutas protegidas con token expirado.
-- Rechazo de acceso a recursos de otro usuario y de escrituras de autoservicio con propietario ajeno.
+- Rechazo de acceso a recursos de otro usuario, escrituras de autoservicio con propietario ajeno y sesiones ajenas sin revelar su existencia.
 - Rechazo de identificadores malformados en rutas protegidas.
 - Autenticación de administrador.
 - Rechazo del panel administrativo para usuarios sin el rol necesario.

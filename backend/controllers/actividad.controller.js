@@ -12,6 +12,10 @@ function obtenerTotal(results) {
   return Number(results?.[0]?.total ?? 0);
 }
 
+function responderSesionNoDisponible(res) {
+  return res.status(404).json({ mensaje: 'Sesión no encontrada' });
+}
+
 // ========== ESTADÍSTICAS DEL USUARIO ==========
 function obtenerEstadisticas(req, res) {
   const idUsuario = normalizarIdEntero(req.params.id);
@@ -115,15 +119,13 @@ async function registrarOperacion(req, res) {
 
     if (sesiones.length === 0) {
       await dbPromise.rollback();
-      return res.status(404).json({ mensaje: 'Sesión no encontrada' });
+      return responderSesionNoDisponible(res);
     }
 
     const sesion = sesiones[0];
     if (sesion.ses_usr_id_usuario !== idUsuarioNormalizado) {
       await dbPromise.rollback();
-      return res
-        .status(403)
-        .json({ mensaje: 'La sesión no pertenece al usuario indicado' });
+      return responderSesionNoDisponible(res);
     }
 
     if (sesion.ses_estado_sesion !== 'activa') {
@@ -280,14 +282,12 @@ async function registrarImagen(req, res) {
     const sesion = sesiones[0];
     if (!sesion) {
       await dbPromise.rollback();
-      return res.status(404).json({ mensaje: 'Sesión no encontrada' });
+      return responderSesionNoDisponible(res);
     }
 
     if (sesion.ses_usr_id_usuario !== idUsuarioNormalizado) {
       await dbPromise.rollback();
-      return res
-        .status(403)
-        .json({ mensaje: 'La sesión no pertenece al usuario indicado' });
+      return responderSesionNoDisponible(res);
     }
 
     if (sesion.ses_estado_sesion !== 'activa') {
