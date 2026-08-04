@@ -456,6 +456,17 @@ test('API responde JSON uniforme cuando la ruta no existe', async () => {
   assert.deepEqual(body, { mensaje: 'Ruta de API no encontrada' });
 });
 
+test('backend responde JSON uniforme cuando una ruta pública no existe', async () => {
+  const { response, body } = await request('/ruta-publica-inexistente');
+
+  assert.equal(response.status, 404);
+  assert.match(response.headers.get('content-type'), /^application\/json/);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.equal(response.headers.get('pragma'), 'no-cache');
+  assert.equal(response.headers.get('expires'), '0');
+  assert.deepEqual(body, { mensaje: 'Ruta no encontrada' });
+});
+
 test('API rechaza solicitudes que superan el límite permitido', async () => {
   const { response, body } = await request('/api/login', {
     method: 'POST',

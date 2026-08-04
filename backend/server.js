@@ -119,6 +119,13 @@ app.use('/api', (req, res) => {
   return res.status(404).json({ mensaje: 'Ruta de API no encontrada' });
 });
 
+app.use((req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  return res.status(404).json({ mensaje: 'Ruta no encontrada' });
+});
+
 // ========== ERRORES DE SOLICITUD ==========
 app.use((error, req, res, next) => {
   if (res.headersSent) {
