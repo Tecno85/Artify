@@ -185,7 +185,7 @@ test('registro exitoso guarda sesión temporal y redirige al editor', async () =
 
 test('registro muestra error de backend sin guardar sesión', async () => {
   const escenario = crearEscenarioRegistro({
-    mensaje: 'El correo ya está registrado',
+    mensaje: 'No fue posible completar el registro',
   });
   escenario.elementos.nombres.value = 'Laura';
   escenario.elementos.apellidos.value = 'Prueba';
@@ -207,6 +207,6 @@ test('registro muestra error de backend sin guardar sesión', async () => {
   assert.equal(escenario.elementos.email.classList.contains('error'), true);
   assert.equal(
     escenario.elementos['email-error'].textContent,
-    'El correo ya está registrado'
+    'No fue posible completar el registro'
   );
 });

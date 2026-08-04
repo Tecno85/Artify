@@ -292,13 +292,13 @@ La versión PostgreSQL fue validada con:
 - Carga de `database/postgresql/seed.sql`.
 - Creación de 5 tablas y la vista `v_usuarios_activos`.
 - Integridad referencial con cascadas PostgreSQL, checks de valores no negativos e índices para analytics.
-- Login con mensaje genérico ante credenciales inválidas, límite de intentos y CORS configurable por entorno, con métodos y cabeceras permitidos de forma explícita.
+- Login y registro público con mensajes genéricos ante credenciales inválidas o correos duplicados, límite de intentos y CORS configurable por entorno, con métodos y cabeceras permitidos de forma explícita.
 - Endpoints `GET /health` y `GET /ready` sin caché para verificar el estado actual del despliegue y PostgreSQL.
 - `pnpm run check`.
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 43/43 correctas.
+- Resultado de pruebas automatizadas backend: 44/44 correctas.
 - Suite frontend con `node:test`: 36/36 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, respaldos locales, modales accesibles, validación de imágenes, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
@@ -467,6 +467,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Ampliación de pruebas frontend para comprobar limpieza de usuario corrupto y rol desconocido antes de redirigir sesiones.
 - [2026-08-03] Endurecimiento backend para rechazar roles no permitidos en login y rutas autenticadas, con pruebas unitarias de controlador, middleware y autorización por propietario.
 - [2026-08-03] Endurecimiento backend para rechazar cuerpos JSON no objeto antes de consultar credenciales, preferencias, sesiones, operaciones o imágenes.
+- [2026-08-03] Endurecimiento de respuestas públicas para evitar enumeración de cuentas durante el registro por correo duplicado.
 
 ---
 

@@ -771,7 +771,7 @@ test('registro, login y flujo básico de usuario funcionan', async () => {
   assert.ok(conversion.body.data.conversionData.sesiones_exitosas >= 1);
 });
 
-test('registro público rechaza correos duplicados', async () => {
+test('registro público rechaza correos duplicados sin revelar si la cuenta existe', async () => {
   assert.ok(idUsuario);
 
   const { response, body } = await request('/api/registro', {
@@ -781,7 +781,7 @@ test('registro público rechaza correos duplicados', async () => {
   });
 
   assert.equal(response.status, 400);
-  assert.equal(body.mensaje, 'El correo ya está registrado');
+  assert.equal(body.mensaje, 'No fue posible completar el registro');
 });
 
 test('login rechaza contraseña incorrecta', async () => {

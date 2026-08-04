@@ -73,3 +73,49 @@ test('login rechaza cuentas activas con rol no permitido sin emitir token', () =
     delete require.cache[DB_PATH];
   }
 });
+
+test('registro público rechaza duplicados con mensaje genérico sin emitir token', async () => {
+  const eventos = [];
+  const dbPromise = {
+    async beginTransaction() {
+      eventos.push('begin');
+    },
+    async query() {
+      eventos.push('query');
+      return [[{ usr_id_usuario: 7 }]];
+    },
+    async rollback() {
+      eventos.push('rollback');
+    },
+  };
+  const dbMock = {
+    promise() {
+      return dbPromise;
+    },
+  };
+  const { registro } = cargarAuthControllerConDb(dbMock);
+  const req = {
+    body: {
+      nombres: 'Ana',
+      apellidos: 'Prueba',
+      correo: 'ana@artify.local',
+      password: 'PruebaArtify123!',
+    },
+  };
+  const res = crearRespuesta();
+
+  try {
+    await registro(req, res);
+
+    assert.deepEqual(eventos, ['begin', 'query', 'rollback']);
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, {
+      mensaje: 'No fue posible completar el registro',
+    });
+    assert.equal(Object.hasOwn(res.body, 'token'), false);
+    assert.equal(Object.hasOwn(res.body, 'usuario'), false);
+  } finally {
+    delete require.cache[AUTH_CONTROLLER_PATH];
+    delete require.cache[DB_PATH];
+  }
+});

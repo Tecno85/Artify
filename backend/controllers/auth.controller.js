@@ -13,6 +13,7 @@ const {
 } = require('../utils/validacion');
 
 const MENSAJE_CREDENCIALES_INVALIDAS = 'Credenciales incorrectas';
+const MENSAJE_REGISTRO_NO_COMPLETADO = 'No fue posible completar el registro';
 const CONFIG_DEFECTO = JSON.stringify({
   notificaciones: true,
   formatoDefecto: 'png',
@@ -142,7 +143,7 @@ async function registro(req, res) {
       await dbPromise.rollback();
       return res
         .status(400)
-        .json({ mensaje: 'El correo ya está registrado' });
+        .json({ mensaje: MENSAJE_REGISTRO_NO_COMPLETADO });
     }
 
     // Encriptar la contraseña antes de persistir el nuevo usuario
@@ -207,7 +208,7 @@ async function registro(req, res) {
     if (esErrorDuplicado(error)) {
       return res
         .status(400)
-        .json({ mensaje: 'El correo ya está registrado' });
+        .json({ mensaje: MENSAJE_REGISTRO_NO_COMPLETADO });
     }
 
     console.error('❌ Error al registrar usuario:', error.message);
