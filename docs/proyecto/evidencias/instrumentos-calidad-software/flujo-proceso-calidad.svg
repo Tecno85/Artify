@@ -1,23 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" role="img" aria-labelledby="title desc">
   <title id="title">Flujo del proceso de calidad</title>
-  <desc id="desc">Siete etapas conectadas desde la planificación hasta la mejora.</desc>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#111111"/></marker></defs>
-  <rect width="1000" height="500" fill="#ffffff"/>
-  <g fill="none" stroke="#111111" stroke-width="2" marker-end="url(#arrow)">
-    <path d="M240 145 H285"/><path d="M465 145 H510"/><path d="M690 145 H735"/>
-    <path d="M825 195 L690 315"/><path d="M600 340 H555"/><path d="M375 340 H330"/>
+  <desc id="desc">Flujo iterativo con siete etapas: planificar, definir, construir, probar, corregir, validar y mejorar.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbfb"/>
+      <stop offset="1" stop-color="#edf5f8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="11" flood-color="#071d33" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#1598a6"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #071d33; }
+      .note { font: 400 18px Arial, sans-serif; fill: #405164; }
+      .num { font: 800 17px Arial, sans-serif; fill: #ffffff; }
+      .step { font: 700 22px Arial, sans-serif; fill: #071d33; }
+      .desc { font: 400 15px Arial, sans-serif; fill: #405164; }
+      .card { fill: #ffffff; stroke: #c7d9df; stroke-width: 1.3; rx: 18; filter: url(#shadow); }
+      .arrow { fill: none; stroke: #1598a6; stroke-width: 3; stroke-linecap: round; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1100" height="560" fill="url(#bg)"/>
+  <text x="70" y="70" class="title">Flujo de calidad aplicado al desarrollo</text>
+  <text x="70" y="101" class="note">Cada etapa genera evidencia y permite retroalimentar el siguiente ciclo de mejora.</text>
+
+  <path class="arrow" d="M257 184 H317"/>
+  <path class="arrow" d="M497 184 H557"/>
+  <path class="arrow" d="M737 184 H797"/>
+  <path class="arrow" d="M888 244 C855 308 795 340 738 350"/>
+  <path class="arrow" d="M617 350 H557"/>
+  <path class="arrow" d="M377 350 H317"/>
+  <path class="arrow" d="M210 300 C168 262 168 221 210 206"/>
+
+  <g>
+    <rect class="card" x="77" y="126" width="180" height="116"/>
+    <circle cx="112" cy="159" r="18" fill="#1598a6"/>
+    <text x="112" y="165" text-anchor="middle" class="num">1</text>
+    <text x="132" y="167" class="step">Planificar</text>
+    <text x="102" y="202" class="desc">Alcance, riesgos</text>
+    <text x="102" y="223" class="desc">y criterios iniciales</text>
+
+    <rect class="card" x="317" y="126" width="180" height="116"/>
+    <circle cx="352" cy="159" r="18" fill="#1598a6"/>
+    <text x="352" y="165" text-anchor="middle" class="num">2</text>
+    <text x="372" y="167" class="step">Definir</text>
+    <text x="342" y="202" class="desc">Instrumentos,</text>
+    <text x="342" y="223" class="desc">responsables y datos</text>
+
+    <rect class="card" x="557" y="126" width="180" height="116"/>
+    <circle cx="592" cy="159" r="18" fill="#1598a6"/>
+    <text x="592" y="165" text-anchor="middle" class="num">3</text>
+    <text x="612" y="167" class="step">Construir</text>
+    <text x="582" y="202" class="desc">Código, interfaz</text>
+    <text x="582" y="223" class="desc">y documentación</text>
+
+    <rect class="card" x="797" y="126" width="180" height="116"/>
+    <circle cx="832" cy="159" r="18" fill="#f2b705"/>
+    <text x="832" y="165" text-anchor="middle" class="num">4</text>
+    <text x="852" y="167" class="step">Probar</text>
+    <text x="822" y="202" class="desc">Sintaxis, suites</text>
+    <text x="822" y="223" class="desc">y criterios de salida</text>
+
+    <rect class="card" x="617" y="292" width="180" height="116"/>
+    <circle cx="652" cy="325" r="18" fill="#e86d6d"/>
+    <text x="652" y="331" text-anchor="middle" class="num">5</text>
+    <text x="672" y="333" class="step">Corregir</text>
+    <text x="642" y="368" class="desc">Defectos, causas</text>
+    <text x="642" y="389" class="desc">y acciones tomadas</text>
+
+    <rect class="card" x="377" y="292" width="180" height="116"/>
+    <circle cx="412" cy="325" r="18" fill="#1598a6"/>
+    <text x="412" y="331" text-anchor="middle" class="num">6</text>
+    <text x="432" y="333" class="step">Validar</text>
+    <text x="402" y="368" class="desc">Resultado real</text>
+    <text x="402" y="389" class="desc">frente al criterio</text>
+
+    <rect class="card" x="137" y="292" width="180" height="116"/>
+    <circle cx="172" cy="325" r="18" fill="#071d33"/>
+    <text x="172" y="331" text-anchor="middle" class="num">7</text>
+    <text x="192" y="333" class="step">Mejorar</text>
+    <text x="162" y="368" class="desc">Lecciones, ajustes</text>
+    <text x="162" y="389" class="desc">y nuevo ciclo</text>
   </g>
-  <g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle" fill="#111111" font-size="22" font-weight="700">
-    <g fill="#dce6f2" stroke="#111111" stroke-width="2">
-      <rect x="60" y="95" width="180" height="100"/><rect x="285" y="95" width="180" height="100"/>
-      <rect x="510" y="95" width="180" height="100"/><rect x="735" y="95" width="180" height="100"/>
-    </g>
-    <g fill="#eef3f8" stroke="#111111" stroke-width="2">
-      <rect x="600" y="290" width="180" height="100"/><rect x="375" y="290" width="180" height="100"/><rect x="150" y="290" width="180" height="100"/>
-    </g>
-    <text x="150" y="152">1. Planificar</text><text x="375" y="152">2. Definir</text>
-    <text x="600" y="152">3. Construir</text><text x="825" y="152">4. Probar</text>
-    <text x="690" y="347">5. Corregir</text><text x="465" y="347">6. Validar</text><text x="240" y="347">7. Mejorar</text>
-  </g>
-  <text x="500" y="455" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Cada hallazgo conserva evidencia y retroalimenta la etapa correspondiente.</text>
+
+  <rect x="70" y="468" width="960" height="42" rx="21" fill="#071d33"/>
+  <text x="550" y="496" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#ffffff">La calidad no se revisa al final: se documenta, se mide y se mejora durante todo el proceso.</text>
 </svg>
