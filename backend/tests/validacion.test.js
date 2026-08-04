@@ -2,6 +2,9 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const {
+  parsearConfiguracionAvanzada,
+} = require('../utils/configuracion');
+const {
   normalizarDatosUsuario,
   normalizarIdEntero,
   validarConfiguracion,
@@ -131,4 +134,27 @@ test('configuración de usuario valida preferencias permitidas y booleanos estri
     }),
     'Las preferencias booleanas son inválidas'
   );
+});
+
+test('configuración avanzada tolera JSON inválido y objetos ya parseados', () => {
+  assert.deepEqual(parsearConfiguracionAvanzada(null), {});
+  assert.deepEqual(parsearConfiguracionAvanzada(''), {});
+  assert.deepEqual(parsearConfiguracionAvanzada('{json-invalido'), {});
+  assert.deepEqual(
+    parsearConfiguracionAvanzada(
+      '{"notificaciones":false,"formatoDefecto":"webp","autoguardado":true}'
+    ),
+    {
+      notificaciones: false,
+      formatoDefecto: 'webp',
+      autoguardado: true,
+    }
+  );
+
+  const configuracion = {
+    notificaciones: true,
+    formatoDefecto: 'png',
+    autoguardado: false,
+  };
+  assert.equal(parsearConfiguracionAvanzada(configuracion), configuracion);
 });
