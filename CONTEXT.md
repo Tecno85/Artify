@@ -298,7 +298,7 @@ La versión PostgreSQL fue validada con:
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 30/30 correctas.
+- Resultado de pruebas automatizadas backend: 31/31 correctas.
 - Suite frontend con `node:test`: 30/30 correctas para autenticación temporal y recordada, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, validación de imágenes, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
@@ -458,6 +458,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Ampliación de pruebas frontend para comprobar que el registro exitoso guarda sesión temporal y redirige al editor.
 - [2026-08-03] Ampliación de pruebas frontend para comprobar que un error del backend en registro no guarda sesión ni redirige.
 - [2026-08-03] Ampliación de pruebas frontend para comprobar redirecciones del panel administrativo ante accesos no autorizados.
+- [2026-08-03] Ampliación de pruebas backend puras para comprobar el limitador de intentos por IP, ruta y correo normalizado.
 
 ---
 
