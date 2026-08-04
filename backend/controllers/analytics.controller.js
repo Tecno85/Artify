@@ -6,36 +6,47 @@ function filtrosPopulares(req, res) {
   // Preferir el nombre estructurado del filtro y usar la descripción como respaldo
   // mantiene compatibles las operaciones registradas antes de incorporar parámetros.
   const query = `
+    WITH filtros_registrados AS (
+      SELECT
+        CASE
+          WHEN filtro IN ('Blanco y Negro', 'Sepia', 'Brillo', 'Contraste')
+            THEN filtro
+          ELSE 'Sin especificar'
+        END AS filtro
+      FROM (
+        SELECT
+          COALESCE(
+            NULLIF(BTRIM(opr_parametros ->> 'filtro'), ''),
+            NULLIF(
+              REGEXP_REPLACE(
+                COALESCE(opr_parametros ->> 'descripcion', ''),
+                '^Filtro aplicado:\\s*',
+                '',
+                'i'
+              ),
+              ''
+            ),
+            'Sin especificar'
+          ) AS filtro
+        FROM OPERACION
+        WHERE opr_estado_operacion = 'completada'
+          AND opr_tipo_operacion = 'filtro'
+      ) filtros_normalizados
+    )
     SELECT
-      COALESCE(
-        NULLIF(BTRIM(opr_parametros ->> 'filtro'), ''),
-        NULLIF(
-          REGEXP_REPLACE(
-            COALESCE(opr_parametros ->> 'descripcion', ''),
-            '^Filtro aplicado:\\s*',
-            '',
-            'i'
-          ),
-          ''
-        ),
-        'Sin especificar'
-      ) as filtro,
+      filtro,
       COUNT(*)::int as usos,
       COALESCE(
         ROUND(
           100.0 * COUNT(*) / NULLIF(
-            (SELECT COUNT(*) FROM OPERACION
-             WHERE opr_estado_operacion = 'completada'
-               AND opr_tipo_operacion = 'filtro'),
+            (SELECT COUNT(*) FROM filtros_registrados),
             0
           ),
           2
         ),
         0
       )::float as porcentaje
-    FROM OPERACION
-    WHERE opr_estado_operacion = 'completada'
-      AND opr_tipo_operacion = 'filtro'
+    FROM filtros_registrados
     GROUP BY filtro
     ORDER BY usos DESC
     LIMIT 10

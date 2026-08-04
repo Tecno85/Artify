@@ -26,7 +26,7 @@ Los bloques JSON de esta sección son ejemplos ilustrativos del contrato de cada
 
 **¿Qué hace?**
 
-Devuelve exclusivamente los filtros visuales más usados por los usuarios de Artify. No mezcla recortes, rotaciones, conversiones ni descargas.
+Devuelve exclusivamente los filtros visuales más usados por los usuarios de Artify. No mezcla recortes, rotaciones, conversiones ni descargas. La respuesta pública solo conserva nombres de filtros reconocidos por el editor; cualquier valor distinto se agrupa como `Sin especificar`.
 
 **URL:** `GET /api/v1/analytics/filtros-populares`
 
@@ -67,7 +67,7 @@ http://localhost:3000/api/v1/analytics/filtros-populares
 
 **¿Qué significan los campos?**
 
-- `filtro` representa el nombre del filtro visual registrado en los parámetros de la operación.
+- `filtro` representa el nombre público del filtro visual. Solo puede ser `Blanco y Negro`, `Sepia`, `Brillo`, `Contraste` o `Sin especificar`.
 - `usos` indica cuántas veces aparece esa operación.
 - `porcentaje` indica qué proporción representa frente al total consultado.
 

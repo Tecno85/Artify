@@ -711,13 +711,36 @@ test('registro, login y flujo básico de usuario funcionan', async () => {
   assert.equal(operacion.response.status, 200);
   assert.equal(operacion.body.mensaje, 'Operación registrada');
 
+  const operacionManipulada = await request('/api/operacion', {
+    method: 'POST',
+    headers: authHeaders,
+    body: JSON.stringify({
+      idUsuario,
+      idSesion,
+      tipo: 'filtro',
+      descripcion: 'Filtro aplicado: <script>alert(1)</script>',
+      parametros: { filtro: '<script>alert(1)</script>' },
+    }),
+  });
+
+  assert.equal(operacionManipulada.response.status, 200);
+  assert.equal(operacionManipulada.body.mensaje, 'Operación registrada');
+
   const analytics = await request('/api/v1/analytics/filtros-populares');
   const filtroPrueba = analytics.body.data.filtros.find(
     (item) => item.filtro === 'Sepia'
   );
+  const filtroManipulado = analytics.body.data.filtros.find(
+    (item) => item.filtro === '<script>alert(1)</script>'
+  );
+  const filtroSinEspecificar = analytics.body.data.filtros.find(
+    (item) => item.filtro === 'Sin especificar'
+  );
 
   assert.equal(analytics.response.status, 200);
   assert.ok(filtroPrueba);
+  assert.equal(filtroManipulado, undefined);
+  assert.ok(filtroSinEspecificar);
   assert.equal(typeof filtroPrueba.usos, 'number');
   assert.equal(typeof filtroPrueba.porcentaje, 'number');
 
