@@ -56,7 +56,7 @@ El alcance actual de Artify incluye:
 - Documentación del proyecto y documentación técnica separadas en la carpeta `docs/`.
 - Despliegue del frontend en GitHub Pages, del backend en Render y de PostgreSQL en Neon.
 
-No hacen parte del alcance actual funciones avanzadas como edición colaborativa en tiempo real, almacenamiento externo de archivos de imagen, inteligencia artificial para imágenes, pagos, integración con redes sociales o una arquitectura de alta disponibilidad con redundancia y conmutación por error.
+No hacen parte del alcance actual funciones avanzadas como edición colaborativa en tiempo real, almacenamiento externo de archivos de imagen, inteligencia artificial para imágenes, pagos, integración con redes sociales, operación completa del editor por teclado o una arquitectura de alta disponibilidad con redundancia y conmutación por error.
 
 ---
 

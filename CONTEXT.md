@@ -30,6 +30,7 @@ PostgreSQL es el motor oficial de persistencia de esta versión.
 - Los botones principales con texto blanco usan un azul de acción de contraste AA; enlaces, contornos de foco y la identidad cian conservan sus colores más luminosos.
 - El editor habilita sus controles sin esperar el arranque del backend; la sesión de edición y las preferencias se inicializan en segundo plano.
 - La carga admite JPG, PNG y WebP de hasta 10 MB, 16 MP y 8192 px por lado para proteger la memoria usada por Canvas y los filtros.
+- El flujo principal del editor está definido para uso con mouse; la operación completa por teclado no hace parte del alcance actual.
 
 ### Backend
 

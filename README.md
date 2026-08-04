@@ -26,6 +26,7 @@ La aplicación incluye autenticación por roles, persistencia de preferencias y 
 ## Características principales
 
 - Carga de imágenes JPG, PNG y WebP mediante selector o arrastrar y soltar, con límites de 10 MB, 16 MP y 8192 px por lado.
+- Flujo principal del editor definido para uso con mouse; la operación completa por teclado no hace parte del alcance actual.
 - Recorte libre o con proporciones predefinidas.
 - Redimensionamiento y rotación.
 - Filtros de blanco y negro, sepia, brillo y contraste con vista previa, reajuste continuo, cancelación y confirmación explícitas.
