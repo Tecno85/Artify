@@ -1,7 +1,12 @@
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const test = require('node:test');
 
-const { validarConfiguracionToken } = require('../utils/token');
+const {
+  crearToken,
+  validarConfiguracionToken,
+  verificarToken,
+} = require('../utils/token');
 
 function configurarEntorno(nodeEnv, tokenSecret) {
   if (nodeEnv === undefined) {
@@ -16,6 +21,32 @@ function configurarEntorno(nodeEnv, tokenSecret) {
   }
 
   process.env.TOKEN_SECRET = tokenSecret;
+}
+
+function base64UrlEncode(valor) {
+  return Buffer.from(valor)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+}
+
+function firmarPrueba(valor, secreto) {
+  return crypto
+    .createHmac('sha256', secreto)
+    .update(valor)
+    .digest('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+}
+
+function crearTokenPrueba(payload, secreto) {
+  const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const body = base64UrlEncode(JSON.stringify(payload));
+  const firma = firmarPrueba(`${header}.${body}`, secreto);
+
+  return `${header}.${body}.${firma}`;
 }
 
 test('TOKEN_SECRET se valida según el entorno antes de iniciar el backend', () => {
@@ -63,6 +94,48 @@ test('TOKEN_SECRET se valida según el entorno antes de iniciar el backend', () 
     assert.equal(validarConfiguracionToken(), secretoSeguro);
   } finally {
     console.warn = consoleWarnOriginal;
+    configurarEntorno(nodeEnvOriginal, tokenSecretOriginal);
+  }
+});
+
+test('tokens firmados se verifican y rechazan manipulación o expiración', () => {
+  const nodeEnvOriginal = process.env.NODE_ENV;
+  const tokenSecretOriginal = process.env.TOKEN_SECRET;
+  const secretoSeguro = 'artify-token-test-2026-secreto-seguro-privado';
+
+  try {
+    configurarEntorno('test', secretoSeguro);
+
+    const token = crearToken({
+      id: 7,
+      correo: 'ana@artify.local',
+      rol: 'usuario',
+    });
+    const payload = verificarToken(token);
+
+    assert.equal(payload.id, 7);
+    assert.equal(payload.correo, 'ana@artify.local');
+    assert.equal(payload.rol, 'usuario');
+    assert.equal(typeof payload.exp, 'number');
+
+    const partes = token.split('.');
+    const bodyManipulado = base64UrlEncode(
+      JSON.stringify({ ...payload, rol: 'admin' })
+    );
+    const tokenManipulado = `${partes[0]}.${bodyManipulado}.${partes[2]}`;
+    assert.throws(() => verificarToken(tokenManipulado), /TOKEN_INVALIDO/);
+
+    const tokenExpirado = crearTokenPrueba(
+      {
+        id: 7,
+        correo: 'ana@artify.local',
+        rol: 'usuario',
+        exp: Math.floor(Date.now() / 1000) - 60,
+      },
+      secretoSeguro
+    );
+    assert.throws(() => verificarToken(tokenExpirado), /TOKEN_EXPIRADO/);
+  } finally {
     configurarEntorno(nodeEnvOriginal, tokenSecretOriginal);
   }
 });
