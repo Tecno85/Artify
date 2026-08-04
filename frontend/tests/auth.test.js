@@ -81,6 +81,24 @@ test('auth reemplaza una sesión recordada por una sesión temporal sin mezclar 
   );
 });
 
+test('auth descarta usuario almacenado con JSON corrupto', () => {
+  const sessionStorage = new AlmacenamientoSimulado({
+    artifyUser: '{usuario-invalido',
+  });
+  const localStorage = new AlmacenamientoSimulado({
+    artifyUser: '{usuario-recordado-invalido',
+  });
+  const contextoFrontend = crearContextoFrontend({
+    sessionStorage,
+    localStorage,
+  });
+  ejecutarScript(contextoFrontend.contexto, 'auth.js');
+
+  assert.equal(evaluar(contextoFrontend.contexto, 'obtenerUsuarioAuth()'), null);
+  assert.equal(sessionStorage.getItem('artifyUser'), null);
+  assert.equal(localStorage.getItem('artifyUser'), null);
+});
+
 test('auth redirige desde el inicio al editor con una sesión vigente', () => {
   const usuario = { id: 7, rol: 'usuario' };
   const token = crearTokenPrueba({
@@ -154,6 +172,34 @@ test('auth descarta una sesión recordada cuando el token expiró', () => {
   assert.equal(redirigida, false);
   assert.equal(localStorage.getItem('artifyUser'), null);
   assert.equal(localStorage.getItem('artifyToken'), null);
+  assert.deepEqual(contextoFrontend.reemplazos, []);
+});
+
+test('auth descarta sesiones con rol desconocido antes de redirigir', () => {
+  const usuario = { id: 7, rol: 'moderador' };
+  const token = crearTokenPrueba({
+    id: usuario.id,
+    rol: usuario.rol,
+    exp: Math.floor(Date.now() / 1000) + 3600,
+  });
+  const sessionStorage = new AlmacenamientoSimulado({
+    artifyUser: JSON.stringify(usuario),
+    artifyToken: token,
+  });
+  const contextoFrontend = crearContextoFrontend({
+    sessionStorage,
+    location: { pathname: '/pages/login.html' },
+  });
+  ejecutarScript(contextoFrontend.contexto, 'auth.js');
+
+  const redirigida = evaluar(
+    contextoFrontend.contexto,
+    'redirigirSesionAuth()'
+  );
+
+  assert.equal(redirigida, false);
+  assert.equal(sessionStorage.getItem('artifyUser'), null);
+  assert.equal(sessionStorage.getItem('artifyToken'), null);
   assert.deepEqual(contextoFrontend.reemplazos, []);
 });
 
