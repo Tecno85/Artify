@@ -169,6 +169,41 @@ test('editor elimina respaldos vencidos o alterados antes de recuperarlos', () =
   assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
 });
 
+test('editor no guarda respaldos locales con datos no válidos', () => {
+  const escenario = crearEscenarioEditor(async () => ({
+    status: 200,
+    ok: true,
+    json: async () => ({ mensaje: 'Sesión iniciada', idSesion: 42 }),
+  }));
+
+  escenario.contexto.respaldoInvalido = {
+    dataUrl: 'javascript:alert(1)',
+    formato: 'png',
+    nombreOriginal: 'ataque.png',
+    tamanoBytes: 128,
+  };
+  assert.equal(
+    evaluar(escenario.contexto, 'guardarRespaldoLocal(respaldoInvalido)'),
+    false
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.contexto.respaldoFormatoInvalido = {
+    dataUrl: 'data:image/gif;base64,AAAA',
+    formato: 'gif',
+    nombreOriginal: 'animada.gif',
+    tamanoBytes: 128,
+  };
+  assert.equal(
+    evaluar(
+      escenario.contexto,
+      'guardarRespaldoLocal(respaldoFormatoInvalido)'
+    ),
+    false
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+});
+
 test('editor limpia la sesión y vuelve al login cuando la API rechaza el token', async () => {
   const escenario = crearEscenarioEditor(async () => ({
     status: 401,

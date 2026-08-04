@@ -76,3 +76,30 @@ test('limita dimensiones y normaliza formatos del editor', () => {
     'jpeg'
   );
 });
+
+test('rechaza archivos vacíos y dimensiones inválidas', () => {
+  const contexto = crearEscenario();
+
+  contexto.archivoPrueba = { type: 'image/png', size: 0 };
+  assert.equal(
+    evaluar(
+      contexto,
+      'window.ArtifyEditorImage.validarArchivoImagen(archivoPrueba).mensaje'
+    ),
+    'El archivo de imagen está vacío'
+  );
+  assert.equal(
+    evaluar(
+      contexto,
+      'window.ArtifyEditorImage.validarDimensionesImagen(0, 600).mensaje'
+    ),
+    'Las dimensiones no son válidas'
+  );
+  assert.equal(
+    evaluar(
+      contexto,
+      'window.ArtifyEditorImage.validarDimensionesImagen(800.5, 600).valido'
+    ),
+    false
+  );
+});
