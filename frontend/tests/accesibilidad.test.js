@@ -77,6 +77,19 @@ test('errores y notificaciones dinámicas se anuncian sin controles engañosos',
   assert.match(editorScript, /container\.setAttribute\('role', 'status'\)/);
 });
 
+test('el editor orienta antes y después de cargar una imagen', () => {
+  const editor = leerPagina('editor.html');
+  const editorScript = fs.readFileSync(path.join(scripts, 'editor.js'), 'utf8');
+
+  assert.match(editor, /Sube una imagen para activar las herramientas/);
+  assert.match(
+    editorScript,
+    /currentImage\s*\?\s*'Selecciona una herramienta para ver sus opciones'\s*:\s*'Sube una imagen para activar las herramientas'/
+  );
+  assert.match(editorScript, /dynamicControls\.replaceChildren\(\)/);
+  assert.match(editorScript, /parrafo\.textContent = mensaje/);
+});
+
 test('el registro y la administración solicitan solo los datos necesarios', () => {
   const registro = leerPagina('registro.html');
   const administracion = leerPagina('admin.html');

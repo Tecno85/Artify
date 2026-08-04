@@ -988,6 +988,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const filterControls = document.getElementById('filterControls');
   const filterStatus = document.getElementById('filterStatus');
   const toolControlsPanel = document.getElementById('toolControls');
+  const dynamicControls = document.getElementById('dynamicControls');
   const btnCancelarFiltro = document.getElementById('btnCancelarFiltro');
   const btnAplicarFiltro = document.getElementById('btnAplicarFiltro');
   const configuracionFiltros = {
@@ -1192,7 +1193,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (ocultarControles && filterControls) {
       filterControls.style.display = 'none';
     }
-    if (toolControlsPanel) toolControlsPanel.style.display = 'block';
+    mostrarAyudaHerramienta();
   }
 
   function cancelarCambiosFiltro() {
@@ -2002,6 +2003,21 @@ window.addEventListener('DOMContentLoaded', () => {
     if (rotateControls) rotateControls.style.display = 'none';
     if (filterControls) filterControls.style.display = 'none';
     if (convertControls) convertControls.style.display = 'none';
+  }
+
+  function mostrarAyudaHerramienta() {
+    if (!toolControlsPanel || !dynamicControls) return;
+
+    const mensaje = currentImage
+      ? 'Selecciona una herramienta para ver sus opciones'
+      : 'Sube una imagen para activar las herramientas';
+
+    dynamicControls.replaceChildren();
+    const parrafo = document.createElement('p');
+    parrafo.className = 'no-tool-selected';
+    parrafo.textContent = mensaje;
+    dynamicControls.append(parrafo);
+    toolControlsPanel.style.display = 'block';
   }
 
   function marcarHerramientaActiva(boton) {
