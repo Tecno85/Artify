@@ -5,6 +5,7 @@ const db = require('../config/db');
 const { crearToken } = require('../utils/token');
 const {
   esRolPermitido,
+  normalizarCuerpoEntrada,
   normalizarCorreo,
   normalizarDatosUsuario,
   validarCredenciales,
@@ -24,7 +25,7 @@ function esErrorDuplicado(error) {
 
 // ========== LOGIN DE USUARIO ==========
 function login(req, res) {
-  const { correo, password } = req.body;
+  const { correo, password } = normalizarCuerpoEntrada(req.body);
   const correoNormalizado = normalizarCorreo(correo);
   const errorValidacion = validarCredenciales({
     correo: correoNormalizado,

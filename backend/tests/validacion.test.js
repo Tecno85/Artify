@@ -6,6 +6,7 @@ const {
 } = require('../utils/configuracion');
 const {
   esRolPermitido,
+  normalizarCuerpoEntrada,
   normalizarDatosUsuario,
   normalizarIdEntero,
   validarConfiguracion,
@@ -71,6 +72,22 @@ test('creación y edición comparten normalización y reglas personales', () => 
     assert.equal(validarUsuario(datosInvalidos), mensaje);
     assert.equal(validarEdicionUsuario(datosInvalidos), mensaje);
   }
+});
+
+test('cuerpos de entrada solo aceptan objetos JSON simples', () => {
+  const cuerpo = { idUsuario: 7 };
+
+  assert.equal(normalizarCuerpoEntrada(cuerpo), cuerpo);
+  assert.deepEqual(normalizarCuerpoEntrada(null), {});
+  assert.deepEqual(normalizarCuerpoEntrada(undefined), {});
+  assert.deepEqual(normalizarCuerpoEntrada([]), {});
+  assert.deepEqual(normalizarDatosUsuario(null), {
+    nombres: undefined,
+    apellidos: undefined,
+    correo: undefined,
+    password: undefined,
+    estado: undefined,
+  });
 });
 
 test('identificadores enteros aceptan solo valores positivos seguros', () => {

@@ -1,6 +1,9 @@
 // ========== DEPENDENCIAS ==========
 const db = require('../config/db');
-const { normalizarIdEntero } = require('../utils/validacion');
+const {
+  normalizarCuerpoEntrada,
+  normalizarIdEntero,
+} = require('../utils/validacion');
 
 const TAMANO_MAXIMO_IMAGEN_BYTES = 10 * 1024 * 1024;
 const DIMENSION_MAXIMA_IMAGEN_PX = 8192;
@@ -74,10 +77,15 @@ function obtenerEstadisticas(req, res) {
 
 // ========== REGISTRO DE OPERACIONES ==========
 async function registrarOperacion(req, res) {
-  const { idUsuario, idSesion, tipo, descripcion, parametros } = req.body;
+  const {
+    idUsuario,
+    idSesion,
+    tipo,
+    descripcion,
+    parametros,
+  } = normalizarCuerpoEntrada(req.body);
   const idUsuarioNormalizado = normalizarIdEntero(idUsuario);
   const idSesionNormalizado = normalizarIdEntero(idSesion);
-  const dbPromise = db.promise();
 
   if (
     idUsuarioNormalizado === null ||
@@ -88,6 +96,8 @@ async function registrarOperacion(req, res) {
   ) {
     return res.status(400).json({ mensaje: 'Datos de operación inválidos' });
   }
+
+  const dbPromise = db.promise();
 
   try {
     await dbPromise.beginTransaction();
@@ -218,7 +228,7 @@ async function registrarImagen(req, res) {
     tamanoOriginal,
     anchoOriginal,
     altoOriginal,
-  } = req.body;
+  } = normalizarCuerpoEntrada(req.body);
   const idUsuarioNormalizado = normalizarIdEntero(idUsuario);
   const idSesionNormalizado = normalizarIdEntero(idSesion);
   const formato = String(formatoFinal || formatoOriginal || '')
@@ -228,7 +238,6 @@ async function registrarImagen(req, res) {
   const tamano = Number(tamanoOriginal);
   const ancho = Number(anchoOriginal);
   const alto = Number(altoOriginal);
-  const dbPromise = db.promise();
 
   if (
     idUsuarioNormalizado === null ||
@@ -249,6 +258,8 @@ async function registrarImagen(req, res) {
   ) {
     return res.status(400).json({ mensaje: 'Datos de imagen inválidos' });
   }
+
+  const dbPromise = db.promise();
 
   console.log('📨 Registrando imagen editada');
 

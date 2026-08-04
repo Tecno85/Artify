@@ -2,6 +2,7 @@
 const db = require('../config/db');
 const { parsearConfiguracionAvanzada } = require('../utils/configuracion');
 const {
+  normalizarCuerpoEntrada,
   normalizarIdEntero,
   validarConfiguracion,
 } = require('../utils/validacion');
@@ -58,7 +59,7 @@ function guardarConfiguracion(req, res) {
     notificaciones,
     formatoDefecto,
     autoguardado,
-  } = req.body;
+  } = normalizarCuerpoEntrada(req.body);
   const idUsuarioNormalizado = normalizarIdEntero(idUsuario);
   const errorValidacion = validarConfiguracion({
     calidadExportacion,

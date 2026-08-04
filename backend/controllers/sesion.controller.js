@@ -1,15 +1,20 @@
 // ========== DEPENDENCIAS ==========
 const db = require('../config/db');
-const { normalizarIdEntero } = require('../utils/validacion');
+const {
+  normalizarCuerpoEntrada,
+  normalizarIdEntero,
+} = require('../utils/validacion');
 
 // ========== SESIONES DE EDICIÓN ==========
 async function iniciarSesionEdicion(req, res) {
-  const idUsuario = normalizarIdEntero(req.body?.idUsuario);
-  const dbPromise = db.promise();
+  const cuerpo = normalizarCuerpoEntrada(req.body);
+  const idUsuario = normalizarIdEntero(cuerpo.idUsuario);
 
   if (idUsuario === null) {
     return res.status(400).json({ mensaje: 'Datos de sesión inválidos' });
   }
+
+  const dbPromise = db.promise();
 
   console.log('📨 Iniciando sesión de edición');
 
@@ -53,12 +58,14 @@ async function iniciarSesionEdicion(req, res) {
 }
 
 async function cerrarSesionEdicion(req, res) {
-  const idSesion = normalizarIdEntero(req.body?.idSesion);
-  const dbPromise = db.promise();
+  const cuerpo = normalizarCuerpoEntrada(req.body);
+  const idSesion = normalizarIdEntero(cuerpo.idSesion);
 
   if (idSesion === null) {
     return res.status(400).json({ mensaje: 'Datos de sesión inválidos' });
   }
+
+  const dbPromise = db.promise();
 
   console.log('📨 Cerrando sesión de edición');
 

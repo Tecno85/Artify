@@ -20,13 +20,23 @@ function normalizarTexto(valor) {
   return typeof valor === 'string' ? valor.trim() : valor;
 }
 
+function normalizarCuerpoEntrada(datos) {
+  if (!datos || typeof datos !== 'object' || Array.isArray(datos)) {
+    return {};
+  }
+
+  return datos;
+}
+
 function normalizarDatosUsuario(datos = {}) {
+  const cuerpo = normalizarCuerpoEntrada(datos);
+
   return {
-    nombres: normalizarTexto(datos.nombres),
-    apellidos: normalizarTexto(datos.apellidos),
-    correo: normalizarCorreo(datos.correo),
-    password: datos.password,
-    estado: datos.estado,
+    nombres: normalizarTexto(cuerpo.nombres),
+    apellidos: normalizarTexto(cuerpo.apellidos),
+    correo: normalizarCorreo(cuerpo.correo),
+    password: cuerpo.password,
+    estado: cuerpo.estado,
   };
 }
 
@@ -177,6 +187,7 @@ function validarConfiguracion({
 // ========== EXPORTACIÓN ==========
 module.exports = {
   esRolPermitido,
+  normalizarCuerpoEntrada,
   normalizarCorreo,
   normalizarDatosUsuario,
   normalizarIdEntero,
