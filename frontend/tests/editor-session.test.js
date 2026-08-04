@@ -127,6 +127,48 @@ test('editor descarta una sesión tardía si el usuario autenticado cambió', as
   assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
 });
 
+test('editor elimina respaldos vencidos o alterados antes de recuperarlos', () => {
+  const escenario = crearEscenarioEditor(async () => ({
+    status: 200,
+    ok: true,
+    json: async () => ({ mensaje: 'Sesión iniciada', idSesion: 42 }),
+  }));
+  const ahora = Date.now();
+  const respaldoVencido = {
+    version: 1,
+    idUsuario: 7,
+    timestamp: ahora - 8 * 24 * 60 * 60 * 1000,
+    dataUrl: 'data:image/png;base64,AAAA',
+    formato: 'png',
+    nombreOriginal: 'vencida.png',
+    tamanoBytes: 128,
+  };
+
+  escenario.localStorage.setItem(
+    'artify_backup_v1',
+    JSON.stringify(respaldoVencido)
+  );
+  assert.equal(
+    evaluar(escenario.contexto, `leerRespaldoLocalParaUsuario(7, ${ahora})`),
+    null
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.localStorage.setItem(
+    'artify_backup_v1',
+    JSON.stringify({
+      ...respaldoVencido,
+      timestamp: ahora,
+      dataUrl: 'javascript:alert(1)',
+    })
+  );
+  assert.equal(
+    evaluar(escenario.contexto, `leerRespaldoLocalParaUsuario(7, ${ahora})`),
+    null
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+});
+
 test('editor limpia la sesión y vuelve al login cuando la API rechaza el token', async () => {
   const escenario = crearEscenarioEditor(async () => ({
     status: 401,

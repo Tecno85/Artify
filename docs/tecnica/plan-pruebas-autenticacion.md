@@ -444,14 +444,14 @@ Actualmente ejecuto 32 pruebas automatizadas que cubren las siguientes validacio
 - Validación unitaria de calidades, formatos y preferencias booleanas de configuración.
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.
 
-También ejecuto 30 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 31 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
 pnpm run test:frontend
 ```
 
-Estas pruebas comprueban el almacenamiento y la limpieza de sesión, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, las validaciones de imagen, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
+Estas pruebas comprueban el almacenamiento y la limpieza de sesión, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la recuperación segura de respaldos locales, las validaciones de imagen, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
 Las siete pruebas no amplían los casos de autenticación del backend: comprueban
@@ -500,9 +500,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 32 pruebas ejecutadas y aprobadas
-Frontend: 30 pruebas ejecutadas y aprobadas
+Frontend: 31 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 69 pruebas automatizadas aprobadas
+Total: 70 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 
