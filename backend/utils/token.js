@@ -78,6 +78,20 @@ function base64UrlDecode(valor) {
   return Buffer.from(base64 + '='.repeat(padding), 'base64').toString('utf8');
 }
 
+function decodificarJsonToken(valor) {
+  try {
+    const datos = JSON.parse(base64UrlDecode(valor));
+
+    if (!datos || typeof datos !== 'object' || Array.isArray(datos)) {
+      throw new Error('TOKEN_INVALIDO');
+    }
+
+    return datos;
+  } catch {
+    throw new Error('TOKEN_INVALIDO');
+  }
+}
+
 function firmar(valor) {
   return crypto
     .createHmac('sha256', obtenerSecreto())
@@ -132,7 +146,12 @@ function verificarToken(token) {
     throw new Error('TOKEN_INVALIDO');
   }
 
-  const payload = JSON.parse(base64UrlDecode(body));
+  const encabezado = decodificarJsonToken(header);
+  if (encabezado.alg !== 'HS256' || encabezado.typ !== 'JWT') {
+    throw new Error('TOKEN_INVALIDO');
+  }
+
+  const payload = decodificarJsonToken(body);
   const ahora = Math.floor(Date.now() / 1000);
 
   if (!payload.exp || payload.exp < ahora) {

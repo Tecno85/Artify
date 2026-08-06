@@ -41,8 +41,12 @@ function firmarPrueba(valor, secreto) {
     .replace(/=+$/g, '');
 }
 
-function crearTokenPrueba(payload, secreto) {
-  const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+function crearTokenPrueba(
+  payload,
+  secreto,
+  headerPayload = { alg: 'HS256', typ: 'JWT' }
+) {
+  const header = base64UrlEncode(JSON.stringify(headerPayload));
   const body = base64UrlEncode(JSON.stringify(payload));
   const firma = firmarPrueba(`${header}.${body}`, secreto);
 
@@ -135,6 +139,39 @@ test('tokens firmados se verifican y rechazan manipulación o expiración', () =
       secretoSeguro
     );
     assert.throws(() => verificarToken(tokenExpirado), /TOKEN_EXPIRADO/);
+  } finally {
+    configurarEntorno(nodeEnvOriginal, tokenSecretOriginal);
+  }
+});
+
+test('tokens firmados rechazan encabezados y payloads no esperados', () => {
+  const nodeEnvOriginal = process.env.NODE_ENV;
+  const tokenSecretOriginal = process.env.TOKEN_SECRET;
+  const secretoSeguro = 'artify-token-test-2026-secreto-seguro-privado';
+
+  try {
+    configurarEntorno('test', secretoSeguro);
+
+    const tokenAlgoritmoInvalido = crearTokenPrueba(
+      {
+        id: 7,
+        correo: 'ana@artify.local',
+        rol: 'usuario',
+        exp: Math.floor(Date.now() / 1000) + 60,
+      },
+      secretoSeguro,
+      { alg: 'none', typ: 'JWT' }
+    );
+    assert.throws(
+      () => verificarToken(tokenAlgoritmoInvalido),
+      /TOKEN_INVALIDO/
+    );
+
+    const tokenPayloadInvalido = crearTokenPrueba(
+      'payload-no-objeto',
+      secretoSeguro
+    );
+    assert.throws(() => verificarToken(tokenPayloadInvalido), /TOKEN_INVALIDO/);
   } finally {
     configurarEntorno(nodeEnvOriginal, tokenSecretOriginal);
   }
