@@ -402,7 +402,7 @@ Esta suite también se ejecuta en GitHub Actions mediante:
 .github/workflows/backend-tests.yml
 ```
 
-Actualmente ejecuto 52 pruebas automatizadas que cubren las siguientes validaciones:
+Actualmente ejecuto 55 pruebas automatizadas que cubren las siguientes validaciones:
 
 - Disponibilidad del proceso Express y de PostgreSQL mediante `/health` y `/ready`, con respuestas sin caché.
 - Contrato de respuesta de los cuatro endpoints públicos de analytics.
@@ -422,7 +422,7 @@ Actualmente ejecuto 52 pruebas automatizadas que cubren las siguientes validacio
 - Acceso a rutas protegidas con token.
 - Rechazo de login con contraseña incorrecta.
 - Confirmación de que logins correctos no consumen el límite de fallos.
-- Bloqueo temporal después de diez fallos equivalentes y envío de `Retry-After`.
+- Bloqueo temporal después de diez fallos equivalentes en login y registro público, con envío de `Retry-After`.
 - Consistencia del indicador cuando existen sesiones simultáneas.
 - Rechazo de rutas protegidas sin token.
 - Rechazo de rutas protegidas con token inválido.
@@ -431,6 +431,7 @@ Actualmente ejecuto 52 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo de consultas personales ajenas aunque el token autenticado tenga rol administrativo.
 - Rechazo de cierre de sesiones ajenas aunque el token autenticado tenga rol administrativo.
 - Rechazo de identificadores malformados en rutas protegidas.
+- Respuesta `400` para identificadores malformados en autorizaciones por cuerpo.
 - Rechazo de metadatos de actividad e imagen con controles, rutas o entradas no textuales.
 - Autenticación de administrador.
 - Rechazo del panel administrativo para usuarios sin el rol necesario.
@@ -457,14 +458,14 @@ Actualmente ejecuto 52 pruebas automatizadas que cubren las siguientes validacio
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.
 - Rechazo unitario de metadatos de imagen que superan el límite de 16 MP del editor.
 
-También ejecuto 39 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 40 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
 pnpm run test:frontend
 ```
 
-Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la orientación inicial de herramientas del editor, la recuperación segura de respaldos locales con imagen base64 coherente, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
+Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, el bloqueo de registro sin guardar sesión ni redirigir, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la orientación inicial de herramientas del editor, la recuperación segura de respaldos locales con imagen base64 coherente, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
 Las siete pruebas no amplían los casos de autenticación del backend: comprueban
@@ -512,10 +513,10 @@ NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
-Backend: 52 pruebas ejecutadas y aprobadas
-Frontend: 39 pruebas ejecutadas y aprobadas
+Backend: 55 pruebas ejecutadas y aprobadas
+Frontend: 40 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 98 pruebas automatizadas aprobadas
+Total: 102 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

@@ -210,3 +210,27 @@ test('registro muestra error de backend sin guardar sesión', async () => {
     'No fue posible completar el registro'
   );
 });
+
+test('registro bloqueado por la API no guarda sesión ni redirige', async () => {
+  const escenario = crearEscenarioRegistro({
+    mensaje: 'Demasiadas solicitudes de registro. Intenta nuevamente más tarde',
+  });
+  escenario.elementos.nombres.value = 'Laura';
+  escenario.elementos.apellidos.value = 'Prueba';
+  escenario.elementos.email.value = 'laura@artify.local';
+  escenario.elementos.password.value = 'Password123';
+  escenario.elementos.confirmPassword.value = 'Password123';
+  escenario.elementos.terminos.checked = true;
+
+  assert.equal(enviarFormulario(escenario), true);
+  await esperarPromesas();
+
+  assert.equal(escenario.solicitudes.length, 1);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
+  assert.equal(escenario.sessionStorage.getItem('artifyUser'), null);
+  assert.equal(escenario.window.location.href, '');
+  assert.equal(
+    escenario.elementos['email-error'].textContent,
+    'Demasiadas solicitudes de registro. Intenta nuevamente más tarde'
+  );
+});

@@ -7,6 +7,7 @@ function limitarIntentos({
   maxRegistros = 1000,
   frecuenciaLimpieza = 100,
   mensaje = 'Demasiados intentos. Intenta nuevamente más tarde',
+  contarRespuesta = (statusCode) => statusCode === 401,
 } = {}) {
   const intentos = new Map();
   let solicitudesDesdeLimpieza = 0;
@@ -57,10 +58,10 @@ function limitarIntentos({
       return res.status(429).json({ mensaje });
     }
 
-    // Contabilizar al terminar permite distinguir un rechazo de credenciales (401)
-    // de una autenticación correcta, que limpia los intentos acumulados.
+    // Contabilizar al terminar permite distinguir respuestas fallidas
+    // configurables de una operación correcta, que limpia los intentos acumulados.
     res.on('finish', () => {
-      if (res.statusCode === 401) {
+      if (contarRespuesta(res.statusCode)) {
         const momento = Date.now();
         const vigente = intentos.get(clave);
 

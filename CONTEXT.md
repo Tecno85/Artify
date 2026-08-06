@@ -293,14 +293,14 @@ La versión PostgreSQL fue validada con:
 - Carga de `database/postgresql/seed.sql`.
 - Creación de 5 tablas y la vista `v_usuarios_activos`.
 - Integridad referencial con cascadas PostgreSQL, checks de valores no negativos e índices para analytics.
-- Login y registro público con mensajes genéricos ante credenciales inválidas o correos duplicados, límite de intentos y CORS configurable por entorno, con métodos y cabeceras permitidos de forma explícita.
+- Login y registro público con mensajes genéricos ante credenciales inválidas, correos duplicados o solicitudes repetidas, límite de intentos y CORS configurable por entorno, con métodos y cabeceras permitidos de forma explícita.
 - Endpoints `GET /health` y `GET /ready` sin caché para verificar el estado actual del despliegue y PostgreSQL.
 - `pnpm run check`.
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 52/52 correctas.
-- Suite frontend con `node:test`: 39/39 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, renderizado seguro y semántica accesible.
+- Resultado de pruebas automatizadas backend: 55/55 correctas.
+- Suite frontend con `node:test`: 40/40 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
@@ -479,6 +479,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-06] Endurecimiento de tokens para rechazar encabezados o payloads firmados no esperados.
 - [2026-08-06] Endurecimiento de CORS para rechazar comodines y orígenes inválidos en producción.
 - [2026-08-06] Endurecimiento backend para exigir propietario exacto en consultas personales por parámetro.
+- [2026-08-06] Endurecimiento de registro público con límite de solicitudes fallidas y contratos 400/403 más precisos en autorización por body.
 
 ---
 

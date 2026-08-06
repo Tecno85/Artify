@@ -554,6 +554,42 @@ test('registro rechaza contraseñas nuevas débiles', async () => {
   );
 });
 
+test('registro bloquea temporalmente solicitudes fallidas equivalentes', async () => {
+  const credenciales = {
+    ...usuarioPrueba,
+    correo: `registro.bloqueo.${stamp}@artify.local`,
+    password: 'solominusculas',
+  };
+
+  for (let intento = 0; intento < 10; intento++) {
+    const { response, body } = await request('/api/registro', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credenciales),
+    });
+
+    assert.equal(response.status, 400);
+    assert.equal(
+      body.mensaje,
+      'La contraseña debe incluir al menos una mayúscula, una minúscula y un número'
+    );
+  }
+
+  const bloqueo = await request('/api/registro', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credenciales),
+  });
+  const esperaSegundos = Number(bloqueo.response.headers.get('retry-after'));
+
+  assert.equal(bloqueo.response.status, 429);
+  assert.equal(
+    bloqueo.body.mensaje,
+    'Demasiadas solicitudes de registro. Intenta nuevamente más tarde'
+  );
+  assert.ok(esperaSegundos >= 1 && esperaSegundos <= 15 * 60);
+});
+
 test('registro, login y flujo básico de usuario funcionan', async () => {
   const registro = await request('/api/registro', {
     method: 'POST',
@@ -973,10 +1009,10 @@ test('rutas protegidas rechazan identificadores malformados', async () => {
     headers: { Authorization: `Bearer ${tokenUsuario}` },
   });
 
-  assert.equal(estadisticas.response.status, 403);
+  assert.equal(estadisticas.response.status, 400);
   assert.equal(
     estadisticas.body.mensaje,
-    'No puedes acceder a recursos de otro usuario'
+    'Identificador de usuario inválido'
   );
 
   const sesionInvalida = await request('/api/sesion/iniciar', {
@@ -988,10 +1024,10 @@ test('rutas protegidas rechazan identificadores malformados', async () => {
     body: JSON.stringify({ idUsuario: `${idUsuario}abc` }),
   });
 
-  assert.equal(sesionInvalida.response.status, 403);
+  assert.equal(sesionInvalida.response.status, 400);
   assert.equal(
     sesionInvalida.body.mensaje,
-    'No puedes modificar recursos de otro usuario'
+    'Identificador de usuario inválido'
   );
 
   const cierreInvalido = await request('/api/sesion/cerrar', {

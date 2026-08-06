@@ -75,3 +75,36 @@ test('limitador bloquea fallos por IP, ruta y correo normalizado', () => {
   });
   assert.equal(otroCorreo.nextLlamado, true);
 });
+
+test('limitador permite configurar qué respuestas fallidas cuentan', () => {
+  const middleware = limitarIntentos({
+    ventanaMs: 60_000,
+    maxIntentos: 2,
+    maxRegistros: 10,
+    frecuenciaLimpieza: 100,
+    contarRespuesta: (statusCode) => statusCode >= 400 && statusCode < 500,
+  });
+
+  assert.equal(
+    ejecutarIntento(middleware, {
+      originalUrl: '/api/registro',
+      statusCode: 400,
+    }).nextLlamado,
+    true
+  );
+  assert.equal(
+    ejecutarIntento(middleware, {
+      originalUrl: '/api/registro',
+      statusCode: 400,
+    }).nextLlamado,
+    true
+  );
+
+  const bloqueado = ejecutarIntento(middleware, {
+    originalUrl: '/api/registro',
+    statusCode: 400,
+  });
+
+  assert.equal(bloqueado.nextLlamado, false);
+  assert.equal(bloqueado.res.statusCode, 429);
+});

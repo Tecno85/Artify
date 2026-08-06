@@ -114,13 +114,17 @@ function autorizarUsuarioPorParametro(nombreParametro = 'id') {
 
 function autorizarUsuarioPorBody(nombreCampo = 'idUsuario') {
   return (req, res, next) => {
+    const valor = normalizarIdEntero(req.body?.[nombreCampo]);
+
+    if (valor === null) {
+      return responder400(res, 'Identificador de usuario inválido');
+    }
+
     if (req.auth?.rol === 'admin') {
       return next();
     }
 
-    const valor = normalizarIdEntero(req.body?.[nombreCampo]);
-
-    if (valor === null || valor !== req.auth?.id) {
+    if (valor !== req.auth?.id) {
       return responder403(res, 'No puedes modificar recursos de otro usuario');
     }
 
@@ -132,7 +136,11 @@ function autorizarPropietarioPorBody(nombreCampo = 'idUsuario') {
   return (req, res, next) => {
     const valor = normalizarIdEntero(req.body?.[nombreCampo]);
 
-    if (valor === null || valor !== req.auth?.id) {
+    if (valor === null) {
+      return responder400(res, 'Identificador de usuario inválido');
+    }
+
+    if (valor !== req.auth?.id) {
       return responder403(res, 'No puedes modificar recursos de otro usuario');
     }
 

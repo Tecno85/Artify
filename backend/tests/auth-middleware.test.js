@@ -156,6 +156,38 @@ test('autorización por propietario rechaza IDs malformados o ajenos', () => {
   delete require.cache[DB_PATH];
 });
 
+test('autorización por body rechaza IDs malformados como solicitud inválida', () => {
+  const {
+    autorizarUsuarioPorBody,
+    autorizarPropietarioPorBody,
+  } = cargarAuthConDb({ query() {} });
+
+  for (const middleware of [
+    autorizarUsuarioPorBody('idUsuario'),
+    autorizarPropietarioPorBody('idUsuario'),
+  ]) {
+    const res = crearRespuesta();
+    let nextEjecutado = false;
+
+    middleware(
+      { auth: { id: 7, rol: 'admin' }, body: { idUsuario: '7abc' } },
+      res,
+      () => {
+        nextEjecutado = true;
+      }
+    );
+
+    assert.equal(nextEjecutado, false);
+    assert.equal(res.statusCode, 400);
+    assert.deepEqual(res.body, {
+      mensaje: 'Identificador de usuario inválido',
+    });
+  }
+
+  delete require.cache[AUTH_PATH];
+  delete require.cache[DB_PATH];
+});
+
 test('consultas personales requieren propietario exacto aunque el rol sea admin', () => {
   const { autorizarUsuarioPorParametro } = cargarAuthConDb({ query() {} });
   const middleware = autorizarUsuarioPorParametro('id');
