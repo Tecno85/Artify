@@ -7,6 +7,23 @@ function normalizarOrigenesCors(valor) {
     .filter(Boolean);
 }
 
+function esOrigenHttpValido(origen) {
+  if (origen === '*' || origen.toLowerCase() === 'null') {
+    return false;
+  }
+
+  try {
+    const url = new URL(origen);
+    return (
+      ['http:', 'https:'].includes(url.protocol) &&
+      url.origin === origen &&
+      Boolean(url.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
 function obtenerOrigenesPermitidos() {
   const origenes = normalizarOrigenesCors(process.env.CORS_ORIGIN);
 
@@ -16,11 +33,21 @@ function obtenerOrigenesPermitidos() {
     );
   }
 
+  if (
+    process.env.NODE_ENV === 'production' &&
+    origenes.some((origen) => !esOrigenHttpValido(origen))
+  ) {
+    throw new Error(
+      'CORS_ORIGIN solo debe contener orígenes HTTP o HTTPS válidos en producción'
+    );
+  }
+
   return origenes;
 }
 
 // ========== EXPORTACIÓN ==========
 module.exports = {
+  esOrigenHttpValido,
   normalizarOrigenesCors,
   obtenerOrigenesPermitidos,
 };

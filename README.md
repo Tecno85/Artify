@@ -179,7 +179,7 @@ pnpm exec playwright install chromium
 pnpm run test:e2e
 ```
 
-GitHub Actions ejecuta automáticamente 49 pruebas del backend, 39 pruebas
+GitHub Actions ejecuta automáticamente 50 pruebas del backend, 39 pruebas
 frontend con cobertura nativa y siete pruebas E2E en cada `push` a `main` y en
 los pull requests. También carga el esquema y valida las migraciones
 incrementales sobre PostgreSQL temporal.

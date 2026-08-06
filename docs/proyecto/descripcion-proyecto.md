@@ -52,7 +52,7 @@ El alcance actual de Artify incluye:
 - Persistencia de usuarios, configuraciones, sesiones, operaciones e imágenes en PostgreSQL.
 - Panel de administración protegido por rol.
 - API REST para funcionalidades internas y endpoints de analíticas.
-- Noventa y cinco pruebas automatizadas: 49 del backend para autenticación, tokens firmados, encabezado y payload esperado de tokens, roles permitidos, autorización por rol, propietario, escrituras personales, cierre de sesiones y sesiones ajenas, payloads inválidos, respuestas públicas seguras, sesiones, configuración, imágenes, metadatos de imagen con límites seguros, analíticas, administración, limitación de intentos y seguridad HTTP con HSTS en producción; 39 del frontend para sesión, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, login por rol, registro público, autorización del panel administrativo, inicio del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validaciones de imagen, límites seguros de redimensionado, contraste, renderizado seguro y accesibilidad básica; y 7 E2E en Chromium para flujos reales de autenticación, registro público, autorización frontend, protección administrativa, sesión recordada y editor.
+- Noventa y seis pruebas automatizadas: 50 del backend para autenticación, tokens firmados, encabezado y payload esperado de tokens, roles permitidos, autorización por rol, propietario, escrituras personales, cierre de sesiones y sesiones ajenas, payloads inválidos, respuestas públicas seguras, sesiones, configuración, CORS estricto en producción, imágenes, metadatos de imagen con límites seguros, analíticas, administración, limitación de intentos y seguridad HTTP con HSTS en producción; 39 del frontend para sesión, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, login por rol, registro público, autorización del panel administrativo, inicio del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validaciones de imagen, límites seguros de redimensionado, contraste, renderizado seguro y accesibilidad básica; y 7 E2E en Chromium para flujos reales de autenticación, registro público, autorización frontend, protección administrativa, sesión recordada y editor.
 - Documentación del proyecto y documentación técnica separadas en la carpeta `docs/`.
 - Despliegue del frontend en GitHub Pages, del backend en Render y de PostgreSQL en Neon.
 
@@ -124,7 +124,7 @@ Desde el punto de vista académico, el proyecto permite evidenciar el proceso de
 
 ## 10. Estado Actual
 
-El proyecto se encuentra en estado activo y desplegado. Actualmente cuenta con frontend funcional en GitHub Pages, backend modularizado en Render, base de datos PostgreSQL en Neon, autenticación real, panel administrativo, 95 pruebas automatizadas entre backend, frontend y E2E en Chromium, y documentación organizada en:
+El proyecto se encuentra en estado activo y desplegado. Actualmente cuenta con frontend funcional en GitHub Pages, backend modularizado en Render, base de datos PostgreSQL en Neon, autenticación real, panel administrativo, 96 pruebas automatizadas entre backend, frontend y E2E en Chromium, y documentación organizada en:
 
 - `docs/proyecto/`: documentación funcional y académica.
 - `docs/tecnica/`: documentación técnica y manual técnico.
