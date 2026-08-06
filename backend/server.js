@@ -11,6 +11,7 @@ validarConfiguracionToken();
 
 const { obtenerOrigenesPermitidos } = require('./utils/cors');
 const origenesPermitidos = obtenerOrigenesPermitidos();
+const { aplicarCabecerasSeguridad } = require('./utils/security-headers');
 
 const db = require('./config/db');
 
@@ -56,10 +57,7 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  aplicarCabecerasSeguridad(res);
   next();
 });
 
