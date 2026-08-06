@@ -307,7 +307,7 @@ Esta salida confirma que Express está escuchando en el puerto configurado y que
 
 ![Dependencias y pruebas del backend verificadas](./evidencias/configuracion-servicios/dependencias-pruebas.svg)
 
-*Descripción:* En esta evidencia muestro que el lockfile permite una instalación reproducible y que la sintaxis y las pruebas automatizadas finalizaron correctamente. El estado actual conserva 45 pruebas backend, 39 frontend y siete E2E en Chromium.
+*Descripción:* En esta evidencia muestro que el lockfile permite una instalación reproducible y que la sintaxis y las pruebas automatizadas finalizaron correctamente. El estado actual conserva 46 pruebas backend, 39 frontend y siete E2E en Chromium.
 
 #### Imagen 6. Backend conectado y API disponible
 
@@ -422,7 +422,7 @@ Desde `backend/` ejecuto la suite frontend, que no necesita PostgreSQL:
 pnpm run test:frontend
 ```
 
-El resultado actual es de 38 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, inicio no bloqueante del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validaciones de imagen, contraste, minimización de datos, renderizado seguro y semántica accesible.
+El resultado actual es de 39 pruebas aprobadas y cero fallos. La suite comprueba sesión temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, respuestas `401`, validación del login, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, inicio no bloqueante del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validaciones de imagen, límites seguros de redimensionado, contraste, minimización de datos, renderizado seguro y semántica accesible.
 
 ### 11.4 Prueba E2E del editor
 
@@ -461,7 +461,7 @@ El frontend respondió con estado HTTP `200` y mostró correctamente la interfaz
 | Variables de entorno | Archivo local completo y valores sensibles protegidos. | Evidencia 4 | Verificado |
 | Dependencias | Lockfile consistente y auditoría de producción sin vulnerabilidades conocidas. | Evidencia 5 y `pnpm audit --prod` | Verificado |
 | Sintaxis del backend | `pnpm run check` finaliza sin errores. | Evidencia 5 | Verificado |
-| Pruebas automatizadas | 45 pruebas backend, 39 frontend y 7 E2E aprobadas, con cero fallos. | Evidencia 5 y resultado reproducible | Verificado |
+| Pruebas automatizadas | 46 pruebas backend, 39 frontend y 7 E2E aprobadas, con cero fallos. | Evidencia 5 y resultado reproducible | Verificado |
 | Servidor de aplicaciones | Express activo en el puerto `3000`. | Evidencia 6 | Verificado |
 | Conexión backend-PostgreSQL | Mensaje de conexión correcta al iniciar. | Evidencia 6 | Verificado |
 | Endpoint de salud | Respuesta HTTP `200` y JSON válido en `/health`. | Evidencia 6 | Verificado |

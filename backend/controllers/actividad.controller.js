@@ -7,6 +7,7 @@ const {
 
 const TAMANO_MAXIMO_IMAGEN_BYTES = 10 * 1024 * 1024;
 const DIMENSION_MAXIMA_IMAGEN_PX = 8192;
+const MAXIMO_PIXELES_IMAGEN = 16_000_000;
 
 function obtenerTotal(results) {
   return Number(results?.[0]?.total ?? 0);
@@ -256,7 +257,8 @@ async function registrarImagen(req, res) {
     ancho > DIMENSION_MAXIMA_IMAGEN_PX ||
     !Number.isSafeInteger(alto) ||
     alto <= 0 ||
-    alto > DIMENSION_MAXIMA_IMAGEN_PX
+    alto > DIMENSION_MAXIMA_IMAGEN_PX ||
+    ancho * alto > MAXIMO_PIXELES_IMAGEN
   ) {
     return res.status(400).json({ mensaje: 'Datos de imagen inválidos' });
   }

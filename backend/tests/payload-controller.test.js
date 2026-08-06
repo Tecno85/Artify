@@ -125,6 +125,35 @@ test('login rechaza cuerpo null antes de consultar credenciales', () => {
   }
 });
 
+test('actividad rechaza metadatos de imagen que exceden 16 MP', async () => {
+  const dbMock = crearDbSinConsultas();
+  const { actividad } = cargarControladoresConDb(dbMock.db);
+  const imagen = crearRespuesta();
+
+  try {
+    await actividad.registrarImagen(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          nombreOriginal: 'demasiado-grande.png',
+          formatoOriginal: 'png',
+          tamanoOriginal: 1024,
+          anchoOriginal: 4001,
+          altoOriginal: 4000,
+        },
+      },
+      imagen
+    );
+
+    assert.equal(imagen.statusCode, 400);
+    assert.equal(imagen.body.mensaje, 'Datos de imagen inválidos');
+    assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+});
+
 test('configuración rechaza arrays antes de guardar preferencias', () => {
   const dbMock = crearDbSinConsultas();
   const { configuracion } = cargarControladoresConDb(dbMock.db);
