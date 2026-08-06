@@ -120,7 +120,8 @@ test('autorización por propietario rechaza IDs malformados o ajenos', () => {
     {
       middleware: autorizarUsuarioPorParametro('id'),
       req: { auth: { id: 7, rol: 'usuario' }, params: { id: 'abc' } },
-      mensaje: 'No puedes acceder a recursos de otro usuario',
+      statusCode: 400,
+      mensaje: 'Identificador de usuario inválido',
     },
     {
       middleware: autorizarUsuarioPorParametro('id'),
@@ -147,9 +148,33 @@ test('autorización por propietario rechaza IDs malformados o ajenos', () => {
     });
 
     assert.equal(nextEjecutado, false);
-    assert.equal(res.statusCode, 403);
+    assert.equal(res.statusCode, caso.statusCode || 403);
     assert.deepEqual(res.body, { mensaje: caso.mensaje });
   }
+
+  delete require.cache[AUTH_PATH];
+  delete require.cache[DB_PATH];
+});
+
+test('consultas personales requieren propietario exacto aunque el rol sea admin', () => {
+  const { autorizarUsuarioPorParametro } = cargarAuthConDb({ query() {} });
+  const middleware = autorizarUsuarioPorParametro('id');
+  const res = crearRespuesta();
+  let nextEjecutado = false;
+
+  middleware(
+    { auth: { id: 7, rol: 'admin' }, params: { id: '8' } },
+    res,
+    () => {
+      nextEjecutado = true;
+    }
+  );
+
+  assert.equal(nextEjecutado, false);
+  assert.equal(res.statusCode, 403);
+  assert.deepEqual(res.body, {
+    mensaje: 'No puedes acceder a recursos de otro usuario',
+  });
 
   delete require.cache[AUTH_PATH];
   delete require.cache[DB_PATH];

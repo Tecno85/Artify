@@ -12,6 +12,10 @@ function esCorreo(valor) {
   return esTexto(valor, 5, 150) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor);
 }
 
+function contieneCaracteresControl(valor) {
+  return /[\u0000-\u001F\u007F]/.test(valor);
+}
+
 function normalizarCorreo(valor) {
   return typeof valor === 'string' ? valor.trim().toLowerCase() : valor;
 }
@@ -184,6 +188,35 @@ function validarConfiguracion({
   return null;
 }
 
+function validarTipoOperacion(valor) {
+  return (
+    typeof valor === 'string' &&
+    esTexto(valor, 1, 100) &&
+    !contieneCaracteresControl(valor)
+  );
+}
+
+function validarDescripcionOperacion(valor) {
+  if (valor === undefined || valor === null) {
+    return true;
+  }
+
+  return (
+    typeof valor === 'string' &&
+    valor.length <= 500 &&
+    !contieneCaracteresControl(valor)
+  );
+}
+
+function validarNombreArchivoImagen(valor) {
+  return (
+    typeof valor === 'string' &&
+    esTexto(valor, 1, 255) &&
+    !/[\\/]/.test(valor) &&
+    !contieneCaracteresControl(valor)
+  );
+}
+
 // ========== EXPORTACIÓN ==========
 module.exports = {
   esRolPermitido,
@@ -193,6 +226,9 @@ module.exports = {
   normalizarIdEntero,
   validarConfiguracion,
   validarCredenciales,
+  validarDescripcionOperacion,
+  validarNombreArchivoImagen,
+  validarTipoOperacion,
   validarUsuario,
   validarEdicionUsuario,
 };

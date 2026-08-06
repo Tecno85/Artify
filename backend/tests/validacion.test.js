@@ -11,7 +11,10 @@ const {
   normalizarIdEntero,
   validarConfiguracion,
   validarCredenciales,
+  validarDescripcionOperacion,
   validarEdicionUsuario,
+  validarNombreArchivoImagen,
+  validarTipoOperacion,
   validarUsuario,
 } = require('../utils/validacion');
 
@@ -184,4 +187,31 @@ test('configuración avanzada tolera JSON inválido y objetos ya parseados', () 
     autoguardado: false,
   };
   assert.equal(parsearConfiguracionAvanzada(configuracion), configuracion);
+});
+
+test('metadatos de actividad rechazan controles y rutas', () => {
+  assert.equal(validarTipoOperacion('filtro'), true);
+  assert.equal(validarDescripcionOperacion('Filtro aplicado'), true);
+  assert.equal(validarDescripcionOperacion(undefined), true);
+  assert.equal(validarNombreArchivoImagen('foto editada.png'), true);
+
+  for (const tipo of ['', '  ', `filtro${String.fromCharCode(7)}`]) {
+    assert.equal(validarTipoOperacion(tipo), false);
+  }
+
+  assert.equal(
+    validarDescripcionOperacion(`texto${String.fromCharCode(10)}`),
+    false
+  );
+  assert.equal(validarDescripcionOperacion(15), false);
+  assert.equal(validarDescripcionOperacion('a'.repeat(501)), false);
+
+  for (const nombre of [
+    '../foto.png',
+    'carpeta/foto.png',
+    'carpeta\\foto.png',
+    `foto${String.fromCharCode(0)}.png`,
+  ]) {
+    assert.equal(validarNombreArchivoImagen(nombre), false);
+  }
 });

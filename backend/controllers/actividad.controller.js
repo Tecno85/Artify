@@ -3,6 +3,9 @@ const db = require('../config/db');
 const {
   normalizarCuerpoEntrada,
   normalizarIdEntero,
+  validarDescripcionOperacion,
+  validarNombreArchivoImagen,
+  validarTipoOperacion,
 } = require('../utils/validacion');
 
 const TAMANO_MAXIMO_IMAGEN_BYTES = 10 * 1024 * 1024;
@@ -95,9 +98,8 @@ async function registrarOperacion(req, res) {
   if (
     idUsuarioNormalizado === null ||
     idSesionNormalizado === null ||
-    typeof tipo !== 'string' ||
-    tipo.trim().length === 0 ||
-    tipo.trim().length > 100
+    !validarTipoOperacion(tipo) ||
+    !validarDescripcionOperacion(descripcion)
   ) {
     return res.status(400).json({ mensaje: 'Datos de operación inválidos' });
   }
@@ -245,9 +247,7 @@ async function registrarImagen(req, res) {
   if (
     idUsuarioNormalizado === null ||
     idSesionNormalizado === null ||
-    typeof nombreOriginal !== 'string' ||
-    nombreOriginal.trim().length === 0 ||
-    nombreOriginal.trim().length > 255 ||
+    !validarNombreArchivoImagen(nombreOriginal) ||
     !['png', 'jpeg', 'webp'].includes(formato) ||
     !Number.isSafeInteger(tamano) ||
     tamano <= 0 ||

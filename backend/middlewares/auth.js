@@ -11,6 +11,10 @@ function responder401(res, mensaje = 'Token ausente, inválido o expirado') {
   return res.status(401).json({ mensaje });
 }
 
+function responder400(res, mensaje = 'Solicitud inválida') {
+  return res.status(400).json({ mensaje });
+}
+
 function responder403(res, mensaje = 'No tienes permisos para esta acción') {
   return res.status(403).json({ mensaje });
 }
@@ -94,13 +98,13 @@ function requiereAdmin(req, res, next) {
 
 function autorizarUsuarioPorParametro(nombreParametro = 'id') {
   return (req, res, next) => {
-    if (req.auth?.rol === 'admin') {
-      return next();
-    }
-
     const valor = normalizarIdEntero(req.params[nombreParametro]);
 
-    if (valor === null || valor !== req.auth?.id) {
+    if (valor === null) {
+      return responder400(res, 'Identificador de usuario inválido');
+    }
+
+    if (valor !== req.auth?.id) {
       return responder403(res, 'No puedes acceder a recursos de otro usuario');
     }
 

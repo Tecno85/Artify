@@ -154,6 +154,66 @@ test('actividad rechaza metadatos de imagen que exceden 16 MP', async () => {
   }
 });
 
+test('actividad rechaza metadatos con controles o rutas antes de consultar', async () => {
+  const dbMock = crearDbSinConsultas();
+  const { actividad } = cargarControladoresConDb(dbMock.db);
+  const operacionTipo = crearRespuesta();
+  const operacionDescripcion = crearRespuesta();
+  const imagen = crearRespuesta();
+
+  try {
+    await actividad.registrarOperacion(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          tipo: `filtro${String.fromCharCode(7)}`,
+          descripcion: 'Filtro aplicado',
+        },
+      },
+      operacionTipo
+    );
+    await actividad.registrarOperacion(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          tipo: 'filtro',
+          descripcion: `Filtro${String.fromCharCode(10)}aplicado`,
+        },
+      },
+      operacionDescripcion
+    );
+    await actividad.registrarImagen(
+      {
+        body: {
+          idUsuario: 7,
+          idSesion: 91,
+          nombreOriginal: '../ataque.png',
+          formatoOriginal: 'png',
+          tamanoOriginal: 1024,
+          anchoOriginal: 640,
+          altoOriginal: 480,
+        },
+      },
+      imagen
+    );
+
+    assert.equal(operacionTipo.statusCode, 400);
+    assert.equal(operacionTipo.body.mensaje, 'Datos de operación inválidos');
+    assert.equal(operacionDescripcion.statusCode, 400);
+    assert.equal(
+      operacionDescripcion.body.mensaje,
+      'Datos de operación inválidos'
+    );
+    assert.equal(imagen.statusCode, 400);
+    assert.equal(imagen.body.mensaje, 'Datos de imagen inválidos');
+    assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+});
+
 test('configuración rechaza arrays antes de guardar preferencias', () => {
   const dbMock = crearDbSinConsultas();
   const { configuracion } = cargarControladoresConDb(dbMock.db);
