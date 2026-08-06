@@ -300,7 +300,7 @@ La versión PostgreSQL fue validada con:
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
 - Resultado de pruebas automatizadas backend: 45/45 correctas.
-- Suite frontend con `node:test`: 38/38 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, renderizado seguro y semántica accesible.
+- Suite frontend con `node:test`: 39/39 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
@@ -472,6 +472,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-03] Unificación del 404 público fuera de `/api` como respuesta JSON sin caché.
 - [2026-08-03] Normalización de filtros en analytics público para no exponer texto libre registrado en operaciones manipuladas.
 - [2026-08-03] Endurecimiento frontend para descartar sesiones cuando el usuario almacenado no coincide con el payload del token.
+- [2026-08-06] Endurecimiento del redimensionado del editor para reutilizar los límites seguros de Canvas antes de procesar nuevas dimensiones.
 
 ---
 

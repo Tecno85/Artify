@@ -1449,6 +1449,15 @@ window.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      const validacionDimensiones = validarDimensionesImagen(
+        newWidth,
+        newHeight
+      );
+      if (!validacionDimensiones.valido) {
+        mostrarNotificacion('error', validacionDimensiones.mensaje);
+        return;
+      }
+
       console.log('📏 Redimensionando:', newWidth, 'x', newHeight);
       actualizarEstado('Redimensionando...', 'processing');
       registrarOperacion(

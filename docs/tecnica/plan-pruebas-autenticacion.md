@@ -450,7 +450,7 @@ Actualmente ejecuto 45 pruebas automatizadas que cubren las siguientes validacio
 - Tolerancia ante configuración avanzada inválida o ya parseada al responder preferencias.
 - Bloqueo unitario de intentos fallidos por IP, ruta y correo normalizado, sin afectar otros correos.
 
-También ejecuto 38 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 39 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
@@ -506,9 +506,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 45 pruebas ejecutadas y aprobadas
-Frontend: 38 pruebas ejecutadas y aprobadas
+Frontend: 39 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 90 pruebas automatizadas aprobadas
+Total: 91 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

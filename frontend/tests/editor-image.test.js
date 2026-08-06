@@ -1,4 +1,6 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const test = require('node:test');
 
 const {
@@ -101,5 +103,21 @@ test('rechaza archivos vacíos y dimensiones inválidas', () => {
       'window.ArtifyEditorImage.validarDimensionesImagen(800.5, 600).valido'
     ),
     false
+  );
+});
+
+test('el redimensionado reutiliza los límites seguros de Canvas', () => {
+  const editorScript = fs.readFileSync(
+    path.resolve(__dirname, '..', 'assets', 'js', 'editor.js'),
+    'utf8'
+  );
+
+  assert.match(
+    editorScript,
+    /const validacionDimensiones = validarDimensionesImagen\(\s*newWidth,\s*newHeight\s*\)/
+  );
+  assert.match(
+    editorScript,
+    /mostrarNotificacion\('error', validacionDimensiones\.mensaje\)/
   );
 });
