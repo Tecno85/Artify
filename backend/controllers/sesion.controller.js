@@ -91,8 +91,7 @@ async function cerrarSesionEdicion(req, res) {
     }
 
     const sesion = sesiones[0];
-    const puedeCerrar =
-      req.auth?.rol === 'admin' || req.auth?.id === sesion.ses_usr_id_usuario;
+    const puedeCerrar = req.auth?.id === sesion.ses_usr_id_usuario;
 
     if (!puedeCerrar) {
       await dbPromise.rollback();

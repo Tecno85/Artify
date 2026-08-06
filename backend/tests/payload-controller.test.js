@@ -212,6 +212,32 @@ test('sesión de edición rechaza cuerpos no objeto y cierres ajenos', async () 
   } finally {
     limpiarControladores();
   }
+
+  const dbSesionAjenaAdmin = crearDbConSesionAjena();
+  const { sesion: sesionConAdmin } = cargarControladoresConDb(
+    dbSesionAjenaAdmin.db
+  );
+  const cierreAjenoAdmin = crearRespuesta();
+
+  try {
+    await sesionConAdmin.cerrarSesionEdicion(
+      {
+        auth: { id: 7, rol: 'admin' },
+        body: { idSesion: 91 },
+      },
+      cierreAjenoAdmin
+    );
+
+    assert.equal(cierreAjenoAdmin.statusCode, 404);
+    assert.equal(cierreAjenoAdmin.body.mensaje, 'Sesión no encontrada');
+    assert.deepEqual(dbSesionAjenaAdmin.obtenerEventos(), [
+      'begin',
+      ['query', [91]],
+      'rollback',
+    ]);
+  } finally {
+    limpiarControladores();
+  }
 });
 
 test('actividad rechaza payloads inválidos y sesiones ajenas', async () => {
