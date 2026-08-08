@@ -313,7 +313,7 @@ La versión PostgreSQL fue validada con:
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
 - Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido, con verificación estricta de MIME, formato y cuerpo base64 de la imagen.
-- Auditoría de dependencias de producción del 3 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
+- Auditoría de dependencias de producción del 6 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
 - GitHub Actions también valida el ejecutor de migraciones incrementales sobre la base temporal de CI.
@@ -346,7 +346,7 @@ Enfoque recomendado:
 
 ### Despliegue público validado
 
-Última validación técnica automatizada realizada el 3 de agosto de 2026:
+Última validación técnica automatizada realizada el 6 de agosto de 2026:
 
 | Servicio | URL |
 | --- | --- |
@@ -480,6 +480,8 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-06] Endurecimiento de CORS para rechazar comodines y orígenes inválidos en producción.
 - [2026-08-06] Endurecimiento backend para exigir propietario exacto en consultas personales por parámetro.
 - [2026-08-06] Endurecimiento de registro público con límite de solicitudes fallidas y contratos 400/403 más precisos en autorización por body.
+- [2026-08-06] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics y CORS con nueve comprobaciones correctas.
+- [2026-08-06] Revalidación de dependencias de producción con `pnpm audit --prod` sin vulnerabilidades conocidas.
 
 ---
 

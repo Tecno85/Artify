@@ -401,7 +401,7 @@ El 14 de julio de 2026 realicé la validación funcional y operativa completa:
 - Respuestas correctas de `/health`, `/ready` y los cuatro endpoints públicos de analytics mediante el smoke automatizado.
 - Repositorio local y remoto sincronizados después del despliegue.
 
-El 30 de julio de 2026 repetí `node scripts/validar-despliegue.js`: las nueve comprobaciones no destructivas de Pages, configuración pública, salud, disponibilidad de PostgreSQL, analytics y CORS respondieron correctamente.
+El 6 de agosto de 2026 repetí `node scripts/validar-despliegue.js`: las nueve comprobaciones no destructivas de Pages, configuración pública, salud, disponibilidad de PostgreSQL, analytics y CORS respondieron correctamente.
 
 ## 12. Evidencia académica sin exponer secretos
 
