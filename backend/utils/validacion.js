@@ -40,7 +40,7 @@ function normalizarDatosUsuario(datos = {}) {
     apellidos: normalizarTexto(cuerpo.apellidos),
     correo: normalizarCorreo(cuerpo.correo),
     password: cuerpo.password,
-    estado: cuerpo.estado,
+    estado: normalizarTexto(cuerpo.estado),
   };
 }
 

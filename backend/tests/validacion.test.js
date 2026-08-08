@@ -24,7 +24,7 @@ test('creación y edición comparten normalización y reglas personales', () => 
     apellidos: '  Pérez Díaz  ',
     correo: '  ANA.PEREZ@EXAMPLE.COM  ',
     password: 'ClaveSegura123!',
-    estado: 'activo',
+    estado: ' suspendido ',
   });
 
   assert.deepEqual(datosNormalizados, {
@@ -32,7 +32,7 @@ test('creación y edición comparten normalización y reglas personales', () => 
     apellidos: 'Pérez Díaz',
     correo: 'ana.perez@example.com',
     password: 'ClaveSegura123!',
-    estado: 'activo',
+    estado: 'suspendido',
   });
   assert.equal(validarUsuario(datosNormalizados), null);
   assert.equal(validarEdicionUsuario(datosNormalizados), null);

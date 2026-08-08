@@ -4,6 +4,7 @@ const test = require('node:test');
 const DB_PATH = require.resolve('../config/db');
 const CONTROLADORES = [
   require.resolve('../controllers/auth.controller'),
+  require.resolve('../controllers/admin.controller'),
   require.resolve('../controllers/configuracion.controller'),
   require.resolve('../controllers/actividad.controller'),
   require.resolve('../controllers/sesion.controller'),
@@ -23,6 +24,7 @@ function cargarControladoresConDb(dbMock) {
 
   return {
     auth: require('../controllers/auth.controller'),
+    admin: require('../controllers/admin.controller'),
     configuracion: require('../controllers/configuracion.controller'),
     actividad: require('../controllers/actividad.controller'),
     sesion: require('../controllers/sesion.controller'),
@@ -224,6 +226,33 @@ test('configuración rechaza arrays antes de guardar preferencias', () => {
 
     assert.equal(res.statusCode, 400);
     assert.equal(res.body.mensaje, 'Selecciona una calidad de exportación válida');
+    assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+});
+
+test('admin rechaza payloads e identificadores inválidos antes de preparar consultas', async () => {
+  const dbMock = crearDbSinConsultas();
+  const { admin } = cargarControladoresConDb(dbMock.db);
+  const creacion = crearRespuesta();
+  const edicion = crearRespuesta();
+  const eliminacion = crearRespuesta();
+
+  try {
+    await admin.crearUsuario({ body: null }, creacion);
+    admin.editarUsuario({ params: { id: 'abc' }, body: {} }, edicion);
+    await admin.eliminarUsuario(
+      { params: { id: 'abc' }, auth: { id: 7 } },
+      eliminacion
+    );
+
+    assert.equal(creacion.statusCode, 400);
+    assert.equal(creacion.body.mensaje, 'Ingresa nombres válidos');
+    assert.equal(edicion.statusCode, 400);
+    assert.equal(edicion.body.mensaje, 'Identificador de usuario inválido');
+    assert.equal(eliminacion.statusCode, 400);
+    assert.equal(eliminacion.body.mensaje, 'Identificador de usuario inválido');
     assert.equal(dbMock.obtenerConsultas(), 0);
   } finally {
     limpiarControladores();

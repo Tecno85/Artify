@@ -46,7 +46,6 @@ async function crearUsuario(req, res) {
     correo: correoNormalizado,
     password,
   } = normalizarDatosUsuario(req.body);
-  const dbPromise = db.promise();
   const errorValidacion = validarUsuario({
     nombres: nombresNormalizados,
     apellidos: apellidosNormalizados,
@@ -57,6 +56,8 @@ async function crearUsuario(req, res) {
   if (errorValidacion) {
     return res.status(400).json({ mensaje: errorValidacion });
   }
+
+  const dbPromise = db.promise();
 
   try {
     await dbPromise.beginTransaction();
@@ -189,7 +190,6 @@ function editarUsuario(req, res) {
 // ========== ELIMINACIÓN DE USUARIO ==========
 async function eliminarUsuario(req, res) {
   const id = normalizarIdEntero(req.params.id);
-  const dbPromise = db.promise();
 
   if (id === null) {
     return res.status(400).json({ mensaje: 'Identificador de usuario inválido' });
@@ -200,6 +200,8 @@ async function eliminarUsuario(req, res) {
       mensaje: 'No puedes eliminar tu propia cuenta de administrador',
     });
   }
+
+  const dbPromise = db.promise();
 
   // Eliminar primero las tablas más dependientes para evitar errores de integridad referencial
   const pasos = [
