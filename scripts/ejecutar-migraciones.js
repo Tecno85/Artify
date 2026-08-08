@@ -7,8 +7,8 @@ const {
   RAIZ_PROYECTO,
   citarLiteral,
   ejecutarPostgresql,
-  esHostLocal,
   obtenerConfiguracionPostgresql,
+  validarDestinoMigraciones,
 } = require('./lib/postgresql-cli');
 
 const DIRECTORIO_MIGRACIONES = path.join(
@@ -103,13 +103,8 @@ function main() {
   const configuracion = obtenerConfiguracionPostgresql();
   const migraciones = listarMigraciones();
 
-  if (!configuracion.database || !configuracion.user) {
-    throw new Error('Faltan las credenciales PostgreSQL en backend/.env');
-  }
-
-  console.log(
-    `Destino: ${configuracion.database} en ${esHostLocal(configuracion.host) ? configuracion.host : 'host remoto'}`
-  );
+  const destino = `${configuracion.database} en ${configuracion.host}`;
+  console.log(`Destino: ${destino}`);
 
   if (!aplicar) {
     console.log('Plan de migraciones:');
@@ -118,14 +113,7 @@ function main() {
     return;
   }
 
-  if (
-    !esHostLocal(configuracion.host) &&
-    process.env.ALLOW_REMOTE_MIGRATIONS !== 'true'
-  ) {
-    throw new Error(
-      'Las migraciones remotas requieren ALLOW_REMOTE_MIGRATIONS=true'
-    );
-  }
+  validarDestinoMigraciones(configuracion);
 
   prepararTablaControl(configuracion);
   const aplicadas = consultarVersionesAplicadas(configuracion);

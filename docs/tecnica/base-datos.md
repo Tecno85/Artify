@@ -251,13 +251,16 @@ El comando `createdb` crea la base vacía. Después `schema.sql` crea los objeto
 Después de la carga inicial ejecuto las migraciones incrementales desde la raíz:
 
 ```bash
-node scripts/ejecutar-migraciones.js --apply
+node scripts/ejecutar-migraciones.js
+ALLOW_NON_TEST_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply
 ```
 
 El ejecutor registra versiones en la tabla técnica `MIGRACION_ESQUEMA`, usa una
 transacción y un bloqueo para evitar aplicaciones simultáneas. Por seguridad,
-rechaza hosts remotos salvo que la persona responsable autorice explícitamente
-`ALLOW_REMOTE_MIGRATIONS=true` después de crear y comprobar un respaldo.
+rechaza bases administrativas, exige `ALLOW_NON_TEST_MIGRATIONS=true` para bases
+que no terminan en `_test`, y rechaza hosts remotos salvo que la persona
+responsable autorice explícitamente `ALLOW_REMOTE_MIGRATIONS=true` después de
+crear y comprobar un respaldo.
 
 Variables principales:
 

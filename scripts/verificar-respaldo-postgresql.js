@@ -12,8 +12,8 @@ const {
   citarLiteral,
   crearEntornoPostgresql,
   ejecutarPostgresql,
-  esHostLocal,
   obtenerConfiguracionPostgresql,
+  validarOrigenRespaldoLocal,
 } = require('./lib/postgresql-cli');
 
 function ejecutarMigraciones(configuracion) {
@@ -30,6 +30,7 @@ function ejecutarMigraciones(configuracion) {
         DB_USER: configuracion.user,
         DB_PASSWORD: configuracion.password,
         DB_NAME: configuracion.database,
+        ALLOW_NON_TEST_MIGRATIONS: 'true',
       },
     }
   );
@@ -41,11 +42,7 @@ function ejecutarMigraciones(configuracion) {
 
 function main() {
   const origen = obtenerConfiguracionPostgresql();
-  if (!esHostLocal(origen.host)) {
-    throw new Error(
-      'La verificación automática solo se permite sobre PostgreSQL local'
-    );
-  }
+  validarOrigenRespaldoLocal(origen);
 
   const sufijo = `${Date.now()}_${process.pid}`;
   const baseRestaurada = `artify_restore_${sufijo}`.slice(0, 63);

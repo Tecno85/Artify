@@ -5,6 +5,8 @@ const { spawnSync } = require('node:child_process');
 const RAIZ_PROYECTO = path.resolve(__dirname, '..', '..');
 const RUTA_ENV_DEFECTO = path.join(RAIZ_PROYECTO, 'backend', '.env');
 const HOSTS_LOCALES = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
+const NOMBRE_BASE_PRUEBAS = /_test$/i;
+const BASES_ADMINISTRATIVAS = new Set(['postgres', 'template0', 'template1']);
 
 function leerArchivoEnv(ruta = RUTA_ENV_DEFECTO) {
   if (!fs.existsSync(ruta)) {
@@ -114,6 +116,60 @@ function esHostLocal(host) {
   return HOSTS_LOCALES.has(String(host).toLowerCase());
 }
 
+function esBaseAdministrativa(database) {
+  return BASES_ADMINISTRATIVAS.has(String(database || '').trim().toLowerCase());
+}
+
+function validarDestinoMigraciones(configuracion, env = process.env) {
+  const database = String(configuracion.database || '').trim();
+
+  if (!database || !configuracion.user) {
+    throw new Error('Faltan las credenciales PostgreSQL en backend/.env');
+  }
+
+  if (esBaseAdministrativa(database)) {
+    throw new Error(
+      `No se aplican migraciones de Artify sobre la base administrativa "${database}"`
+    );
+  }
+
+  if (!esHostLocal(configuracion.host) && env.ALLOW_REMOTE_MIGRATIONS !== 'true') {
+    throw new Error(
+      'Las migraciones remotas requieren ALLOW_REMOTE_MIGRATIONS=true'
+    );
+  }
+
+  if (!NOMBRE_BASE_PRUEBAS.test(database) && env.ALLOW_NON_TEST_MIGRATIONS !== 'true') {
+    throw new Error(
+      'Las migraciones sobre bases no terminadas en "_test" requieren ALLOW_NON_TEST_MIGRATIONS=true'
+    );
+  }
+
+  return true;
+}
+
+function validarOrigenRespaldoLocal(configuracion) {
+  const database = String(configuracion.database || '').trim();
+
+  if (!database || !configuracion.user) {
+    throw new Error('Faltan las credenciales PostgreSQL en backend/.env');
+  }
+
+  if (!esHostLocal(configuracion.host)) {
+    throw new Error(
+      'La verificación automática solo se permite sobre PostgreSQL local'
+    );
+  }
+
+  if (esBaseAdministrativa(database)) {
+    throw new Error(
+      `No se verifica respaldo desde la base administrativa "${database}"`
+    );
+  }
+
+  return true;
+}
+
 function citarLiteral(valor) {
   return `'${String(valor).replace(/'/g, "''")}'`;
 }
@@ -128,6 +184,9 @@ module.exports = {
   citarLiteral,
   crearEntornoPostgresql,
   ejecutarPostgresql,
+  esBaseAdministrativa,
   esHostLocal,
   obtenerConfiguracionPostgresql,
+  validarDestinoMigraciones,
+  validarOrigenRespaldoLocal,
 };

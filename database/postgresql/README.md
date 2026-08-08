@@ -31,12 +31,14 @@ psql -d artify_db -v correo='admin@artify.com' -f database/postgresql/promote-ad
 Después de la carga inicial aplico las migraciones pendientes desde la raíz:
 
 ```bash
-node scripts/ejecutar-migraciones.js --apply
+node scripts/ejecutar-migraciones.js
+ALLOW_NON_TEST_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply
 ```
 
 El comando crea la tabla técnica `MIGRACION_ESQUEMA`, registra cada archivo
 aplicado y no vuelve a ejecutar una versión ya registrada. Sin `--apply` solo
-muestra el plan. Las instrucciones detalladas están en
+muestra el plan. La confirmación `ALLOW_NON_TEST_MIGRATIONS=true` evita aplicar
+por accidente sobre una base local con datos útiles. Las instrucciones detalladas están en
 [`migrations/README.md`](./migrations/README.md).
 
 Para preparar un usuario técnico de mínimo privilegio uso `app-role.sql` con

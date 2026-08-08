@@ -24,13 +24,17 @@ Este comando solo muestra los archivos disponibles y no modifica PostgreSQL.
 ## Aplicar localmente
 
 ```bash
-node scripts/ejecutar-migraciones.js --apply
+ALLOW_NON_TEST_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply
 ```
 
-La configuración se toma de `backend/.env`. Para un host remoto también se exige una confirmación explícita:
+La configuración se toma de `backend/.env`. Las bases cuyo nombre termina en
+`_test` pueden migrarse sin esta confirmación adicional para facilitar CI y
+pruebas temporales. Para un host remoto también se exige una confirmación
+explícita:
 
 ```bash
-ALLOW_REMOTE_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply
+ALLOW_REMOTE_MIGRATIONS=true ALLOW_NON_TEST_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply
 ```
 
-La confirmación no sustituye el respaldo ni la revisión del SQL.
+Las confirmaciones no sustituyen el respaldo ni la revisión del SQL. El ejecutor
+bloquea bases administrativas como `postgres`, `template0` y `template1`.

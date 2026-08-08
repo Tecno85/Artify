@@ -312,7 +312,7 @@ No ejecuto automáticamente `schema.sql` sobre Neon porque elimina y reconstruye
 2. Creo y verifico un respaldo de Neon.
 3. Ejecuto `node scripts/ejecutar-migraciones.js` sin `--apply` para revisar el plan.
 4. Pruebo la migración y una restauración en otra base PostgreSQL.
-5. Solo después autorizo el host remoto y ejecuto `ALLOW_REMOTE_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply` con `DATABASE_URL` apuntando al destino correcto.
+5. Solo después autorizo el host remoto y la base no `_test`; ejecuto `ALLOW_REMOTE_MIGRATIONS=true ALLOW_NON_TEST_MIGRATIONS=true node scripts/ejecutar-migraciones.js --apply` con `DATABASE_URL` apuntando al destino correcto.
 
 `schema.sql` completo se reserva para aprovisionamiento inicial o reinicios controlados con autorización.
 
