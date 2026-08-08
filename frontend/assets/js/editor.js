@@ -100,7 +100,6 @@ function iniciarSesionEdicionEnSegundoPlano(usuario) {
         }
 
         sessionStorage.setItem('artifyIdSesion', idSesion.toString());
-        console.log('✅ Sesión de edición iniciada. ID:', idSesion);
         return idSesion;
       }
 
@@ -130,8 +129,6 @@ async function obtenerIdSesionEdicion() {
 
 // ========== FUNCIÓN CRÍTICA: SINCRONIZAR IMAGEN Y CANVAS ==========
 function sincronizarImagenYCanvas(callback) {
-  console.log('🔄 Sincronizando imagen y canvas');
-
   // Crear blob del canvas actual
   canvas.toBlob(
     (blob) => {
@@ -147,8 +144,6 @@ function sincronizarImagenYCanvas(callback) {
       img.onload = () => {
         URL.revokeObjectURL(url);
         currentImage = img;
-
-        console.log('✅ Imagen sincronizada:', img.width, 'x', img.height);
 
         // Asegurar que canvas y currentImage tienen las mismas dimensiones
         if (canvas.width !== img.width || canvas.height !== img.height) {
@@ -202,9 +197,10 @@ async function registrarOperacion(tipo, descripcion, parametros = {}) {
       throw new Error(`La API respondió ${response.status}`);
     }
 
-    console.log('✅ Operación registrada en PostgreSQL:', tipo);
+    return true;
   } catch (err) {
     console.warn('⚠️ No se pudo registrar la operación:', err);
+    return false;
   }
 }
 
@@ -233,9 +229,10 @@ async function registrarImagenDescargada(formato, blob) {
       throw new Error(`La API respondió ${response.status}`);
     }
 
-    console.log('✅ Descarga registrada en PostgreSQL');
+    return true;
   } catch (error) {
     console.warn('⚠️ La descarga terminó, pero no se pudo registrar:', error);
+    return false;
   }
 }
 
@@ -273,9 +270,7 @@ async function autoguardarImagen() {
           tamanoBytes: blob.size,
         });
 
-        if (guardado) {
-          console.log('💾 Backup automático guardado');
-        } else {
+        if (!guardado) {
           console.warn('⚠️ No se pudo guardar backup (imagen muy grande)');
         }
       };
@@ -364,7 +359,6 @@ function verificarResolucion() {
   const anchoVentana = document.documentElement.clientWidth;
   const altoVentana = document.documentElement.clientHeight;
   const modal = document.getElementById('modalResolucion');
-  console.log(`🔍 Resolución detectada: ${anchoVentana} x ${altoVentana}px`);
 
   if (
     anchoVentana >= RESOLUCION_MINIMA_ANCHO &&
@@ -407,7 +401,6 @@ window.noVolverAMostrar = function () {
 
 // ========== INICIALIZACIÓN ==========
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('🚀 Inicializando Artify Editor...');
   modalAccesible.registrar(
     document.getElementById('modalResolucion'),
     window.cerrarModalResolucion
@@ -884,7 +877,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const formatoDestino = document.getElementById('convertFormato').value;
       const calidadConversion = document.getElementById('convertCalidad').value;
 
-      console.log('🔄 Convirtiendo a:', formatoDestino);
       actualizarEstado('Convirtiendo imagen...', 'processing');
       registrarOperacion('convertir', `Conversión a formato ${formatoDestino}`);
 
@@ -1301,11 +1293,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const configuracion = configuracionFiltros[filtroAplicado];
     const nombreFiltro = nombresFiltros[filtroAplicado] || filtroAplicado;
 
-    console.log(
-      '🎨 Aplicando filtro:',
-      filtroAplicado,
-      valorFormateado
-    );
     actualizarEstado('Aplicando filtro...', 'processing');
 
     filterPreviewIntensity = valorFiltro;
@@ -1458,7 +1445,6 @@ window.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      console.log('📏 Redimensionando:', newWidth, 'x', newHeight);
       actualizarEstado('Redimensionando...', 'processing');
       registrarOperacion(
         'redimensionar',
@@ -1511,7 +1497,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    console.log('🔄 Rotando imagen:', angle, '°');
     actualizarEstado('Rotando imagen...', 'processing');
     registrarOperacion('rotar', `Rotación de ${angle}°`);
 
@@ -1571,7 +1556,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    console.log('✂️ Activando modo recorte');
     cropMode = true;
     canvas.style.cursor = 'crosshair';
     canvas.addEventListener('pointerdown', iniciarRecorte);
@@ -1584,7 +1568,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (cropRatioSelect) {
     cropRatioSelect.addEventListener('change', (e) => {
       cropRatio = e.target.value;
-      console.log('📐 Proporción seleccionada:', cropRatio);
     });
   }
 
@@ -1604,13 +1587,6 @@ window.addEventListener('DOMContentLoaded', () => {
     startX = (e.clientX - rect.left) * scaleX;
     startY = (e.clientY - rect.top) * scaleY;
 
-    console.log('🎯 Inicio recorte:', {
-      startX,
-      startY,
-      scaleX,
-      scaleY,
-      zoom: zoomLevel,
-    });
   }
 
   function dibujarRecorte(e) {
@@ -1706,7 +1682,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function finalizarRecorte() {
     isDragging = false;
-    console.log('✅ Recorte finalizado:', cropArea);
   }
 
   function hayRecortePendiente() {
@@ -1831,7 +1806,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    console.log('✂️ Aplicando recorte:', cropArea);
     actualizarEstado('Recortando imagen...', 'processing');
     registrarOperacion('recorte', 'Recorte de imagen aplicado');
 
@@ -1876,7 +1850,6 @@ window.addEventListener('DOMContentLoaded', () => {
   function desactivarModoRecorte() {
     if (!cropMode) return;
 
-    console.log('✅ Desactivando modo recorte');
     cropMode = false;
     isDragging = false;
     cropArea = { x: 0, y: 0, width: 0, height: 0 };
@@ -2021,15 +1994,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (toolControlsPanel) toolControlsPanel.style.display = 'none';
   }
 
-  function actualizarEstado(texto, tipo = 'success') {
-    // Solo registrar en consola para debugging
-    const iconos = {
-      processing: '⏳',
-      success: '✅',
-      error: '❌',
-    };
-    console.log(`${iconos[tipo] || '📌'} Estado: ${texto}`);
-  }
+  function actualizarEstado() {}
 
   // ========== NOTIFICACIONES ==========
   function mostrarNotificacion(tipo, mensaje) {
@@ -2186,7 +2151,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   inicializarRF10yRF11();
-  console.log('✅ Editor Artify cargado correctamente');
 
   // ========== CERRAR SESIÓN AL CERRAR EL NAVEGADOR ==========
   window.addEventListener('beforeunload', () => {
@@ -2200,7 +2164,6 @@ window.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ idSesion: parseInt(idSesion) }),
         keepalive: true,
       });
-      console.log('✅ Sesión cerrada al salir del navegador');
     }
   });
 });
@@ -2229,7 +2192,6 @@ async function cargarPreferencias() {
     const data = await res.json();
 
     if (data.mensaje === 'ok') {
-      console.log('✅ Preferencias cargadas desde la API');
       return data.configuracion;
     }
     return { ...PREFERENCIAS_DEFAULT };
@@ -2265,7 +2227,6 @@ async function guardarPreferencias(prefs) {
       return false;
     }
 
-    console.log('✅ Preferencias guardadas en PostgreSQL:', data.mensaje);
     return true;
   } catch {
     console.warn('⚠️ No se pudo guardar configuración en el servidor');
@@ -2275,13 +2236,6 @@ async function guardarPreferencias(prefs) {
 
 function aplicarPreferencias(prefs) {
   preferenciasActuales = { ...PREFERENCIAS_DEFAULT, ...prefs };
-  console.log('✅ Preferencias aplicadas:', prefs);
-  console.log('📊 Calidad de exportación:', prefs.calidadExportacion);
-  console.log('📄 Formato por defecto:', prefs.formatoDefecto);
-  console.log(
-    '💾 Autoguardado:',
-    prefs.autoguardado ? 'Activado' : 'Desactivado'
-  );
 }
 
 async function abrirModalConfiguracion(disparador) {
@@ -2434,7 +2388,6 @@ async function cerrarSesionSegura() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idSesion: parseInt(idSesion) }),
       });
-      console.log('✅ Sesión de edición cerrada correctamente');
     } catch (err) {
       console.warn('⚠️ No se pudo cerrar la sesión en el servidor');
     }

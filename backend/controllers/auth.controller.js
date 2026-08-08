@@ -37,8 +37,6 @@ function login(req, res) {
     return res.status(400).json({ mensaje: errorValidacion });
   }
 
-  console.log('📨 Intento de login recibido');
-
   // Buscar el usuario por correo para validar sus credenciales
   const query = 'SELECT * FROM USUARIO WHERE LOWER(usr_correo) = ?';
 
@@ -127,8 +125,6 @@ async function registro(req, res) {
   if (errorValidacion) {
     return res.status(400).json({ mensaje: errorValidacion });
   }
-
-  console.log('📨 Solicitud de registro recibida');
 
   const dbPromise = db.promise();
 

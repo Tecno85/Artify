@@ -117,10 +117,8 @@ loginForm.addEventListener('submit', (e) => {
 
           // Redirigir según el rol del usuario
           if (data.usuario.rol === 'admin') {
-            console.log('👑 Redirigiendo al panel de administración...');
             window.location.href = './admin.html';
           } else {
-            console.log('🚀 Redirigiendo al editor...');
             window.location.href = './editor.html';
           }
         } else {

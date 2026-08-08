@@ -265,11 +265,18 @@ TOKEN_SECRET=cambia_este_valor_por_un_secreto_largo_y_aleatorio
 PORT=3000
 NODE_ENV=development
 CORS_ORIGIN=http://localhost:8080,http://127.0.0.1:8080
+
+# URLs públicas para validación y medición operativa:
+ARTIFY_FRONTEND_URL=https://tecno85.github.io/artify/
+ARTIFY_API_URL=https://artify-sena-postgresql.onrender.com
+ARTIFY_LOAD_URL=https://artify-sena-postgresql.onrender.com/health
 ```
 
 `DATABASE_URL` es la variable principal para despliegues como Render o Neon y permanece comentada en la configuración local. Para ejecutar Artify localmente uso `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
 
 `CORS_ORIGIN` controla los orígenes autorizados para consumir el backend. En desarrollo puede contener varios orígenes separados por coma; en producción debe apuntar al frontend publicado.
+
+`ARTIFY_FRONTEND_URL`, `ARTIFY_API_URL` y `ARTIFY_LOAD_URL` son URLs públicas para scripts de validación y medición; no son secretos, pero se configuran por entorno para evitar depender de valores rígidos cuando cambie el despliegue.
 
 ### Frontend desplegado
 
@@ -305,6 +312,7 @@ La versión PostgreSQL fue validada con:
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas, incluido el estado administrativo antes de persistir cambios.
+- Flujos normales de autenticación, registro, configuración, sesiones, actividad y editor sin trazas informativas de consola que expongan estado interno innecesario.
 - Cobertura de autorización por rol, rechazo de roles no permitidos, propietario exacto en consultas personales, escrituras de autoservicio y cierres de sesión, sesiones ajenas tratadas como no disponibles, tokens firmados con encabezado y payload esperados, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics, con filtros públicos normalizados a nombres reconocidos.
 - Validación previa de tamaño, megapíxeles y dimensiones antes de asignar una imagen al Canvas.
 - Validación backend de cuerpos JSON no objeto, identificadores en consultas de actividad y metadatos de actividad e imagen con rechazo de controles, rutas y límites de 10 MB, 16 MP y 8192 px del editor.
@@ -369,6 +377,10 @@ Variables cruzadas requeridas:
 ```env
 # GitHub Actions: variable del repositorio
 ARTIFY_API_URL=https://artify-sena-postgresql.onrender.com
+
+# Scripts operativos locales o CI
+ARTIFY_FRONTEND_URL=https://tecno85.github.io/artify/
+ARTIFY_LOAD_URL=https://artify-sena-postgresql.onrender.com/health
 
 # Render
 CORS_ORIGIN=https://tecno85.github.io
@@ -485,6 +497,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-08] Endurecimiento del panel administrativo para rechazar payloads e identificadores inválidos antes de preparar consultas.
 - [2026-08-08] Endurecimiento del registro público para validar payloads antes de preparar transacciones.
 - [2026-08-08] Endurecimiento del editor para rechazar respaldos locales sin tamaño seguro y retirar atajos de teclado de herramientas.
+- [2026-08-08] Higiene operativa para reducir trazas informativas, reforzar archivos `.env.*` ignorados y parametrizar URLs públicas de validación.
 
 ---
 

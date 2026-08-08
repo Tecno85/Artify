@@ -2,6 +2,7 @@
 
 const URL_OBJETIVO =
   process.env.ARTIFY_LOAD_URL ||
+  // Este endpoint público puede cambiar sin tocar el código usando ARTIFY_LOAD_URL.
   'https://artify-sena-postgresql.onrender.com/health';
 const TOTAL_SOLICITUDES = obtenerEntero('ARTIFY_LOAD_REQUESTS', 25, 1, 100);
 const CONCURRENCIA = obtenerEntero('ARTIFY_LOAD_CONCURRENCY', 5, 1, 10);

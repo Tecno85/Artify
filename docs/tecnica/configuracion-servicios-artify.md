@@ -262,6 +262,9 @@ Cuando un valor contiene espacios o el carácter `#`, lo escribo entre comillas 
 | `PORT` | Puerto del backend. | `3000` | Debe estar disponible. |
 | `NODE_ENV` | Tipo de entorno. | `development` | En producción debe configurarse como corresponda. |
 | `CORS_ORIGIN` | Orígenes autorizados para consumir la API. | `http://localhost:8080` | En producción debe coincidir con la URL pública del frontend. |
+| `ARTIFY_FRONTEND_URL` | URL pública del frontend para smoke tests. | `https://tecno85.github.io/artify/` | No es secreta; puede cambiar por entorno. |
+| `ARTIFY_API_URL` | URL pública del backend para despliegue y smoke tests. | `https://artify-sena-postgresql.onrender.com` | No incluye `/api` ni barra final. |
+| `ARTIFY_LOAD_URL` | Endpoint usado por la medición básica. | `https://artify-sena-postgresql.onrender.com/health` | No sustituye una prueba formal de carga. |
 
 #### Imagen 4. Variables de entorno
 
@@ -493,7 +496,7 @@ Considero que la configuración cumple la evidencia cuando:
 Durante la configuración aplico las siguientes medidas:
 
 - No subo `backend/.env` al repositorio.
-- Mantengo `.env.example` como plantilla sin credenciales reales.
+- Mantengo `.env.example` como plantilla sin credenciales reales y dejo ignorados `.env`, `.env.*`, `backend/.env` y `backend/.env.*`.
 - No escribo contraseñas directamente en comandos almacenados o capturas.
 - Oculto `DB_USER`, `DB_PASSWORD`, `DATABASE_URL` y `TOKEN_SECRET` en las evidencias.
 - Uso un `TOKEN_SECRET` largo, aleatorio y diferente para cada entorno.

@@ -192,7 +192,8 @@ node scripts/validar-despliegue.js
 
 La medición básica de `/health` se ejecuta con
 `node scripts/medir-rendimiento.js`. Es un smoke controlado y no sustituye una
-prueba formal de capacidad.
+prueba formal de capacidad. Las URLs públicas usadas por estos scripts pueden
+sobrescribirse con `ARTIFY_FRONTEND_URL`, `ARTIFY_API_URL` y `ARTIFY_LOAD_URL`.
 
 El smoke público también se ejecuta cada día desde
 `.github/workflows/monitor-public.yml`.

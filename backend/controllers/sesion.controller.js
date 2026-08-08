@@ -20,8 +20,6 @@ async function iniciarSesionEdicion(req, res) {
 
   const dbPromise = db.promise();
 
-  console.log('📨 Iniciando sesión de edición');
-
   try {
     // Crear la sesión y reflejar su estado en USUARIO como una sola operación lógica.
     await dbPromise.beginTransaction();
@@ -70,8 +68,6 @@ async function cerrarSesionEdicion(req, res) {
   }
 
   const dbPromise = db.promise();
-
-  console.log('📨 Cerrando sesión de edición');
 
   try {
     await dbPromise.beginTransaction();

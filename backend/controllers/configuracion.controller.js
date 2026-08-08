@@ -17,8 +17,6 @@ function obtenerConfiguracion(req, res) {
       .json({ mensaje: 'Identificador de usuario inválido' });
   }
 
-  console.log('📨 Cargando configuración de usuario');
-
   const query = 'SELECT * FROM CONFIGURACION WHERE cfg_usr_id_usuario = ?';
 
   db.query(query, [id], (err, results) => {
@@ -73,8 +71,6 @@ function guardarConfiguracion(req, res) {
       .status(400)
       .json({ mensaje: errorValidacion || 'Datos de configuración inválidos' });
   }
-
-  console.log('📨 Guardando configuración de usuario');
 
   // Agrupar preferencias avanzadas en el formato persistido en la base de datos
   const avanzada = JSON.stringify({

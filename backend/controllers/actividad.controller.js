@@ -28,8 +28,6 @@ function obtenerEstadisticas(req, res) {
     return res.status(400).json({ mensaje: 'Identificador de usuario inválido' });
   }
 
-  console.log('📨 Cargando estadísticas de usuario');
-
   const querySesiones = `
     SELECT COUNT(*)::int as total
     FROM SESION_EDICION
@@ -264,8 +262,6 @@ async function registrarImagen(req, res) {
   }
 
   const dbPromise = db.promise();
-
-  console.log('📨 Registrando imagen editada');
 
   try {
     await dbPromise.beginTransaction();

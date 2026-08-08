@@ -260,8 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (isValid) {
-      console.log('✅ Formulario válido, iniciando registro...');
-
       const btnRegistrarse = registroForm.querySelector(
         'button[type="submit"]'
       );
@@ -351,6 +349,4 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => notificacion.remove(), 300);
     }, 3000);
   }
-
-  console.log('✅ Sistema de registro cargado correctamente');
 });

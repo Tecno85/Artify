@@ -2,6 +2,8 @@
 
 const FRONTEND_URL =
   process.env.ARTIFY_FRONTEND_URL || 'https://tecno85.github.io/artify/';
+// Este valor por defecto corresponde al backend público verificado.
+// En otro entorno debe sobrescribirse con ARTIFY_API_URL.
 const BACKEND_URL = (
   process.env.ARTIFY_API_URL ||
   'https://artify-sena-postgresql.onrender.com'

@@ -177,6 +177,7 @@ CORS_ORIGIN=https://tecno85.github.io
 Reglas importantes:
 
 - `DATABASE_URL` y `TOKEN_SECRET` nunca se guardan en Git.
+- Los archivos `.env`, `.env.*`, `backend/.env` y `backend/.env.*` permanecen ignorados; solo `.env.example` se versiona como plantilla sanitizada.
 - `TOKEN_SECRET` debe tener al menos 32 caracteres y no puede conservar un valor de ejemplo; el backend detiene el arranque si la configuración es insegura.
 - `CORS_ORIGIN` contiene el origen de Pages, sin `/artify/` y sin barra final.
 - En producción, el backend no inicia si `CORS_ORIGIN` está vacío; Render muestra el motivo en los registros para poder corregir la variable antes de publicar.
@@ -224,7 +225,7 @@ Creo esta variable:
 | Name | `ARTIFY_API_URL` |
 | Value | `https://artify-sena-postgresql.onrender.com` |
 
-La URL del backend es pública y puede almacenarse como variable del repositorio. No agrego `/api` ni una barra al final.
+La URL del backend es pública y puede almacenarse como variable del repositorio. No agrego `/api` ni una barra al final. Si Render asigna otro dominio, actualizo `ARTIFY_API_URL` en GitHub Actions y uso el mismo valor al ejecutar los scripts de validación.
 
 ### 5.2 Activar GitHub Pages
 
@@ -256,6 +257,15 @@ https://tecno85.github.io/artify/assets/js/config.js
 ```
 
 No muevo `frontend/index.html` a la raíz. El workflow convierte `frontend/` en la raíz del sitio publicado.
+
+Para ejecutar los scripts operativos contra otro entorno sin modificar el código:
+
+```bash
+ARTIFY_FRONTEND_URL=https://tecno85.github.io/artify/ \
+ARTIFY_API_URL=https://artify-sena-postgresql.onrender.com \
+ARTIFY_LOAD_URL=https://artify-sena-postgresql.onrender.com/health \
+node scripts/validar-despliegue.js
+```
 
 ## 6. Primera publicación completa
 
@@ -415,7 +425,7 @@ Para presentar la evidencia del despliegue, muestro:
 6. Registro, login, editor y panel administrativo.
 7. Tablas de Neon sin mostrar la cadena `DATABASE_URL`.
 
-No muestro contraseñas, tokens de acceso, `TOKEN_SECRET` ni credenciales PostgreSQL.
+No muestro contraseñas, tokens de acceso, `TOKEN_SECRET`, archivos `.env` reales ni credenciales PostgreSQL. La URL pública de Render puede aparecer en evidencias, pero no sustituye a `DATABASE_URL`.
 
 ## 13. Referencias oficiales
 
