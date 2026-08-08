@@ -123,6 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
     inputs.forEach((id) => limpiarError(id));
   }
 
+  async function leerRespuestaJsonSegura(respuesta) {
+    try {
+      return await respuesta.json();
+    } catch {
+      return { mensaje: 'Respuesta inválida del servidor' };
+    }
+  }
+
   function validarSoloLetras(input) {
     const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
     return regex.test(input.value) && input.value.length >= 2;
@@ -279,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
           password: password.value,
         }),
       })
-        .then((res) => res.json())
+        .then((res) => leerRespuestaJsonSegura(res))
         .then((data) => {
           btnRegistrarse.disabled = false;
           btnRegistrarse.textContent = 'Registrarse';

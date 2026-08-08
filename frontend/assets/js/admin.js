@@ -27,16 +27,39 @@ function mostrarError(id, mensaje) {
     el.textContent = mensaje;
     el.classList.add('show');
   }
-  if (input) input.classList.add('error');
+  if (input) {
+    input.classList.add('error');
+    input.setAttribute('aria-invalid', 'true');
+  }
 }
 
 function limpiarErrores() {
   document.querySelectorAll('.error-message').forEach((el) => {
     el.classList.remove('show');
+    el.textContent = '';
   });
   document.querySelectorAll('input.error').forEach((el) => {
     el.classList.remove('error');
+    el.setAttribute('aria-invalid', 'false');
   });
+}
+
+function renderizarEstadoTabla(mensaje) {
+  const tbody = document.getElementById('tablaBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = `
+    <tr class="loading-row">
+      <td colspan="7">${escaparHtml(mensaje)}</td>
+    </tr>`;
+}
+
+function actualizarControlesUsuarios(cargando) {
+  const buscador = document.getElementById('searchInput');
+  const agregar = document.getElementById('btnAgregarUsuario');
+
+  if (buscador) buscador.disabled = cargando;
+  if (agregar) agregar.disabled = cargando;
 }
 
 function redirigirAccesoNoAutorizado() {
@@ -124,9 +147,14 @@ document.getElementById('btnLogout').addEventListener('click', async () => {
 
 // ========== SELECT — CARGAR USUARIOS ==========
 async function cargarUsuarios() {
+  renderizarEstadoTabla('Cargando usuarios...');
+  actualizarControlesUsuarios(true);
+
   try {
     const res = await fetchAuth(`${API}/api/admin/usuarios`);
-    const data = await res.json();
+    const data = await res.json().catch(() => ({
+      mensaje: 'Respuesta inválida del servidor',
+    }));
 
     if (data.mensaje === 'ok') {
       todosLosUsuarios = data.usuarios;
@@ -134,10 +162,25 @@ async function cargarUsuarios() {
       actualizarEstadisticas(todosLosUsuarios);
     } else if (res.status === 401 || res.status === 403) {
       redirigirAccesoNoAutorizado();
+    } else {
+      todosLosUsuarios = [];
+      renderizarEstadoTabla('No fue posible cargar los usuarios');
+      actualizarEstadisticas([]);
+      mostrarNotificacion(
+        'error',
+        typeof data?.mensaje === 'string'
+          ? data.mensaje
+          : 'No fue posible cargar los usuarios'
+      );
     }
   } catch (err) {
     console.error('❌ Error al cargar usuarios:', err);
+    todosLosUsuarios = [];
+    renderizarEstadoTabla('No fue posible cargar los usuarios');
+    actualizarEstadisticas([]);
     mostrarNotificacion('error', 'Error al cargar los usuarios');
+  } finally {
+    actualizarControlesUsuarios(false);
   }
 }
 
@@ -226,6 +269,7 @@ function actualizarEstadisticas(usuarios) {
   const inactivos = usuarios.filter(
     (u) => u.usr_estado_usuario !== 'activo'
   ).length;
+  document.getElementById('totalUsuariosBadge').textContent = usuarios.length;
   document.getElementById('statActivos').textContent = activos;
   document.getElementById('statInactivos').textContent = inactivos;
 }

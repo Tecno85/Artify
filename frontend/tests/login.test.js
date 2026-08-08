@@ -47,7 +47,10 @@ function crearEscenarioLogin(respuestaFetch) {
     fetch: async (url, options) => {
       solicitudes.push({ url, options });
       return {
-        json: async () => respuestaFetch,
+        json: async () => {
+          if (respuestaFetch instanceof Error) throw respuestaFetch;
+          return respuestaFetch;
+        },
       };
     },
   });
@@ -182,4 +185,24 @@ test('login conserva la sesión en el navegador cuando se solicita recordarla', 
   );
   assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
   assert.equal(escenario.window.location.href, './editor.html');
+});
+
+test('login muestra error claro si la API responde contenido inválido', async () => {
+  const escenario = crearEscenarioLogin(new Error('JSON inválido'));
+  escenario.email.value = 'ana@artify.local';
+  escenario.password.value = 'Password123';
+
+  enviarFormulario(escenario);
+  await esperarPromesas();
+
+  assert.equal(escenario.solicitudes.length, 1);
+  assert.equal(escenario.window.location.href, '');
+  assert.equal(escenario.botonSubmit.disabled, false);
+  assert.equal(escenario.botonSubmit.textContent, 'Iniciar Sesión');
+  assert.equal(escenario.email.classList.contains('error'), true);
+  assert.equal(escenario.email.getAttribute('aria-invalid'), 'true');
+  assert.equal(
+    escenario.emailError.textContent,
+    'Respuesta inválida del servidor'
+  );
 });

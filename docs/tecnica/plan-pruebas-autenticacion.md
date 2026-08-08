@@ -459,14 +459,14 @@ Actualmente ejecuto 62 pruebas automatizadas que cubren las siguientes validacio
 - Rechazo unitario de metadatos de imagen que superan el límite de 16 MP del editor.
 - Guardas unitarias para migraciones y verificación de respaldo: bases administrativas bloqueadas, migraciones remotas con confirmación explícita y migraciones sobre bases no `_test` con confirmación adicional.
 
-También ejecuto 41 pruebas frontend sin dependencias adicionales mediante:
+También ejecuto 44 pruebas frontend sin dependencias adicionales mediante:
 
 ```bash
 cd backend
 pnpm run test:frontend
 ```
 
-Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, el bloqueo de registro sin guardar sesión ni redirigir, la redirección según el rol, la autorización del panel administrativo, el inicio no bloqueante de la sesión de edición, la orientación inicial de herramientas del editor, la recuperación segura de respaldos locales con imagen base64 coherente, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
+Estas pruebas comprueban el almacenamiento, la limpieza de sesión, el descarte de sesiones inválidas y la coherencia entre token y usuario almacenado, la incorporación del token en solicitudes protegidas, la reacción ante respuestas `401`, la validación previa del login, la validación previa del registro público, el bloqueo de registro sin guardar sesión ni redirigir, la redirección según el rol, respuestas inválidas de login y registro, la autorización del panel administrativo, estados de carga y error del panel administrativo, el inicio no bloqueante de la sesión de edición, la orientación inicial de herramientas del editor, la recuperación segura de respaldos locales con imagen base64 coherente, la captura y restauración de foco en modales, las validaciones de imagen y respaldo local, el tratamiento seguro de contenido dinámico y la semántica accesible de modales y mensajes.
 
 Como verificación complementaria del navegador ejecuto `pnpm run test:e2e`.
 Las siete pruebas no amplían los casos de autenticación del backend: comprueban
@@ -515,9 +515,9 @@ Resultado esperado y verificado por la suite automatizada y el workflow de CI:
 
 ```text
 Backend: 62 pruebas ejecutadas y aprobadas
-Frontend: 41 pruebas ejecutadas y aprobadas
+Frontend: 44 pruebas ejecutadas y aprobadas
 E2E: 7 pruebas ejecutadas y aprobadas
-Total: 110 pruebas automatizadas aprobadas
+Total: 113 pruebas automatizadas aprobadas
 0 pruebas fallidas
 ```
 

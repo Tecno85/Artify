@@ -7,6 +7,7 @@ function mostrarError(inputId, mensaje) {
 
   if (input && errorSpan) {
     input.classList.add('error');
+    input.setAttribute('aria-invalid', 'true');
     errorSpan.textContent = mensaje;
     errorSpan.classList.add('show');
   }
@@ -18,7 +19,17 @@ function limpiarError(inputId) {
 
   if (input && errorSpan) {
     input.classList.remove('error');
+    input.setAttribute('aria-invalid', 'false');
+    errorSpan.textContent = '';
     errorSpan.classList.remove('show');
+  }
+}
+
+async function leerRespuestaJsonSegura(respuesta) {
+  try {
+    return await respuesta.json();
+  } catch {
+    return { mensaje: 'Respuesta inválida del servidor' };
   }
 }
 
@@ -105,7 +116,7 @@ loginForm.addEventListener('submit', (e) => {
         password: passwordInput.value,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => leerRespuestaJsonSegura(res))
       .then((data) => {
         btnLogin.disabled = false;
         btnLogin.textContent = 'Iniciar Sesión';

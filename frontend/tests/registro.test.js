@@ -71,7 +71,12 @@ function crearEscenarioRegistro(
     location: { pathname: '/pages/registro.html' },
     fetch: async (url, options) => {
       solicitudes.push({ url, options });
-      return { json: async () => respuestaFetch };
+      return {
+        json: async () => {
+          if (respuestaFetch instanceof Error) throw respuestaFetch;
+          return respuestaFetch;
+        },
+      };
     },
     setTimeout: (callback) => {
       callback();
@@ -232,5 +237,29 @@ test('registro bloqueado por la API no guarda sesión ni redirige', async () => 
   assert.equal(
     escenario.elementos['email-error'].textContent,
     'Demasiadas solicitudes de registro. Intenta nuevamente más tarde'
+  );
+});
+
+test('registro muestra error claro si la API responde contenido inválido', async () => {
+  const escenario = crearEscenarioRegistro(new Error('JSON inválido'));
+  escenario.elementos.nombres.value = 'Laura';
+  escenario.elementos.apellidos.value = 'Prueba';
+  escenario.elementos.email.value = 'laura@artify.local';
+  escenario.elementos.password.value = 'Password123';
+  escenario.elementos.confirmPassword.value = 'Password123';
+  escenario.elementos.terminos.checked = true;
+
+  assert.equal(enviarFormulario(escenario), true);
+  await esperarPromesas();
+
+  assert.equal(escenario.solicitudes.length, 1);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
+  assert.equal(escenario.window.location.href, '');
+  assert.equal(escenario.botonSubmit.disabled, false);
+  assert.equal(escenario.botonSubmit.textContent, 'Registrarse');
+  assert.equal(escenario.elementos.email.getAttribute('aria-invalid'), 'true');
+  assert.equal(
+    escenario.elementos['email-error'].textContent,
+    'Respuesta inválida del servidor'
   );
 });

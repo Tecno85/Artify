@@ -8,6 +8,7 @@ const {
   crearElemento,
   ejecutarScript,
   evaluar,
+  esperarPromesas,
 } = require('./helpers/frontend-vm');
 
 test('admin escapa HTML y protege la cuenta administrativa actual', () => {
@@ -224,5 +225,65 @@ test('admin redirige accesos no autorizados sin mostrar el panel', () => {
   assert.notEqual(
     visitante.elementos.get('adminPanel')?.style.display,
     'block'
+  );
+});
+
+test('admin muestra estado de error si no puede cargar usuarios', async () => {
+  const elementos = new Map();
+  let manejadorDOMContentLoaded;
+  const document = {
+    addEventListener(tipo, manejador) {
+      if (tipo === 'DOMContentLoaded') {
+        manejadorDOMContentLoaded = manejador;
+      }
+    },
+    getElementById(id) {
+      if (!elementos.has(id)) {
+        elementos.set(
+          id,
+          crearElemento({
+            dataset: {},
+            style: {},
+          })
+        );
+      }
+
+      return elementos.get(id);
+    },
+    querySelectorAll() {
+      return [];
+    },
+  };
+  const contextoFrontend = crearContextoFrontend({ document });
+  contextoFrontend.contexto.API = 'http://api.artify.test';
+  contextoFrontend.contexto.fetchAuth = async () => {
+    throw new Error('API no disponible');
+  };
+  contextoFrontend.contexto.obtenerTokenAuth = () => 'token-admin';
+  contextoFrontend.contexto.obtenerUsuarioAuth = () => ({
+    id: 7,
+    nombres: 'Admin',
+    apellidos: 'Artify',
+    correo: 'admin@artify.local',
+    rol: 'admin',
+  });
+  contextoFrontend.contexto.limpiarSesionAuth = () => {};
+  ejecutarScript(contextoFrontend.contexto, 'admin.js');
+
+  manejadorDOMContentLoaded();
+  await esperarPromesas();
+
+  assert.match(
+    elementos.get('tablaBody').innerHTML,
+    /No fue posible cargar los usuarios/
+  );
+  assert.equal(elementos.get('searchInput').disabled, false);
+  assert.equal(elementos.get('btnAgregarUsuario').disabled, false);
+  assert.equal(elementos.get('totalUsuariosBadge').textContent, 0);
+  assert.equal(elementos.get('statActivos').textContent, 0);
+  assert.equal(elementos.get('statInactivos').textContent, 0);
+  assert.equal(
+    elementos.get('adminNotificacion').textContent,
+    'Error al cargar los usuarios'
   );
 });

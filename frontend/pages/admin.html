@@ -197,6 +197,8 @@
                 placeholder="Juan Carlos"
                 minlength="2"
                 maxlength="100"
+                aria-invalid="false"
+                aria-describedby="modalNombres-error"
               />
               <span class="error-message" id="modalNombres-error"></span>
             </div>
@@ -211,6 +213,8 @@
                 placeholder="Pérez García"
                 minlength="2"
                 maxlength="100"
+                aria-invalid="false"
+                aria-describedby="modalApellidos-error"
               />
               <span class="error-message" id="modalApellidos-error"></span>
             </div>
@@ -223,6 +227,8 @@
                 type="email"
                 id="modalCorreo"
                 placeholder="usuario@artify.com"
+                aria-invalid="false"
+                aria-describedby="modalCorreo-error"
               />
               <span class="error-message" id="modalCorreo-error"></span>
             </div>
@@ -238,6 +244,7 @@
                 minlength="8"
                 maxlength="128"
                 autocomplete="new-password"
+                aria-invalid="false"
                 aria-describedby="modalPassword-helper modalPassword-error"
               />
               <span class="error-message" id="modalPassword-error"></span>
