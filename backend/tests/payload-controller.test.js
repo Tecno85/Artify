@@ -96,6 +96,22 @@ function crearDbConSesionAjena() {
   };
 }
 
+function crearDbEstadisticas({ error = null, resultado = [] } = {}) {
+  const eventos = [];
+
+  return {
+    db: {
+      query(consulta, params, callback) {
+        eventos.push({ consulta, params });
+        callback(error, resultado);
+      },
+    },
+    obtenerEventos() {
+      return eventos;
+    },
+  };
+}
+
 function crearRespuesta() {
   return {
     statusCode: 200,
@@ -228,6 +244,78 @@ test('actividad rechaza metadatos con controles o rutas antes de consultar', asy
     assert.equal(imagen.body.mensaje, 'Datos de imagen inválidos');
     assert.equal(dbMock.obtenerConsultas(), 0);
   } finally {
+    limpiarControladores();
+  }
+});
+
+test('actividad rechaza identificador inválido de estadísticas sin consultar', () => {
+  const dbMock = crearDbSinConsultas();
+  const { actividad } = cargarControladoresConDb(dbMock.db);
+  const res = crearRespuesta();
+
+  try {
+    actividad.obtenerEstadisticas({ params: { id: '7abc' } }, res);
+
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.body.mensaje, 'Identificador de usuario inválido');
+    assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+});
+
+test('actividad obtiene estadísticas en una sola consulta agregada', () => {
+  const dbMock = crearDbEstadisticas({
+    resultado: [
+      {
+        sesiones: 2,
+        operaciones: 5,
+        imagenes_editadas: 3,
+      },
+    ],
+  });
+  const { actividad } = cargarControladoresConDb(dbMock.db);
+  const res = crearRespuesta();
+
+  try {
+    actividad.obtenerEstadisticas({ params: { id: '7' } }, res);
+
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.body, {
+      mensaje: 'ok',
+      estadisticas: {
+        sesiones: 2,
+        operaciones: 5,
+        imagenesEditadas: 3,
+      },
+    });
+    assert.equal(dbMock.obtenerEventos().length, 1);
+    assert.deepEqual(dbMock.obtenerEventos()[0].params, [7, 7, 7]);
+    assert.match(dbMock.obtenerEventos()[0].consulta, /SESION_EDICION/);
+    assert.match(dbMock.obtenerEventos()[0].consulta, /OPERACION/);
+    assert.match(dbMock.obtenerEventos()[0].consulta, /IMAGEN/);
+  } finally {
+    limpiarControladores();
+  }
+});
+
+test('actividad responde error uniforme si fallan las estadísticas', () => {
+  const dbMock = crearDbEstadisticas({
+    error: new Error('fallo db'),
+  });
+  const { actividad } = cargarControladoresConDb(dbMock.db);
+  const res = crearRespuesta();
+  const consoleErrorOriginal = console.error;
+
+  try {
+    console.error = () => {};
+    actividad.obtenerEstadisticas({ params: { id: '7' } }, res);
+
+    assert.equal(res.statusCode, 500);
+    assert.deepEqual(res.body, { mensaje: 'Error en el servidor' });
+    assert.equal(dbMock.obtenerEventos().length, 1);
+  } finally {
+    console.error = consoleErrorOriginal;
     limpiarControladores();
   }
 });

@@ -16,6 +16,10 @@ function obtenerTotal(results) {
   return Number(results?.[0]?.total ?? 0);
 }
 
+function obtenerConteo(results, campo) {
+  return Number(results?.[0]?.[campo] ?? 0);
+}
+
 function responderSesionNoDisponible(res) {
   return res.status(404).json({ mensaje: 'Sesión no encontrada' });
 }
@@ -28,55 +32,38 @@ function obtenerEstadisticas(req, res) {
     return res.status(400).json({ mensaje: 'Identificador de usuario inválido' });
   }
 
-  const querySesiones = `
-    SELECT COUNT(*)::int as total
-    FROM SESION_EDICION
-    WHERE ses_usr_id_usuario = ?
+  const query = `
+    SELECT
+      (
+        SELECT COUNT(*)::int
+        FROM SESION_EDICION
+        WHERE ses_usr_id_usuario = ?
+      ) AS sesiones,
+      (
+        SELECT COUNT(*)::int
+        FROM OPERACION
+        WHERE opr_usr_id_usuario = ?
+      ) AS operaciones,
+      (
+        SELECT COUNT(*)::int
+        FROM IMAGEN
+        WHERE img_usr_id_usuario = ?
+      ) AS imagenes_editadas
   `;
 
-  return db.query(querySesiones, [idUsuario], (err, results) => {
+  return db.query(query, [idUsuario, idUsuario, idUsuario], (err, results) => {
     if (err) {
       console.error('❌ Error al obtener estadísticas:', err.message);
       return res.status(500).json({ mensaje: 'Error en el servidor' });
     }
 
-    const totalSesiones = obtenerTotal(results);
-
-    const queryOperaciones = `
-      SELECT COUNT(*)::int as total
-      FROM OPERACION
-      WHERE opr_usr_id_usuario = ?
-    `;
-
-    db.query(queryOperaciones, [idUsuario], (errOperaciones, resOpe) => {
-      if (errOperaciones) {
-        console.error('❌ Error al obtener operaciones:', errOperaciones.message);
-        return res.status(500).json({ mensaje: 'Error en el servidor' });
-      }
-
-      const totalOperaciones = obtenerTotal(resOpe);
-
-      const queryImagenes = `
-        SELECT COUNT(*)::int as total
-        FROM IMAGEN
-        WHERE img_usr_id_usuario = ?
-      `;
-
-      db.query(queryImagenes, [idUsuario], (errImagenes, resImg) => {
-        if (errImagenes) {
-          console.error('❌ Error al obtener imágenes:', errImagenes.message);
-          return res.status(500).json({ mensaje: 'Error en el servidor' });
-        }
-
-        return res.json({
-          mensaje: 'ok',
-          estadisticas: {
-            sesiones: totalSesiones,
-            operaciones: totalOperaciones,
-            imagenesEditadas: obtenerTotal(resImg),
-          },
-        });
-      });
+    return res.json({
+      mensaje: 'ok',
+      estadisticas: {
+        sesiones: obtenerConteo(results, 'sesiones'),
+        operaciones: obtenerConteo(results, 'operaciones'),
+        imagenesEditadas: obtenerConteo(results, 'imagenes_editadas'),
+      },
     });
   });
 }

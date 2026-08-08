@@ -306,7 +306,7 @@ La versión PostgreSQL fue validada con:
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 62/62 correctas.
+- Resultado de pruebas automatizadas backend: 65/65 correctas.
 - Suite frontend con `node:test`: 44/44 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, respuestas inválidas de login y registro, autorización del panel administrativo, estados de carga y error del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, ausencia de atajos de teclado para operar herramientas, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
@@ -314,7 +314,7 @@ La versión PostgreSQL fue validada con:
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas, incluido el estado administrativo antes de persistir cambios.
 - Flujos normales de autenticación, registro, configuración, sesiones, actividad y editor sin trazas informativas de consola que expongan estado interno innecesario.
 - Guardas unitarias para migraciones y verificación de respaldo: bases administrativas bloqueadas, migraciones remotas con confirmación explícita y bases no `_test` con confirmación adicional.
-- Cobertura de autorización por rol, rechazo de roles no permitidos, propietario exacto en consultas personales, escrituras de autoservicio y cierres de sesión, sesiones ajenas tratadas como no disponibles, tokens firmados con encabezado y payload esperados, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics, con filtros públicos normalizados a nombres reconocidos.
+- Cobertura de autorización por rol, rechazo de roles no permitidos, propietario exacto en consultas personales, escrituras de autoservicio y cierres de sesión, sesiones ajenas tratadas como no disponibles, tokens firmados con encabezado y payload esperados, estadísticas de usuario con consulta agregada, CRUD administrativo completo y contratos de los cuatro endpoints públicos de analytics, con filtros públicos normalizados a nombres reconocidos.
 - Validación previa de tamaño, megapíxeles y dimensiones antes de asignar una imagen al Canvas.
 - Validación backend de cuerpos JSON no objeto, identificadores en consultas de actividad y metadatos de actividad e imagen con rechazo de controles, rutas y límites de 10 MB, 16 MP y 8192 px del editor.
 - Bloqueo transaccional de la sesión al registrar operaciones o imágenes para conservar el orden y el estado ante solicitudes concurrentes.
@@ -501,6 +501,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-08] Higiene operativa para reducir trazas informativas, reforzar archivos `.env.*` ignorados y parametrizar URLs públicas de validación.
 - [2026-08-08] Endurecimiento de migraciones y verificación de respaldo para exigir confirmaciones explícitas y bloquear bases administrativas.
 - [2026-08-08] Mejora de estados visibles de login, registro y panel administrativo ante respuestas inválidas o fallos de carga.
+- [2026-08-08] Simplificación de estadísticas de usuario con consulta agregada y respuestas compartidas para analytics.
 
 ---
 

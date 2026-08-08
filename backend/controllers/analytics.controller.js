@@ -1,6 +1,27 @@
 // ========== DEPENDENCIAS ==========
 const db = require('../config/db');
 
+// ========== RESPUESTAS COMPARTIDAS ==========
+function responderErrorAnalytics(res, etiqueta, err) {
+  console.error(`❌ Error obteniendo ${etiqueta}:`, err.message);
+  return res.status(500).json({
+    ok: false,
+    mensaje: 'Error obteniendo datos',
+  });
+}
+
+function responderAnalytics(res, mensaje, data, meta = {}) {
+  return res.json({
+    ok: true,
+    mensaje,
+    data,
+    meta: {
+      timestamp: new Date().toISOString(),
+      ...meta,
+    },
+  });
+}
+
 // ========== ANALYTICS: FILTROS ==========
 function filtrosPopulares(req, res) {
   // Preferir el nombre estructurado del filtro y usar la descripción como respaldo
@@ -54,22 +75,15 @@ function filtrosPopulares(req, res) {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('❌ Error obteniendo filtros:', err.message);
-      return res.status(500).json({
-        ok: false,
-        mensaje: 'Error obteniendo datos',
-      });
+      return responderErrorAnalytics(res, 'filtros', err);
     }
 
-    return res.json({
-      ok: true,
-      mensaje: 'Top filtros utilizados',
-      data: { filtros: results },
-      meta: {
-        timestamp: new Date().toISOString(),
-        totalFiltros: results.length,
-      },
-    });
+    return responderAnalytics(
+      res,
+      'Top filtros utilizados',
+      { filtros: results },
+      { totalFiltros: results.length }
+    );
   });
 }
 
@@ -99,22 +113,15 @@ function horariosEdicion(req, res) {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('❌ Error obteniendo horarios:', err.message);
-      return res.status(500).json({
-        ok: false,
-        mensaje: 'Error obteniendo datos',
-      });
+      return responderErrorAnalytics(res, 'horarios', err);
     }
 
-    return res.json({
-      ok: true,
-      mensaje: 'Horarios pico de edición',
-      data: { horarios: results },
-      meta: {
-        timestamp: new Date().toISOString(),
-        totalHoras: results.length,
-      },
-    });
+    return responderAnalytics(
+      res,
+      'Horarios pico de edición',
+      { horarios: results },
+      { totalHoras: results.length }
+    );
   });
 }
 
@@ -147,22 +154,15 @@ function formatosPreferidos(req, res) {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('❌ Error obteniendo formatos:', err.message);
-      return res.status(500).json({
-        ok: false,
-        mensaje: 'Error obteniendo datos',
-      });
+      return responderErrorAnalytics(res, 'formatos', err);
     }
 
-    return res.json({
-      ok: true,
-      mensaje: 'Formatos más descargados',
-      data: { formatos: results },
-      meta: {
-        timestamp: new Date().toISOString(),
-        totalFormatos: results.length,
-      },
-    });
+    return responderAnalytics(
+      res,
+      'Formatos más descargados',
+      { formatos: results },
+      { totalFormatos: results.length }
+    );
   });
 }
 
@@ -186,21 +186,14 @@ function tasaConversion(req, res) {
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error('❌ Error obteniendo tasa de conversión:', err.message);
-      return res.status(500).json({
-        ok: false,
-        mensaje: 'Error obteniendo datos',
-      });
+      return responderErrorAnalytics(res, 'tasa de conversión', err);
     }
 
-    return res.json({
-      ok: true,
-      mensaje: 'Tasa de conversión de sesiones',
-      data: { conversionData: results[0] },
-      meta: {
-        timestamp: new Date().toISOString(),
-      },
-    });
+    return responderAnalytics(
+      res,
+      'Tasa de conversión de sesiones',
+      { conversionData: results[0] }
+    );
   });
 }
 
