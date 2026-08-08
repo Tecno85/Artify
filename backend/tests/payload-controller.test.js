@@ -127,6 +127,22 @@ test('login rechaza cuerpo null antes de consultar credenciales', () => {
   }
 });
 
+test('registro rechaza cuerpo no objeto antes de preparar consultas', async () => {
+  const dbMock = crearDbSinConsultas();
+  const { auth } = cargarControladoresConDb(dbMock.db);
+  const res = crearRespuesta();
+
+  try {
+    await auth.registro({ body: [] }, res);
+
+    assert.equal(res.statusCode, 400);
+    assert.equal(res.body.mensaje, 'Ingresa nombres válidos');
+    assert.equal(dbMock.obtenerConsultas(), 0);
+  } finally {
+    limpiarControladores();
+  }
+});
+
 test('actividad rechaza metadatos de imagen que exceden 16 MP', async () => {
   const dbMock = crearDbSinConsultas();
   const { actividad } = cargarControladoresConDb(dbMock.db);

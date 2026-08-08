@@ -117,7 +117,6 @@ async function registro(req, res) {
     correo: correoNormalizado,
     password,
   } = normalizarDatosUsuario(req.body);
-  const dbPromise = db.promise();
   const errorValidacion = validarUsuario({
     nombres: nombresNormalizados,
     apellidos: apellidosNormalizados,
@@ -130,6 +129,8 @@ async function registro(req, res) {
   }
 
   console.log('📨 Solicitud de registro recibida');
+
+  const dbPromise = db.promise();
 
   try {
     await dbPromise.beginTransaction();
