@@ -121,3 +121,15 @@ test('el redimensionado reutiliza los límites seguros de Canvas', () => {
     /mostrarNotificacion\('error', validacionDimensiones\.mensaje\)/
   );
 });
+
+test('el editor no registra atajos de teclado para operar herramientas', () => {
+  const editorScript = fs.readFileSync(
+    path.resolve(__dirname, '..', 'assets', 'js', 'editor.js'),
+    'utf8'
+  );
+
+  assert.doesNotMatch(editorScript, /ctrlKey/);
+  assert.doesNotMatch(editorScript, /btnDeshacer\.click\(\)/);
+  assert.doesNotMatch(editorScript, /btnRehacer\.click\(\)/);
+  assert.doesNotMatch(editorScript, /btnDescargar\.click\(\)/);
+});

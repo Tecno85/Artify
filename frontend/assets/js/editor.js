@@ -1980,22 +1980,6 @@ window.addEventListener('DOMContentLoaded', () => {
     img.src = estado.imageUrl;
   });
 
-  // ========== ATAJOS DE TECLADO ==========
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'z') {
-      e.preventDefault();
-      btnDeshacer.click();
-    }
-    if (e.ctrlKey && e.key === 'y') {
-      e.preventDefault();
-      btnRehacer.click();
-    }
-    if (e.ctrlKey && e.key === 's') {
-      e.preventDefault();
-      if (!btnDescargar.disabled) btnDescargar.click();
-    }
-  });
-
   // ========== UTILIDADES ==========
   function ocultarTodosLosControles() {
     cerrarSesionFiltro();

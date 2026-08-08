@@ -2,6 +2,7 @@
 window.ArtifyEditorStorage = (() => {
   const RESPALDO_LOCAL_KEY = 'artify_backup_v1';
   const RESPALDO_EXPIRACION_MS = 7 * 24 * 60 * 60 * 1000;
+  const RESPALDO_TAMANO_MAXIMO_BYTES = 10 * 1024 * 1024;
   const RESPALDO_LEGACY_KEYS = [
     'artify_backup_image',
     'artify_backup_timestamp',
@@ -33,6 +34,9 @@ window.ArtifyEditorStorage = (() => {
       if (
         !Number.isSafeInteger(idUsuario) ||
         idUsuario <= 0 ||
+        !Number.isSafeInteger(tamanoBytes) ||
+        tamanoBytes <= 0 ||
+        tamanoBytes > RESPALDO_TAMANO_MAXIMO_BYTES ||
         !esDataUrlImagenValido(dataUrl, formatoNormalizado)
       ) {
         return false;
@@ -49,10 +53,7 @@ window.ArtifyEditorStorage = (() => {
           typeof nombreOriginal === 'string' && nombreOriginal.trim()
             ? nombreOriginal.trim().slice(0, 255)
             : `imagen-recuperada.${formatoNormalizado}`,
-        tamanoBytes:
-          Number.isSafeInteger(tamanoBytes) && tamanoBytes > 0
-            ? tamanoBytes
-            : 0,
+        tamanoBytes,
       };
 
       localStorage.setItem(RESPALDO_LOCAL_KEY, JSON.stringify(respaldo));

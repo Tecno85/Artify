@@ -231,6 +231,36 @@ test('editor no guarda respaldos locales con datos no válidos', () => {
     false
   );
   assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.contexto.respaldoTamanoInvalido = {
+    dataUrl: 'data:image/png;base64,AAAA',
+    formato: 'png',
+    nombreOriginal: 'sin-tamano.png',
+    tamanoBytes: 0,
+  };
+  assert.equal(
+    evaluar(
+      escenario.contexto,
+      'guardarRespaldoLocal(respaldoTamanoInvalido)'
+    ),
+    false
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+
+  escenario.contexto.respaldoDemasiadoGrande = {
+    dataUrl: 'data:image/png;base64,AAAA',
+    formato: 'png',
+    nombreOriginal: 'grande.png',
+    tamanoBytes: 10 * 1024 * 1024 + 1,
+  };
+  assert.equal(
+    evaluar(
+      escenario.contexto,
+      'guardarRespaldoLocal(respaldoDemasiadoGrande)'
+    ),
+    false
+  );
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
 });
 
 test('editor limpia la sesión y vuelve al login cuando la API rechaza el token', async () => {

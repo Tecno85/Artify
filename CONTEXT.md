@@ -300,7 +300,7 @@ La versión PostgreSQL fue validada con:
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
 - Resultado de pruebas automatizadas backend: 57/57 correctas.
-- Suite frontend con `node:test`: 40/40 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, renderizado seguro y semántica accesible.
+- Suite frontend con `node:test`: 41/41 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, autorización del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, ausencia de atajos de teclado para operar herramientas, renderizado seguro y semántica accesible.
 - Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
 - Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
@@ -312,7 +312,7 @@ La versión PostgreSQL fue validada con:
 - Protección de la cuenta administrativa autenticada frente a eliminación o desactivación accidental desde el panel.
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
-- Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido, con verificación estricta de MIME, formato y cuerpo base64 de la imagen.
+- Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido, con verificación estricta de MIME, formato, tamaño y cuerpo base64 de la imagen.
 - Auditoría de dependencias de producción del 6 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
@@ -484,6 +484,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-06] Revalidación de dependencias de producción con `pnpm audit --prod` sin vulnerabilidades conocidas.
 - [2026-08-08] Endurecimiento del panel administrativo para rechazar payloads e identificadores inválidos antes de preparar consultas.
 - [2026-08-08] Endurecimiento del registro público para validar payloads antes de preparar transacciones.
+- [2026-08-08] Endurecimiento del editor para rechazar respaldos locales sin tamaño seguro y retirar atajos de teclado de herramientas.
 
 ---
 
