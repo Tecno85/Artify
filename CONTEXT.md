@@ -322,7 +322,7 @@ La versión PostgreSQL fue validada con:
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
 - Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido, con verificación estricta de MIME, formato, tamaño y cuerpo base64 de la imagen.
-- Auditoría de dependencias de producción del 6 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
+- Auditoría de dependencias de producción del 9 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
 - GitHub Actions también valida el ejecutor de migraciones incrementales sobre la base temporal de CI.
@@ -355,7 +355,7 @@ Enfoque recomendado:
 
 ### Despliegue público validado
 
-Última validación técnica automatizada realizada el 6 de agosto de 2026:
+Última validación técnica automatizada realizada el 9 de agosto de 2026:
 
 | Servicio | URL |
 | --- | --- |
@@ -502,6 +502,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-08] Endurecimiento de migraciones y verificación de respaldo para exigir confirmaciones explícitas y bloquear bases administrativas.
 - [2026-08-08] Mejora de estados visibles de login, registro y panel administrativo ante respuestas inválidas o fallos de carga.
 - [2026-08-08] Simplificación de estadísticas de usuario con consulta agregada y respuestas compartidas para analytics.
+- [2026-08-09] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics, CORS y auditoría `pnpm audit --prod` sin vulnerabilidades conocidas.
 
 ---
 

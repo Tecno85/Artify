@@ -504,7 +504,7 @@ Durante la configuración aplico las siguientes medidas:
 - Reviso periódicamente la compatibilidad y los avisos de seguridad de Node.js, pnpm, PostgreSQL y las dependencias.
 - No publico puertos de desarrollo directamente en Internet.
 
-La auditoría `pnpm audit --prod` ejecutada el 6 de agosto de 2026 no reportó vulnerabilidades conocidas. El aviso bajo y transitivo `GHSA-v422-hmwv-36x6` quedó corregido al fijar `body-parser` en la versión `2.3.0` mediante override de pnpm, conservando Express como dependencia principal del backend.
+La auditoría `pnpm audit --prod` ejecutada el 9 de agosto de 2026 no reportó vulnerabilidades conocidas. El aviso bajo y transitivo `GHSA-v422-hmwv-36x6` quedó corregido al fijar `body-parser` en la versión `2.3.0` mediante override de pnpm, conservando Express como dependencia principal del backend.
 
 El repositorio incluye `database/postgresql/app-role.sql` para crear un rol PostgreSQL exclusivo de Artify con permisos de lectura, escritura y secuencias, sin privilegios de propietario. El procedimiento se verificó en una restauración local temporal. Antes de usarlo en Neon debo comprobar las capacidades del plan, crear un respaldo y actualizar `DATABASE_URL` en Render sin exponer la contraseña.
 

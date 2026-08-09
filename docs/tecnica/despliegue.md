@@ -4,7 +4,7 @@
 > **Frontend:** GitHub Pages
 > **Backend:** Render
 > **Base de datos:** Neon PostgreSQL
-> **Última validación:** 30 de julio de 2026
+> **Última validación:** 9 de agosto de 2026
 
 En esta guía documento cómo aprovisiono por primera vez y cómo vuelvo a desplegar la versión pública de Artify. La instalación en un equipo personal se explica por separado en [`plan-instalacion-artify.md`](./plan-instalacion-artify.md).
 
@@ -411,7 +411,7 @@ El 14 de julio de 2026 realicé la validación funcional y operativa completa:
 - Respuestas correctas de `/health`, `/ready` y los cuatro endpoints públicos de analytics mediante el smoke automatizado.
 - Repositorio local y remoto sincronizados después del despliegue.
 
-El 6 de agosto de 2026 repetí `node scripts/validar-despliegue.js`: las nueve comprobaciones no destructivas de Pages, configuración pública, salud, disponibilidad de PostgreSQL, analytics y CORS respondieron correctamente.
+El 9 de agosto de 2026 repetí `node scripts/validar-despliegue.js`: las nueve comprobaciones no destructivas de Pages, configuración pública, salud, disponibilidad de PostgreSQL, analytics y CORS respondieron correctamente.
 
 ## 12. Evidencia académica sin exponer secretos
 
