@@ -1,8 +1,21 @@
 const { expect, test } = require('@playwright/test');
+const path = require('node:path');
 
 const IMAGEN_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGM4kWL0HwAFtAJeHzr7ywAAAABJRU5ErkJggg==',
   'base64'
+);
+const IMAGEN_EDITOR = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'docs',
+  'proyecto',
+  'evidencias',
+  'manual-usuario-artify',
+  'operativo',
+  '04-imagen-cargada.png'
 );
 
 test('carga, cancela y confirma filtros, actualiza historial y descarga', async ({
@@ -197,6 +210,22 @@ test('carga, cancela y confirma filtros, actualiza historial y descarga', async 
   await expect(page.locator('#operationsCount')).toHaveText(
     '2 cambios aplicados'
   );
+
+  await page.locator('#fileInput').setInputFiles(IMAGEN_EDITOR);
+  await expect(page.locator('#btnDescargar')).toBeEnabled();
+  await expect(page.locator('#submenuFiltros')).toBeVisible();
+  await page.locator('#btnRecortar').click();
+  await expect(page.locator('#submenuFiltros')).toBeHidden();
+  await expect(page.locator('#cropControls')).toBeVisible();
+  await expect(page.locator('#btnAplicarRecorte')).toBeDisabled();
+
+  const canvasBox = await page.locator('#mainCanvas').boundingBox();
+  expect(canvasBox).not.toBeNull();
+  await page.mouse.move(canvasBox.x + 30, canvasBox.y + 30);
+  await page.mouse.down();
+  await page.mouse.move(canvasBox.x + 160, canvasBox.y + 120);
+  await page.mouse.up();
+  await expect(page.locator('#btnAplicarRecorte')).toBeEnabled();
 
   await page.evaluate(() => {
     sessionStorage.setItem(

@@ -1550,6 +1550,14 @@ window.addEventListener('DOMContentLoaded', () => {
     activarModoRecorte();
   });
 
+  function actualizarAccionesRecorte() {
+    const btnAplicarRecorte = document.getElementById('btnAplicarRecorte');
+    if (!btnAplicarRecorte) return;
+
+    btnAplicarRecorte.disabled =
+      !currentImage || cropArea.width === 0 || cropArea.height === 0;
+  }
+
   function activarModoRecorte() {
     if (!currentImage) {
       mostrarNotificacion('error', 'No hay imagen cargada');
@@ -1557,6 +1565,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     cropMode = true;
+    cropArea = { x: 0, y: 0, width: 0, height: 0 };
+    cropPreviewVisible = false;
+    actualizarAccionesRecorte();
     canvas.style.cursor = 'crosshair';
     canvas.addEventListener('pointerdown', iniciarRecorte);
     canvas.addEventListener('pointermove', dibujarRecorte);
@@ -1678,6 +1689,7 @@ window.addEventListener('DOMContentLoaded', () => {
     cropArea.height = height;
 
     redibujarConRecorte();
+    actualizarAccionesRecorte();
   }
 
   function finalizarRecorte() {
@@ -1854,6 +1866,7 @@ window.addEventListener('DOMContentLoaded', () => {
     isDragging = false;
     cropArea = { x: 0, y: 0, width: 0, height: 0 };
     cropPreviewVisible = false;
+    actualizarAccionesRecorte();
     canvas.style.cursor = 'default';
 
     canvas.removeEventListener('pointerdown', iniciarRecorte);
@@ -1991,6 +2004,10 @@ window.addEventListener('DOMContentLoaded', () => {
       .querySelectorAll('.tool-btn')
       .forEach((btn) => btn.classList.remove('active'));
     boton.classList.add('active');
+    if (boton !== btnFiltros && submenuFiltros) {
+      submenuFiltros.style.display = 'none';
+      btnFiltros.classList.remove('expanded');
+    }
     if (toolControlsPanel) toolControlsPanel.style.display = 'none';
   }
 
