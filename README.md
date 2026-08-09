@@ -140,7 +140,7 @@ Pruebas de integración:
 
 ```bash
 cd backend
-NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
+DATABASE_URL= NODE_ENV=test DB_HOST=localhost DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 ```
 
 **Windows - PowerShell:**
@@ -148,10 +148,14 @@ NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 ```powershell
 cd backend
 $env:NODE_ENV = 'test'
+$env:DATABASE_URL = ''
+$env:DB_HOST = 'localhost'
 $env:DB_NAME = 'artify_test'
 $env:ALLOW_TEST_DB_MUTATIONS = 'true'
 pnpm test
 Remove-Item Env:NODE_ENV
+Remove-Item Env:DATABASE_URL
+Remove-Item Env:DB_HOST
 Remove-Item Env:DB_NAME
 Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 ```
@@ -159,6 +163,9 @@ Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 > [!WARNING]
 > Antes debo crear y cargar `artify_test` según el
 > [plan de instalación](docs/tecnica/plan-instalacion-artify.md#72-sintaxis-y-pruebas-automatizadas).
+> La variable `DATABASE_URL` se deja vacía en este comando para que una URL de
+> desarrollo o producción configurada en `backend/.env` no tenga prioridad sobre
+> `DB_NAME=artify_test`.
 > La suite se bloquea si la base no termina en `_test` o si intenta usar un host
 > remoto sin autorización explícita; nunca debe apuntar a Neon ni a producción.
 

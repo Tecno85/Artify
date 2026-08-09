@@ -491,10 +491,14 @@ confirmación explícita de las mutaciones temporales.
 ```powershell
 cd backend
 $env:NODE_ENV = 'test'
+$env:DATABASE_URL = ''
+$env:DB_HOST = 'localhost'
 $env:DB_NAME = 'artify_test'
 $env:ALLOW_TEST_DB_MUTATIONS = 'true'
 pnpm test
 Remove-Item Env:NODE_ENV
+Remove-Item Env:DATABASE_URL
+Remove-Item Env:DB_HOST
 Remove-Item Env:DB_NAME
 Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 ```
@@ -503,12 +507,12 @@ Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 
 ```bash
 cd backend
-NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
+DATABASE_URL= NODE_ENV=test DB_HOST=localhost DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 ```
 
 > **Protección activa:** la suite se detiene antes de conectarse si `NODE_ENV`
 > no es `test`, falta la confirmación, el nombre de la base no termina en
-> `_test` o el host es remoto. Una base remota exclusiva exige además
+> `_test`, `DATABASE_URL` apunta a otra base o el host es remoto. Una base remota exclusiva exige además
 > `ALLOW_REMOTE_TEST_DATABASE=true`; nunca uso esta excepción con Neon o
 > producción.
 

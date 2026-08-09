@@ -503,6 +503,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-08] Mejora de estados visibles de login, registro y panel administrativo ante respuestas inválidas o fallos de carga.
 - [2026-08-08] Simplificación de estadísticas de usuario con consulta agregada y respuestas compartidas para analytics.
 - [2026-08-09] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics, CORS y auditoría `pnpm audit --prod` sin vulnerabilidades conocidas.
+- [2026-08-09] Validación final de release con backend completo sobre `artify_test`, suite frontend y pruebas E2E aprobadas.
 
 ---
 

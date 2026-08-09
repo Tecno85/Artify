@@ -345,17 +345,22 @@ cd backend
 pnpm run check
 ```
 
-Ejecuto la suite con una confirmación explícita y sobrescribo únicamente el
-nombre de la base para esta orden.
+Ejecuto la suite con una confirmación explícita y sobrescribo la conexión solo
+para esta orden. `DATABASE_URL` queda vacía para que una URL configurada en
+`backend/.env` no tenga prioridad sobre `DB_NAME=artify_test`.
 
 **Windows - PowerShell:**
 
 ```powershell
 $env:NODE_ENV = 'test'
+$env:DATABASE_URL = ''
+$env:DB_HOST = 'localhost'
 $env:DB_NAME = 'artify_test'
 $env:ALLOW_TEST_DB_MUTATIONS = 'true'
 pnpm test
 Remove-Item Env:NODE_ENV
+Remove-Item Env:DATABASE_URL
+Remove-Item Env:DB_HOST
 Remove-Item Env:DB_NAME
 Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 ```
@@ -363,14 +368,14 @@ Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 **macOS - Terminal:**
 
 ```bash
-NODE_ENV=test DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
+DATABASE_URL= NODE_ENV=test DB_HOST=localhost DB_NAME=artify_test ALLOW_TEST_DB_MUTATIONS=true pnpm test
 ```
 
-La suite esperada contiene 28 pruebas. Si falla antes de iniciar, verifico que
+La suite esperada contiene 65 pruebas. Si falla antes de iniciar, verifico que
 PostgreSQL esté activo, que `artify_test` tenga el esquema cargado y que
 `DATABASE_URL` continúe comentada en `backend/.env`.
 
-Después ejecuto las 26 pruebas del frontend. Estas no usan PostgreSQL ni crean datos:
+Después ejecuto las 44 pruebas del frontend. Estas no usan PostgreSQL ni crean datos:
 
 ```bash
 pnpm run test:frontend
