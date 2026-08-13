@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="980" height="480" viewBox="0 0 980 480" role="img" aria-labelledby="title desc">
   <title id="title">Dependencias y pruebas del backend verificadas</title>
-  <desc id="desc">Representación visual resumida, no captura literal, de los resultados de pnpm install, pnpm run check y pnpm test sobre el backend de Artify.</desc>
+  <desc id="desc">Representación visual resumida, no captura literal, de los resultados de pnpm install, pnpm run check, pnpm test, pnpm run test:frontend y pnpm run test:e2e sobre Artify.</desc>
   <defs>
     <style>
       .bg { fill: #eef3f8; }
@@ -26,7 +26,7 @@
   <text class="ok" x="112" y="178">Lockfile verificado. Dependencias al día.</text>
   <text class="cmd" x="112" y="224">$ pnpm run check</text>
   <text class="ok" x="112" y="260">server.js sin errores de sintaxis.</text>
-  <text class="cmd" x="112" y="306">$ pnpm test</text>
-  <text class="text" x="112" y="342">tests 28    pass 28    fail 0</text>
-  <text class="ok" x="112" y="388">Auth, administración, analytics y PostgreSQL verificados.</text>
+  <text class="cmd" x="112" y="306">$ pnpm test &amp;&amp; pnpm run test:frontend &amp;&amp; pnpm run test:e2e</text>
+  <text class="text" x="112" y="342">backend 65/65    frontend 44/44    e2e 7/7</text>
+  <text class="ok" x="112" y="388">Autenticación, editor, admin, analytics y PostgreSQL verificados.</text>
 </svg>
