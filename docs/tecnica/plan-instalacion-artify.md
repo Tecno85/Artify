@@ -293,14 +293,24 @@ Mantengo esta terminal abierta. Detengo el backend con `Ctrl + C` cuando termine
 **Terminal 2 - ubicación:** raíz `artify/`.
 
 ```bash
-npx --yes http-server@14.1.1 frontend -p 8080
+python3 -m http.server 8080 --directory frontend
 ```
 
-Uso `http-server@14.1.1` para que todos los compañeros ejecuten la misma versión. La primera vez, `npx` puede descargarla temporalmente. Mantengo esta terminal abierta y abro:
+Mantengo esta terminal abierta y abro la página inicial:
 
 ```text
-http://127.0.0.1:8080
+http://127.0.0.1:8080/
 ```
+
+Rutas locales principales:
+
+| Vista | Ruta local |
+| --- | --- |
+| Inicio | `http://127.0.0.1:8080/` |
+| Login | `http://127.0.0.1:8080/pages/login.html` |
+| Registro | `http://127.0.0.1:8080/pages/registro.html` |
+| Editor | `http://127.0.0.1:8080/pages/editor.html` |
+| Panel administrativo | `http://127.0.0.1:8080/pages/admin.html` |
 
 En local, `frontend/assets/js/config.js` conserva `ARTIFY_API_URL` vacío. `auth.js` usa el mismo protocolo y hostname del frontend en el puerto `3000`; al seguir esta guía desde `http://127.0.0.1:8080`, la API será `http://127.0.0.1:3000`.
 
@@ -399,13 +409,14 @@ pnpm run test:e2e
 
 ### 7.3 Flujo funcional
 
-1. Abro `http://127.0.0.1:8080`.
-2. Registro un usuario.
-3. Inicio sesión.
-4. Cargo una imagen.
-5. Aplico un filtro.
-6. Descargo la imagen.
-7. Cierro sesión.
+1. Abro `http://127.0.0.1:8080/`.
+2. Entro a `http://127.0.0.1:8080/pages/registro.html` y registro un usuario.
+3. Entro a `http://127.0.0.1:8080/pages/login.html` e inicio sesión.
+4. Verifico la redirección o ingreso al editor en `http://127.0.0.1:8080/pages/editor.html`.
+5. Cargo una imagen.
+6. Aplico un filtro.
+7. Descargo la imagen.
+8. Cierro sesión.
 
 ### 7.4 Lista de comprobación
 
@@ -414,7 +425,7 @@ pnpm run test:e2e
 - [ ] `artify_db` contiene las tablas y la vista.
 - [ ] `/health` responde correctamente.
 - [ ] `/ready` confirma PostgreSQL.
-- [ ] El frontend abre en el puerto `8080`.
+- [ ] El frontend abre en el puerto `8080` y las rutas `/`, `/pages/login.html`, `/pages/registro.html`, `/pages/editor.html` y `/pages/admin.html` cargan correctamente.
 - [ ] Registro, login, editor y descarga funcionan.
 - [ ] `pnpm run check`, `pnpm test`, `pnpm run test:frontend` y `pnpm run test:e2e` finalizan correctamente.
 
@@ -482,7 +493,7 @@ CORS_ORIGIN=http://localhost:8081,http://127.0.0.1:8081
 Reinicio el backend para volver a cargar CORS y ejecuto:
 
 ```bash
-npx --yes http-server@14.1.1 frontend -p 8081
+python3 -m http.server 8081 --directory frontend
 ```
 
 Abro `http://127.0.0.1:8081`. Si cambio ambos puertos, aplico los dos grupos de ajustes.

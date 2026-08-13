@@ -123,7 +123,17 @@ En otra terminal, desde la raíz del proyecto:
 python3 -m http.server 8080 --directory frontend
 ```
 
-Después se abre [http://127.0.0.1:8080](http://127.0.0.1:8080). El backend utiliza el puerto `3000` y el frontend el `8080`.
+Después se abre [http://127.0.0.1:8080/](http://127.0.0.1:8080/). El backend utiliza el puerto `3000` y el frontend el `8080`.
+
+Rutas locales frecuentes:
+
+| Vista | Ruta |
+| --- | --- |
+| Inicio | [http://127.0.0.1:8080/](http://127.0.0.1:8080/) |
+| Login | [http://127.0.0.1:8080/pages/login.html](http://127.0.0.1:8080/pages/login.html) |
+| Registro | [http://127.0.0.1:8080/pages/registro.html](http://127.0.0.1:8080/pages/registro.html) |
+| Editor | [http://127.0.0.1:8080/pages/editor.html](http://127.0.0.1:8080/pages/editor.html) |
+| Panel administrativo | [http://127.0.0.1:8080/pages/admin.html](http://127.0.0.1:8080/pages/admin.html) |
 
 ## Pruebas
 

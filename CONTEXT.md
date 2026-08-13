@@ -505,6 +505,7 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-09] Revalidación pública no destructiva de GitHub Pages, configuración publicada, Render, PostgreSQL, analytics, CORS y auditoría `pnpm audit --prod` sin vulnerabilidades conocidas.
 - [2026-08-09] Validación final de release con backend completo sobre `artify_test`, suite frontend y pruebas E2E aprobadas.
 - [2026-08-09] Mejora UX del editor con recorte aplicable solo tras seleccionar área y cierre del submenú de filtros al cambiar de herramienta.
+- [2026-08-12] Corrección documental de instalación local con servidor estático Python y rutas directas de inicio, login, registro, editor y administración.
 
 ---
 

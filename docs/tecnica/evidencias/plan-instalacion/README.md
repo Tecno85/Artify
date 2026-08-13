@@ -9,6 +9,6 @@ Los archivos disponibles son:
 - `env-sanitizado.svg`: archivo `.env` configurado sin datos sensibles.
 - `postgresql-artify.svg`: base de datos `artify_db` y tablas verificadas en PostgreSQL.
 - `backend-ejecutandose.svg`: backend ejecutándose correctamente y API con respuesta HTTP `200`.
-- `frontend-artify.png`: frontend abierto en el navegador local.
+- `frontend-artify.png`: frontend abierto en el navegador local desde `http://127.0.0.1:8080/`; las rutas internas se validan desde `pages/login.html`, `pages/registro.html`, `pages/editor.html` y `pages/admin.html`.
 
 Los SVG son recursos didácticos reconstruidos y no capturas literales de terminal. Para sustentar los resultados deben acompañarse con la ejecución de los comandos del plan. `frontend-artify.png` sí es una captura del navegador.

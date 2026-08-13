@@ -325,20 +325,19 @@ Esta salida confirma que Express está escuchando en el puerto configurado y que
 El frontend está construido con HTML, CSS y JavaScript Vanilla. Para probar rutas y solicitudes desde un origen HTTP, lo sirvo desde la raíz del proyecto:
 
 ```bash
-npx --yes http-server@14.1.1 frontend -p 8080
+python3 -m http.server 8080 --directory frontend
 ```
-
-Fijo `http-server@14.1.1` en el comando para repetir la evidencia con la misma versión.
 
 Después abro:
 
 ```text
-http://127.0.0.1:8080
+http://127.0.0.1:8080/
 ```
 
 Compruebo los siguientes puntos:
 
 - La página inicial carga sin errores visibles.
+- Las rutas `/pages/login.html`, `/pages/registro.html`, `/pages/editor.html` y `/pages/admin.html` responden desde el servidor local.
 - Los recursos CSS, JavaScript e imágenes aparecen correctamente.
 - Los enlaces de inicio de sesión y registro están disponibles.
 - El frontend puede comunicarse con la API local en el puerto `3000`.

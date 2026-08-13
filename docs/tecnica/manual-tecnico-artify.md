@@ -234,7 +234,10 @@ Comprobaciones:
 | --- | --- |
 | `http://127.0.0.1:3000/health` | El proceso Express está activo. |
 | `http://127.0.0.1:3000/ready` | El backend puede consultar PostgreSQL. |
-| `http://127.0.0.1:8080` | Se presenta la interfaz de Artify. |
+| `http://127.0.0.1:8080/` | Se presenta la página inicial de Artify. |
+| `http://127.0.0.1:8080/pages/login.html` | Se presenta el inicio de sesión. |
+| `http://127.0.0.1:8080/pages/registro.html` | Se presenta el registro público. |
+| `http://127.0.0.1:8080/pages/editor.html` | Se presenta el editor cuando la sesión local lo permite. |
 | `pnpm run check` | La sintaxis del backend es válida. |
 | `pnpm run test:frontend` | Las pruebas del frontend terminan correctamente. |
 
