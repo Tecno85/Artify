@@ -171,7 +171,7 @@ Remove-Item Env:ALLOW_TEST_DB_MUTATIONS
 ```
 
 > [!WARNING]
-> Antes debo crear y cargar `artify_test` según el
+> Antes se debe crear y cargar `artify_test` según el
 > [plan de instalación](docs/tecnica/plan-instalacion-artify.md#72-sintaxis-y-pruebas-automatizadas).
 > La variable `DATABASE_URL` se deja vacía en este comando para que una URL de
 > desarrollo o producción configurada en `backend/.env` no tenga prioridad sobre
@@ -220,7 +220,7 @@ El smoke público también se ejecuta cada día desde
 | Componente | Plataforma | Dirección |
 | --- | --- | --- |
 | Frontend | GitHub Pages | [tecno85.github.io/artify](https://tecno85.github.io/artify/) |
-| Backend | Render | `https://artify-sena-postgresql.onrender.com` |
+| Backend | Render | [artify-backend.onrender.com](https://artify-backend.onrender.com/) |
 | Base de datos | Neon | PostgreSQL administrado |
 
 Cada `push` a `main` publica el contenido de `frontend/` mediante GitHub Actions. La configuración completa de variables, CORS, Render, Neon y GitHub Pages está en la [guía de despliegue](./docs/tecnica/despliegue.md).
