@@ -137,7 +137,7 @@ Si la cuenta está inactiva o suspendida, las credenciales son incorrectas o el 
 | Zona | Elemento | Función |
 | --- | --- | --- |
 | Encabezado | Identidad administrativa | Muestra el nombre de la cuenta autenticada. |
-| Encabezado | Cerrar Sesión | Elimina las credenciales locales y sale del panel. |
+| Encabezado | Cerrar Sesión | Revoca el token en el servidor, elimina las credenciales locales y sale del panel. |
 | Barra lateral | Usuarios | Indica el total de registros mostrados por el módulo. |
 | Barra lateral | Activos e inactivos | Resume cuentas activas y cuentas con estado diferente de activo. |
 | Barra de herramientas | Buscar usuario | Filtra el listado en tiempo real. |
@@ -240,6 +240,8 @@ La edición no solicita una contraseña nueva y tampoco modifica el rol. Para pr
 > La eliminación no se puede deshacer desde el panel y también elimina los datos dependientes del usuario. La cuenta administrativa actualmente autenticada está protegida: su botón muestra **Cuenta actual** y no permite eliminarla.
 
 ### 8.6 Cerrar sesión
+
+Si el servidor no confirma el cierre, aparece un aviso y el botón permite reintentar. La sesión no se presenta como cerrada hasta confirmar la revocación; compruebe la conexión antes de intentarlo nuevamente.
 
 1. Termine y verifique cualquier gestión pendiente.
 2. Seleccione **Cerrar Sesión** en el encabezado.

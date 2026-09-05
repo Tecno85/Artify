@@ -146,6 +146,9 @@ app.use((error, req, res, next) => {
 // Cerrar sesiones abandonadas para mantener consistencia de estado en la base de datos
 const limpiezaSesionesInterval = setInterval(
   () => {
+    db.query('DELETE FROM "TOKEN_REVOCADO" WHERE tok_expira <= NOW()', (error) => {
+      if (error) console.error('Error al limpiar tokens vencidos:', error.message);
+    });
     const query = `
       WITH sesiones_cerradas AS (
         UPDATE SESION_EDICION

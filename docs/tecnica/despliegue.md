@@ -10,6 +10,8 @@ En esta guía documento cómo aprovisiono por primera vez y cómo vuelvo a despl
 
 ## 1. Arquitectura desplegada
 
+Para publicar el refuerzo de seguridad de septiembre de 2026, aplicar primero `20260905_004_revocar_tokens.sql` y verificar los permisos de `TOKEN_REVOCADO`; después desplegar backend y frontend, en ese orden. El [procedimiento de seguridad](./seguridad-sesiones.md) detalla la revocación, CSP y la configuración de pnpm 11. Esta actualización aún no forma parte de la validación pública de agosto indicada arriba.
+
 Distribuyo los componentes de Artify en tres servicios:
 
 ```mermaid

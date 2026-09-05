@@ -91,8 +91,9 @@ test('admin escapa HTML y protege la cuenta administrativa actual', () => {
   assert.match(tabla, /Cuenta actual/);
   assert.match(tabla, /Admin Artify/);
   assert.match(tabla, /Usuario Prueba/);
-  assert.doesNotMatch(tabla, /abrirEliminar\(7\)/);
-  assert.match(tabla, /abrirEliminar\(8\)/);
+  assert.doesNotMatch(tabla, /data-accion="eliminar" data-id="7"/);
+  assert.match(tabla, /data-accion="eliminar" data-id="8"/);
+  assert.doesNotMatch(tabla, /onclick=/);
   assert.equal(
     evaluar(
       contextoFrontend.contexto,

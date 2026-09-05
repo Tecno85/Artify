@@ -118,6 +118,7 @@ function crearToken(payload) {
   const ahora = Math.floor(Date.now() / 1000);
   const tokenPayload = {
     ...payload,
+    jti: crypto.randomUUID(),
     exp: ahora + TOKEN_EXPIRACION_SEGUNDOS,
   };
 
@@ -154,11 +155,15 @@ function verificarToken(token) {
   const payload = decodificarJsonToken(body);
   const ahora = Math.floor(Date.now() / 1000);
 
-  if (!payload.exp || payload.exp < ahora) {
+  if (!Number.isSafeInteger(payload.exp) || payload.exp <= ahora) {
     throw new Error('TOKEN_EXPIRADO');
   }
 
   return payload;
+}
+
+function obtenerHuellaToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
 }
 
 // ========== EXPORTACIÓN ==========
@@ -166,4 +171,5 @@ module.exports = {
   crearToken,
   verificarToken,
   validarConfiguracionToken,
+  obtenerHuellaToken,
 };

@@ -1439,3 +1439,33 @@ test('una cuenta suspendida no puede iniciar sesión ni reutilizar su token', as
     await actualizarEstadoUsuario('activo');
   }
 });
+
+test('logout revoca solo el token presentado y rechaza su reutilización', async () => {
+  const acceder = () => request('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ correo: usuarioPrueba.correo, password: usuarioPrueba.password }),
+  });
+  const primero = await acceder();
+  const segundo = await acceder();
+  assert.equal(primero.response.status, 200);
+  assert.equal(segundo.response.status, 200);
+  assert.notEqual(primero.body.token, segundo.body.token);
+  const headers = { Authorization: `Bearer ${primero.body.token}` };
+  const salida = await request('/api/logout', { method: 'POST', headers });
+  assert.equal(salida.response.status, 200);
+  assert.equal(salida.body.mensaje, 'Sesión de acceso cerrada');
+  assert.equal((await request(`/api/configuracion/${idUsuario}`, { headers })).response.status, 401);
+  assert.equal((await request('/api/logout', { method: 'POST', headers })).response.status, 401);
+  assert.equal((await request(`/api/configuracion/${idUsuario}`, {
+    headers: { Authorization: `Bearer ${segundo.body.token}` },
+  })).response.status, 200);
+  const db = crearConexionDb();
+  try {
+    const huella = crypto.createHash('sha256').update(primero.body.token).digest('hex');
+    const { rows } = await db.query('SELECT tok_huella FROM "TOKEN_REVOCADO" WHERE tok_huella = $1', [huella]);
+    assert.equal(rows[0].tok_huella, huella);
+  } finally {
+    await db.end();
+  }
+});

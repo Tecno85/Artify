@@ -141,8 +141,23 @@ function escaparHtml(valor) {
 
 // ========== CERRAR SESIÓN ==========
 document.getElementById('btnLogout').addEventListener('click', async () => {
-  limpiarSesionAuth();
-  window.location.href = '../index.html';
+  const boton = document.getElementById('btnLogout');
+  boton.disabled = true;
+  if (await cerrarSesionAuth()) {
+    window.location.href = '../index.html';
+  } else {
+    mostrarNotificacion('error', 'No se pudo cerrar la sesión. Comprueba la conexión y reintenta.');
+    boton.disabled = false;
+  }
+});
+
+document.getElementById('tablaBody').addEventListener('click', (evento) => {
+  const boton = evento.target.closest('button[data-accion]');
+  if (!boton || boton.disabled) return;
+  const id = Number(boton.dataset.id);
+  if (!Number.isSafeInteger(id) || id <= 0) return;
+  if (boton.dataset.accion === 'editar') window.abrirEditar(id);
+  if (boton.dataset.accion === 'eliminar') window.abrirEliminar(id);
 });
 
 // ========== SELECT — CARGAR USUARIOS ==========
@@ -216,7 +231,7 @@ function renderizarTabla(usuarios) {
             Cuenta actual
           </button>`
           : `
-          <button class="btn-eliminar-row" onclick="abrirEliminar(${idUsuario})">
+          <button class="btn-eliminar-row" data-accion="eliminar" data-id="${idUsuario}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
@@ -245,7 +260,7 @@ function renderizarTabla(usuarios) {
       </td>
       <td>
         <div class="acciones-cell">
-          <button class="btn-editar" onclick="abrirEditar(${idUsuario})">
+          <button class="btn-editar" data-accion="editar" data-id="${idUsuario}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>

@@ -56,6 +56,11 @@ SELECT format(
 ) \gexec
 
 SELECT format(
+  'GRANT SELECT, INSERT, DELETE ON TABLE "TOKEN_REVOCADO" TO %I',
+  :'app_user'
+) \gexec
+
+SELECT format(
   'REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM %I',
   :'app_user'
 ) \gexec

@@ -33,7 +33,8 @@ La aplicación incluye autenticación por roles, persistencia de preferencias y 
 - Conversión a PNG, JPEG y WebP con ajuste de calidad.
 - Historial de hasta 20 pasos para deshacer y rehacer, con un contador de cambios aplicados independiente de las operaciones registradas en la cuenta.
 - Zoom entre 50 % y 200 %.
-- Autoguardado local opcional, aislado por usuario y recuperable durante 7 días.
+- Autoguardado local opcional en PNG, aislado por usuario y recuperable durante 7 días; sigue deshacer y rehacer e informa si no puede guardar.
+- Descarga local con las preferencias disponibles, incluso si el backend no responde o la sesión vence durante la edición.
 - Registro, inicio de sesión temporal o recordada, redirección automática por rol y autorización de rutas.
 - Términos y condiciones consultables antes de crear una cuenta.
 - Panel administrativo con gestión de usuarios y analíticas.
@@ -196,8 +197,8 @@ pnpm exec playwright install chromium
 pnpm run test:e2e
 ```
 
-GitHub Actions ejecuta automáticamente 65 pruebas del backend, 44 pruebas
-frontend con cobertura nativa y siete pruebas E2E en cada `push` a `main` y en
+GitHub Actions ejecuta automáticamente 74 pruebas del backend, 50 pruebas
+frontend con cobertura nativa y 16 pruebas E2E en cada `push` a `main` y en
 los pull requests. También carga el esquema y valida las migraciones
 incrementales sobre PostgreSQL temporal.
 
@@ -242,6 +243,7 @@ Cada `push` a `main` publica el contenido de `frontend/` mediante GitHub Actions
 - [Normalización y modelo relacional](./docs/tecnica/normalizacion-modelo-relacional-artify.md)
 - [API de analíticas](./docs/tecnica/api-analytics.md)
 - [Pruebas de autenticación](./docs/tecnica/plan-pruebas-autenticacion.md)
+- [Seguridad, revocación de sesiones y CSP](./docs/tecnica/seguridad-sesiones.md)
 - [Matriz de validación del frontend](./docs/tecnica/matriz-validacion-frontend.md)
 - [Estándares de codificación](./docs/tecnica/coding-standards.md)
 - [Mantenimiento y soporte](./docs/tecnica/plan-mantenimiento-soporte-artify.md)

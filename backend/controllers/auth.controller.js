@@ -214,7 +214,25 @@ async function registro(req, res) {
 }
 
 // ========== EXPORTACIÓN ==========
+function cerrarSesionAuth(req, res) {
+  // Conservar solo la huella; nunca almacenar el token reutilizable.
+  db.query(
+    `INSERT INTO "TOKEN_REVOCADO" (tok_huella, tok_expira)
+     VALUES (?, to_timestamp(?))
+     ON CONFLICT (tok_huella) DO NOTHING`,
+    [req.tokenHuella, req.auth.exp],
+    (error) => {
+      if (error) {
+        console.error('Error al revocar la sesión:', error.message);
+        return res.status(500).json({ mensaje: 'No se pudo cerrar la sesión. Intenta nuevamente.' });
+      }
+      return res.json({ mensaje: 'Sesión de acceso cerrada' });
+    }
+  );
+}
+
 module.exports = {
   login,
   registro,
+  cerrarSesionAuth,
 };

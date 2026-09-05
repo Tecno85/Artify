@@ -168,7 +168,8 @@ La autenticación de Artify se apoya en correo, contraseña, `bcryptjs` y un tok
 - Express oculta la cabecera `X-Powered-By`, limita los cuerpos a 64 KB y evita que las respuestas de `/api`, `/health` y `/ready` se almacenen en caché.
 - Los cuerpos JSON malformados o demasiado grandes reciben errores JSON controlados con estados `400` y `413`.
 - Las rutas inexistentes bajo `/api` reciben una respuesta JSON uniforme con estado `404`, en lugar de la página HTML predeterminada de Express.
-- El login limita diez fallos por IP, ruta y correo durante quince minutos; responde `429` con `Retry-After` y conserva como máximo 1000 registros temporales en memoria.
+- El login limita diez fallos por IP, ruta y correo durante quince minutos; adicionalmente se limitan 100 solicitudes combinadas de login/registro y 30 registros por IP en esa ventana. Los contadores incluyen solicitudes en curso y normalizan la ruta; responden `429` con `Retry-After` y conservan como máximo 1000 entradas por limitador sin expulsar bloqueos vigentes.
+- `POST /api/logout` persiste la huella del token en `TOKEN_REVOCADO`; cada ruta privada comprueba que no esté revocado. Las seis páginas aplican CSP para restringir scripts y conexiones. Los límites y el orden de actualización se documentan en [seguridad y sesiones](./seguridad-sesiones.md).
 
 ---
 

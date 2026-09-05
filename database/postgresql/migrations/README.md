@@ -13,6 +13,8 @@ Esta carpeta contiene cambios incrementales que actualizan una base existente si
 
 ## Consultar el plan
 
+La migración `20260905_004_revocar_tokens.sql` crea `TOKEN_REVOCADO` y concede acceso a los roles que ya tienen `SELECT`, `INSERT` y `DELETE` sobre `USUARIO`. Debe aplicarse antes del backend que incorpora `/api/logout`. Ver [seguridad y sesiones](../../../docs/tecnica/seguridad-sesiones.md).
+
 Desde la raíz del repositorio:
 
 ```bash

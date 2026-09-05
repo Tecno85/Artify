@@ -1,7 +1,7 @@
 # CONTEXT.md — Proyecto Artify
 
 > Archivo de contexto para continuar el desarrollo.
-> Última actualización: Agosto 2026
+> Última actualización: Septiembre 2026
 
 ---
 
@@ -29,6 +29,8 @@ PostgreSQL es el motor oficial de persistencia de esta versión.
 - La gestión de cuentas solicita únicamente nombres, apellidos, correo y contraseña; el registro público también exige confirmación y aceptación de términos.
 - Los botones principales con texto blanco usan un azul de acción de contraste AA; enlaces, contornos de foco y la identidad cian conservan sus colores más luminosos.
 - El editor habilita sus controles sin esperar el arranque del backend; la sesión de edición y las preferencias se inicializan en segundo plano.
+- La descarga utiliza las preferencias en memoria o los valores predeterminados sin consultar la API. Si una petición recibe 401 durante una edición con imagen cargada, se limpian las credenciales y el respaldo local, se conserva el Canvas para descargar y se muestra un aviso para volver a iniciar sesión.
+- El autoguardado usa el PNG del estado confirmado del historial, incluye deshacer y rehacer, descarta escrituras tardías y muestra su estado o fallo en Propiedades.
 - La carga admite JPG, PNG y WebP de hasta 10 MB, 16 MP y 8192 px por lado para proteger la memoria usada por Canvas y los filtros.
 - El flujo principal del editor está definido para uso con mouse; la operación completa por teclado no hace parte del alcance actual.
 
@@ -43,6 +45,8 @@ PostgreSQL es el motor oficial de persistencia de esta versión.
 | Gestor backend | pnpm 11.1.1 | backend | Oficial en esta variante |
 
 El backend valida `TOKEN_SECRET` y `CORS_ORIGIN` antes de abrir PostgreSQL o escuchar el puerto. En producción rechaza secretos ausentes, menores de 32 caracteres o copiados de las plantillas, y exige al menos un origen CORS; en desarrollo usa un secreto temporal, muestra una advertencia y permite omitir el origen. El pool PostgreSQL limita conexiones y tiempos de espera, informa errores inesperados y se cierra de forma ordenada ante `SIGTERM` o `SIGINT`. Express oculta `X-Powered-By`, aplica cabeceras de seguridad y HSTS en producción, limita los cuerpos a 64 KB, evita almacenar respuestas `/api`, `/health` y `/ready` en caché, y devuelve JSON uniforme cuando el cuerpo es inválido, demasiado grande o la ruta solicitada no existe.
+
+La autenticación limita 100 solicitudes combinadas de login/registro y 30 registros por IP cada quince minutos, además de diez fallos por IP, ruta y correo. Cuenta solicitudes en curso y normaliza las rutas. `POST /api/logout` revoca el token en PostgreSQL; las rutas privadas comprueban su huella y las revocaciones vencidas se limpian cada treinta minutos. Las páginas frontend aplican CSP con scripts del mismo origen y conexión al origen configurado de la API. Véase `docs/tecnica/seguridad-sesiones.md` para límites y orden de publicación.
 
 ### Control de versiones
 
@@ -175,6 +179,7 @@ CONFIGURACION
 IMAGEN
 SESION_EDICION
 OPERACION
+TOKEN_REVOCADO
 v_usuarios_activos
 ```
 
@@ -202,6 +207,7 @@ v_usuarios_activos
 | --- | --- | --- |
 | POST | `/api/login` | Login con bcrypt. Devuelve usuario autenticado y token. |
 | POST | `/api/registro` | Registro simplificado con los datos necesarios y contraseña protegida con bcrypt. |
+| POST | `/api/logout` | Revoca el token presentado, almacenando su huella hasta el vencimiento. |
 
 ### Panel de Administración
 
@@ -306,10 +312,10 @@ La versión PostgreSQL fue validada con:
 - `pnpm test` contra una instancia temporal de PostgreSQL.
 - Guardia previa a las pruebas: exige `NODE_ENV=test`, confirmación explícita,
   base terminada en `_test` y autorización adicional para hosts remotos.
-- Resultado de pruebas automatizadas backend: 65/65 correctas.
-- Suite frontend con `node:test`: 44/44 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, respuestas inválidas de login y registro, autorización del panel administrativo, estados de carga y error del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, ausencia de atajos de teclado para operar herramientas, renderizado seguro y semántica accesible.
-- Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 25,58 % en líneas y 50,00 % en funciones sobre los archivos instrumentados.
-- Siete pruebas E2E en Chromium: login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
+- Resultado de pruebas automatizadas backend: 74/74 correctas sobre PostgreSQL temporal local `artify_seguridad_test` (5 de septiembre de 2026).
+- Suite frontend con `node:test`: 50/50 correctas para autenticación temporal y recordada, limpieza de sesiones inválidas, coherencia entre token y usuario almacenado, redirección automática por rol, expiración de tokens, validación del registro público, bloqueo de registro sin guardar sesión, respuestas inválidas de login y registro, autorización del panel administrativo, estados de carga y error del panel administrativo, sesión del editor, orientación inicial de herramientas, respaldos locales con imagen base64 coherente, modales accesibles, validación de imágenes, límites seguros de redimensionado, ausencia de atajos de teclado para operar herramientas, renderizado seguro y semántica accesible.
+- Reporte nativo de cobertura frontend mediante `pnpm run test:frontend:coverage`, integrado en CI: 35,24 % en líneas y 62,30 % en funciones sobre los archivos instrumentados, medido el 5 de septiembre de 2026 con Node.js 24.19.0.
+- Dieciséis pruebas E2E en Chromium (incluyen autoguardado, recuperación, descarga ante fallos de la API, cierre de sesión con reintento y bloqueo CSP): login y redirección de usuario al editor, registro público con aceptación obligatoria de términos y redirección al editor, redirección de usuario operativo fuera del panel administrativo, login y redirección de administrador al panel, protección contra eliminación de la cuenta administrativa autenticada, persistencia de la sesión recordada en otra pestaña y flujo del editor para cargar una imagen, cancelar, confirmar y reajustar filtros sin salir de la herramienta, reflejar los cambios aplicados al deshacer y rehacer, descargar sin alterar el historial y comprobar foco y cierre con Escape en modales.
 - Validación temprana de `TOKEN_SECRET` y cierre ordenado del proceso backend.
 - Normalización compartida de los datos mínimos usados al crear y editar cuentas, incluido el estado administrativo antes de persistir cambios.
 - Flujos normales de autenticación, registro, configuración, sesiones, actividad y editor sin trazas informativas de consola que expongan estado interno innecesario.
@@ -322,7 +328,7 @@ La versión PostgreSQL fue validada con:
 - Política uniforme para contraseñas nuevas en el registro público, el panel administrativo y el backend, sin bloquear el acceso de cuentas existentes.
 - Guardado de configuración mediante UPSERT para conservar una sola fila por usuario y responder correctamente ante IDs inválidos o inexistentes.
 - Autoguardado local recuperable durante 7 días, aislado por usuario y eliminado al desactivarlo, cerrar sesión o detectar un respaldo inválido, con verificación estricta de MIME, formato, tamaño y cuerpo base64 de la imagen.
-- Auditoría de dependencias de producción del 9 de agosto de 2026: sin vulnerabilidades conocidas después de fijar `body-parser` en `2.3.0` mediante override de pnpm para resolver `GHSA-v422-hmwv-36x6`.
+- Auditoría de dependencias de producción del 5 de septiembre de 2026: sin vulnerabilidades conocidas; `body-parser@2.3.0` y `qs@6.16.0` fijados en `backend/pnpm-workspace.yaml`, configuración reconocida por pnpm 11.
 - Flujo de GitHub Actions para ejecutar PostgreSQL, sintaxis y las suites backend y frontend en `push` o `pull_request`.
 - Monitoreo público diario mediante GitHub Actions para Pages, configuración, Render, PostgreSQL, analytics y CORS.
 - GitHub Actions también valida el ejecutor de migraciones incrementales sobre la base temporal de CI.
@@ -506,6 +512,9 @@ CORS_ORIGIN=https://tecno85.github.io
 - [2026-08-09] Validación final de release con backend completo sobre `artify_test`, suite frontend y pruebas E2E aprobadas.
 - [2026-08-09] Mejora UX del editor con recorte aplicable solo tras seleccionar área y cierre del submenú de filtros al cambiar de herramienta.
 - [2026-08-12] Corrección documental de instalación local con servidor estático Python y rutas directas de inicio, login, registro, editor y administración.
+- [2026-09-05] Corrección del autoguardado para seguir el estado confirmado al deshacer y rehacer, evitar vistas previas y escrituras tardías e informar fallos visibles. Descarga local con preferencias en memoria o predeterminadas ante API lenta, desconectada o sesión vencida. Validación: 47 pruebas frontend y 13 E2E correctas; sin ejecutar integración PostgreSQL en esta revisión.
+
+- [2026-09-05] Refuerzo del limitador de acceso, actualización a qs 6.16.0 con configuración pnpm 11, revocación persistente de tokens al cerrar sesión y CSP frontend. Migración y permisos comprobados en PostgreSQL temporal; 74 pruebas backend, 50 frontend y 16 E2E aprobadas. Cambios locales pendientes de migración y despliegue en producción.
 
 ---
 

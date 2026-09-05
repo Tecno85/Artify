@@ -115,6 +115,30 @@ function limpiarSesionAuth() {
   localStorage.removeItem('artify_backup_timestamp');
 }
 
+async function cerrarSesionAuth() {
+  const token = obtenerTokenAuth();
+  if (!token) {
+    limpiarSesionAuth();
+    return true;
+  }
+  try {
+    const res = await fetch(`${API}/api/logout`, {
+      method: 'POST',
+      headers: construirHeadersAuth(),
+      signal: AbortSignal.timeout(10_000),
+    });
+    const confirmado = res.status === 401 || (
+      res.ok && (await res.json()).mensaje === 'Sesión de acceso cerrada'
+    );
+    if (!confirmado || obtenerTokenAuth() !== token) return false;
+    limpiarSesionAuth();
+    return true;
+  } catch {
+    // Conservar la sesión permite reintentar cuando el servidor no confirma la revocación.
+    return false;
+  }
+}
+
 function obtenerRutaSesionAuth(usuario) {
   const paginaInterna = window.location.pathname.includes('/pages/');
   const archivo =
@@ -178,6 +202,13 @@ async function fetchAuth(url, options = {}) {
     limpiarSesionAuth();
 
     const paginaActual = window.location.pathname.split('/').pop();
+    // El editor puede conservar una imagen local para permitir su descarga.
+    if (
+      paginaActual === 'editor.html' &&
+      window.manejarSesionExpiradaEditor?.()
+    ) {
+      return response;
+    }
     if (!['login.html', 'registro.html'].includes(paginaActual)) {
       window.location.replace('./login.html');
     }

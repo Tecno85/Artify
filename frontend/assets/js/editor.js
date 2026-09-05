@@ -21,6 +21,7 @@ let calidadActual = null; // Calidad actual de la imagen después de conversión
 let archivoActual = null;
 let preferenciasActuales = null;
 let autoguardadoTimeout = null;
+let revisionAutoguardado = 0;
 let promesaSesionEdicion = null;
 const modalAccesible = window.ArtifyModal || {
   abrir(modal) {
@@ -76,7 +77,9 @@ function iniciarSesionEdicionEnSegundoPlano(usuario) {
 
       if (res.status === 401 || res.status === 403) {
         limpiarSesionAuth();
-        window.location.href = './login.html';
+        if (!window.manejarSesionExpiradaEditor()) {
+          window.location.href = './login.html';
+        }
         return null;
       }
 
@@ -236,49 +239,71 @@ async function registrarImagenDescargada(formato, blob) {
   }
 }
 
-function programarAutoguardado() {
+function mostrarEstadoRespaldo(mensaje) {
+  const estado = document.getElementById('estadoRespaldo');
+  if (estado) estado.textContent = mensaje;
+}
+
+window.manejarSesionExpiradaEditor = () => {
+  if (!currentImage) return false;
+  revisionAutoguardado++;
   clearTimeout(autoguardadoTimeout);
+  mostrarEstadoRespaldo(
+    'Sesión vencida o no disponible. Descarga tu imagen antes de volver a iniciar sesión.'
+  );
+  return true;
+};
+
+function programarAutoguardado() {
+  revisionAutoguardado++;
+  clearTimeout(autoguardadoTimeout);
+  if (!preferenciasActuales?.autoguardado || !obtenerUsuarioAuth()) return;
+  mostrarEstadoRespaldo('Autoguardado pendiente…');
   autoguardadoTimeout = setTimeout(autoguardarImagen, 750);
 }
 
-async function autoguardarImagen() {
-  const prefs = preferenciasActuales || (await cargarPreferencias());
+function autoguardarImagen() {
+  const usuario = obtenerUsuarioAuth();
+  const estado = operationsHistory[historyIndex];
+  if (!preferenciasActuales?.autoguardado || !usuario || !estado?.blob) return;
 
-  if (!prefs.autoguardado || !currentImage || !canvas) {
-    return;
-  }
-
-  const formato = prefs.formatoDefecto || 'png';
-  const calidad = prefs.calidadExportacion || 'alta';
-  const calidadMap = { alta: 1.0, media: 0.8, baja: 0.6 };
-  const mimeTypeMap = {
-    png: 'image/png',
-    jpeg: 'image/jpeg',
-    webp: 'image/webp',
+  const revision = revisionAutoguardado;
+  const nombreOriginal = archivoActual?.nombreOriginal;
+  const sigueVigente = () =>
+    revision === revisionAutoguardado &&
+    preferenciasActuales?.autoguardado &&
+    obtenerUsuarioAuth()?.id === usuario.id;
+  const informarError = () => {
+    if (sigueVigente()) {
+      mostrarEstadoRespaldo(
+        'No se pudo autoguardar. Descarga tu imagen para conservar los cambios.'
+      );
+    }
   };
 
-  canvas.toBlob(
-    (blob) => {
-      if (!blob) return;
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const guardado = guardarRespaldoLocal({
-          dataUrl: reader.result,
-          formato,
-          nombreOriginal: archivoActual?.nombreOriginal,
-          tamanoBytes: blob.size,
-        });
-
-        if (!guardado) {
-          console.warn('⚠️ No se pudo guardar backup (imagen muy grande)');
-        }
-      };
-      reader.readAsDataURL(blob);
-    },
-    mimeTypeMap[formato] || 'image/png',
-    calidadMap[calidad] || 1.0
-  );
+  // Respaldar el estado confirmado en PNG evita guardar vistas previas o perder calidad.
+  try {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (!sigueVigente()) return;
+      const guardado = guardarRespaldoLocal({
+        dataUrl: reader.result,
+        formato: 'png',
+        nombreOriginal,
+        tamanoBytes: estado.blob.size,
+      });
+      if (guardado) {
+        mostrarEstadoRespaldo('Autoguardado actualizado en este navegador.');
+      } else {
+        informarError();
+      }
+    };
+    reader.onerror = informarError;
+    reader.onabort = informarError;
+    reader.readAsDataURL(estado.blob);
+  } catch {
+    informarError();
+  }
 }
 
 // ========== FUNCIÓN PARA GUARDAR ESTADO EN HISTORIAL ==========
@@ -286,6 +311,8 @@ function guardarEstadoEnHistorial(
   descripcion,
   { esEstadoInicial = false } = {}
 ) {
+  revisionAutoguardado++;
+  clearTimeout(autoguardadoTimeout);
   // Si estamos en medio del historial, eliminar los estados futuros
   if (historyIndex < operationsHistory.length - 1) {
     const estadosDescartados = operationsHistory.splice(historyIndex + 1);
@@ -304,11 +331,17 @@ function guardarEstadoEnHistorial(
     (blob) => {
       if (!blob) {
         console.warn('⚠️ No se pudo guardar el estado en el historial');
+        if (preferenciasActuales?.autoguardado) {
+          mostrarEstadoRespaldo(
+            'No se pudo autoguardar. Descarga tu imagen para conservar los cambios.'
+          );
+        }
         return;
       }
 
       const url = URL.createObjectURL(blob);
       operationsHistory.push({
+        blob,
         imageUrl: url,
         descripcion: descripcion,
         timestamp: Date.now(),
@@ -401,6 +434,8 @@ window.noVolverAMostrar = function () {
 
 // ========== INICIALIZACIÓN ==========
 window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('btnCerrarResolucion')?.addEventListener('click', window.cerrarModalResolucion);
+  document.getElementById('btnNoMostrarResolucion')?.addEventListener('click', window.noVolverAMostrar);
   modalAccesible.registrar(
     document.getElementById('modalResolucion'),
     window.cerrarModalResolucion
@@ -735,7 +770,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // ========== DESCARGAR IMAGEN ==========
-  btnDescargar.addEventListener('click', async () => {
+  btnDescargar.addEventListener('click', () => {
     if (!currentImage) return;
 
     if (hayRecortePendiente()) {
@@ -756,24 +791,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
     actualizarEstado('Generando descarga...', 'processing');
 
-    // Obtener preferencias desde la API
-    const prefs = await cargarPreferencias();
-
-    // La carga de preferencias es asíncrona; volver a comprobar antes de exportar.
-    if (hayRecortePendiente()) {
-      actualizarEstado('Listo', 'success');
-      mostrarNotificacion(
-        'warning',
-        'Aplica el recorte o cambia de herramienta antes de descargar la imagen'
-      );
-      return;
-    }
+    // La exportación es local, incluso si la API no responde o la sesión venció.
+    const prefs = preferenciasActuales || PREFERENCIAS_DEFAULT;
 
     // Si hay un formato convertido, usar ese; si no, usar las preferencias
     const formato = formatoActual || prefs.formatoDefecto || 'png';
     const calidad = calidadActual || prefs.calidadExportacion || 'alta';
-
-    registrarOperacion('descargar', `Descarga en formato ${formato}`);
 
     // Mapear calidad a valor numérico
     const calidadMap = {
@@ -809,6 +832,7 @@ window.addEventListener('DOMContentLoaded', () => {
         a.download = `artify-editado-${Date.now()}.${extension}`;
         a.click();
         URL.revokeObjectURL(url);
+        registrarOperacion('descargar', `Descarga en formato ${formato}`);
         registrarImagenDescargada(formato, blob);
 
         actualizarEstado('Listo', 'success');
@@ -1917,6 +1941,8 @@ window.addEventListener('DOMContentLoaded', () => {
     cancelarRecortePendiente(true);
     if (historyIndex <= 0) return;
 
+    revisionAutoguardado++;
+    clearTimeout(autoguardadoTimeout);
     historyIndex--;
     const estado = operationsHistory[historyIndex];
 
@@ -1935,6 +1961,7 @@ window.addEventListener('DOMContentLoaded', () => {
       actualizarBotonesHistorial();
       actualizarContadorOperaciones();
       actualizarEstado('Listo', 'success');
+      programarAutoguardado();
     };
     img.src = estado.imageUrl;
   });
@@ -1944,6 +1971,8 @@ window.addEventListener('DOMContentLoaded', () => {
     cancelarRecortePendiente(true);
     if (historyIndex >= operationsHistory.length - 1) return;
 
+    revisionAutoguardado++;
+    clearTimeout(autoguardadoTimeout);
     historyIndex++;
     const estado = operationsHistory[historyIndex];
 
@@ -1962,6 +1991,7 @@ window.addEventListener('DOMContentLoaded', () => {
       actualizarBotonesHistorial();
       actualizarContadorOperaciones();
       actualizarEstado('Listo', 'success');
+      programarAutoguardado();
     };
     img.src = estado.imageUrl;
   });
@@ -2253,6 +2283,14 @@ async function guardarPreferencias(prefs) {
 
 function aplicarPreferencias(prefs) {
   preferenciasActuales = { ...PREFERENCIAS_DEFAULT, ...prefs };
+  revisionAutoguardado++;
+  clearTimeout(autoguardadoTimeout);
+  if (!obtenerUsuarioAuth() && window.manejarSesionExpiradaEditor()) return;
+  if (preferenciasActuales.autoguardado) {
+    if (currentImage) programarAutoguardado();
+  } else {
+    mostrarEstadoRespaldo('Autoguardado desactivado.');
+  }
 }
 
 async function abrirModalConfiguracion(disparador) {
@@ -2396,12 +2434,17 @@ function cerrarConfirmacionLogout() {
 }
 
 async function cerrarSesionSegura() {
+  const boton = document.getElementById('btnConfirmarLogout');
+  const error = document.getElementById('errorLogout');
+  boton.disabled = true;
+  error.textContent = '';
   const idSesion = sessionStorage.getItem('artifyIdSesion');
 
   if (idSesion) {
     try {
       await fetchAuth(`${API}/api/sesion/cerrar`, {
         method: 'POST',
+        signal: AbortSignal.timeout(5_000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idSesion: parseInt(idSesion) }),
       });
@@ -2410,8 +2453,12 @@ async function cerrarSesionSegura() {
     }
   }
 
-  limpiarSesionAuth();
-  setTimeout(() => (window.location.href = '../index.html'), 1000);
+  if (await cerrarSesionAuth()) {
+    window.location.href = '../index.html';
+  } else {
+    error.textContent = 'No se pudo cerrar la sesión. Comprueba la conexión y reintenta.';
+    boton.disabled = false;
+  }
 }
 
 function inicializarRF10yRF11() {

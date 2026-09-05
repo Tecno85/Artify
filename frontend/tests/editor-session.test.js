@@ -280,3 +280,57 @@ test('editor limpia la sesión y vuelve al login cuando la API rechaza el token'
   assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
   assert.equal(escenario.window.location.href, './login.html');
 });
+
+function prepararAutoguardadoSimulado() {
+  const escenario = crearEscenarioEditor(() => {
+    throw new Error('El autoguardado no debe consultar la API');
+  });
+  const estado = { textContent: '' };
+  escenario.contexto.document = { getElementById: () => estado };
+  const lectores = [];
+  escenario.contexto.FileReader = class {
+    constructor() { lectores.push(this); }
+    readAsDataURL(blob) { this.blob = blob; }
+  };
+  evaluar(escenario.contexto, `
+    preferenciasActuales = { autoguardado: true };
+    operationsHistory = [{ blob: { size: 3 } }, { blob: { size: 6 } }];
+    historyIndex = 0;
+  `);
+  return { ...escenario, estado, lectores };
+}
+
+test('un respaldo tardío no reemplaza el estado más reciente', () => {
+  const escenario = prepararAutoguardadoSimulado();
+  evaluar(escenario.contexto, 'autoguardarImagen()');
+  evaluar(escenario.contexto, `
+    revisionAutoguardado++;
+    historyIndex = 1;
+    autoguardarImagen();
+  `);
+  escenario.lectores[1].result = 'data:image/png;base64,AQIDBAUG';
+  escenario.lectores[1].onload();
+  escenario.lectores[0].result = 'data:image/png;base64,AAAA';
+  escenario.lectores[0].onload();
+  const respaldo = JSON.parse(escenario.localStorage.getItem('artify_backup_v1'));
+  assert.equal(respaldo.dataUrl, 'data:image/png;base64,AQIDBAUG');
+  assert.equal(respaldo.tamanoBytes, 6);
+});
+
+test('desactivar autoguardado descarta una escritura que ya estaba en curso', () => {
+  const escenario = prepararAutoguardadoSimulado();
+  evaluar(escenario.contexto, 'autoguardarImagen()');
+  evaluar(escenario.contexto, 'aplicarPreferencias({ autoguardado: false })');
+  escenario.lectores[0].result = 'data:image/png;base64,AAAA';
+  escenario.lectores[0].onload();
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+  assert.equal(escenario.estado.textContent, 'Autoguardado desactivado.');
+});
+
+test('un error al leer el respaldo deja una advertencia visible', () => {
+  const escenario = prepararAutoguardadoSimulado();
+  evaluar(escenario.contexto, 'autoguardarImagen()');
+  escenario.lectores[0].onerror();
+  assert.match(escenario.estado.textContent, /No se pudo autoguardar/);
+  assert.equal(escenario.localStorage.getItem('artify_backup_v1'), null);
+});

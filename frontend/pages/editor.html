@@ -2,6 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000 http://127.0.0.1:3000; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editor - Artify</title>
     <link rel="icon" href="../assets/images/modx-icon.svg" type="image/svg" />
@@ -215,6 +216,12 @@
               <span class="prop-label">Formato:</span>
               <span class="prop-value" id="propFormato">-</span>
             </div>
+            <p
+              id="estadoRespaldo"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></p>
           </section>
 
           <!-- Controles según herramienta seleccionada -->
@@ -414,10 +421,10 @@
           <li>Reducir el zoom del navegador a 90% u 80% si fuera necesario</li>
         </ul>
         <div class="modal-resolucion-actions">
-          <button class="btn-modal-primary" onclick="cerrarModalResolucion()">
+          <button class="btn-modal-primary" id="btnCerrarResolucion">
             Entendido, continuar de todos modos
           </button>
-          <button class="btn-modal-secondary" onclick="noVolverAMostrar()">
+          <button class="btn-modal-secondary" id="btnNoMostrarResolucion">
             No volver a mostrar este mensaje
           </button>
         </div>
@@ -635,6 +642,7 @@
           Estás a punto de cerrar tu sesión en Artify. Los cambios no guardados
           se perderán.
         </p>
+        <p id="errorLogout" role="alert"></p>
         <div class="modal-confirm-actions">
           <button class="btn-confirm-cancel" id="btnCancelarLogout">
             Cancelar

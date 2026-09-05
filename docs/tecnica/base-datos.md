@@ -5,7 +5,7 @@
 > **Motor:** PostgreSQL
 > **Script principal:** `database/postgresql/schema.sql`
 > **Fecha:** Junio 2026
-> **Última actualización:** Julio 2026
+> **Última actualización:** Septiembre 2026
 
 ---
 
@@ -32,6 +32,8 @@ USUARIO
 ---
 
 ## 3. Scripts Principales
+
+Además de las cinco tablas funcionales, `TOKEN_REVOCADO` es una tabla técnica independiente: `tok_huella char(64)` es la clave primaria con SHA-256 del token y `tok_expira timestamptz NOT NULL` indica su vencimiento. Un índice por vencimiento permite limpiar entradas cada treinta minutos. No contiene tokens reutilizables ni datos personales. Se incorpora a instalaciones existentes con `20260905_004_revocar_tokens.sql`, antes de actualizar el backend.
 
 | Archivo | Propósito |
 | --- | --- |

@@ -1,6 +1,6 @@
 // ========== DEPENDENCIAS ==========
 const db = require('../config/db');
-const { verificarToken } = require('../utils/token');
+const { verificarToken, obtenerHuellaToken } = require('../utils/token');
 const {
   esRolPermitido,
   normalizarIdEntero,
@@ -58,9 +58,14 @@ function autenticarToken(req, res, next) {
     SELECT usr_id_usuario, usr_correo, usr_rol, usr_estado_usuario
     FROM USUARIO
     WHERE usr_id_usuario = ?
+      AND NOT EXISTS (
+        SELECT 1 FROM "TOKEN_REVOCADO"
+        WHERE tok_huella = ? AND tok_expira > NOW()
+      )
   `;
 
-  return db.query(query, [idUsuario], (error, usuarios) => {
+  req.tokenHuella = obtenerHuellaToken(token);
+  return db.query(query, [idUsuario, req.tokenHuella], (error, usuarios) => {
     if (error) {
       console.error('❌ Error al validar la cuenta autenticada:', error.message);
       return res.status(500).json({ mensaje: 'Error en el servidor' });

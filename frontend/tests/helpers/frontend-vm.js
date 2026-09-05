@@ -118,6 +118,7 @@ function crearContextoFrontend(opciones = {}) {
     Number,
     String,
     Promise,
+    AbortSignal,
   });
 
   return {

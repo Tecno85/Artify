@@ -8,6 +8,8 @@ function limitarIntentos({
   frecuenciaLimpieza = 100,
   mensaje = 'Demasiados intentos. Intenta nuevamente más tarde',
   contarRespuesta = (statusCode) => statusCode === 401,
+  porIp = false,
+  contarAlRecibir = false,
 } = {}) {
   const intentos = new Map();
   let solicitudesDesdeLimpieza = 0;
@@ -23,11 +25,7 @@ function limitarIntentos({
   function asegurarCapacidad(ahora) {
     limpiarRegistrosExpirados(ahora);
 
-    while (intentos.size >= maxRegistros) {
-      const claveMasAntigua = intentos.keys().next().value;
-      if (claveMasAntigua === undefined) break;
-      intentos.delete(claveMasAntigua);
-    }
+    return intentos.size < maxRegistros;
   }
 
   return (req, res, next) => {
@@ -40,13 +38,28 @@ function limitarIntentos({
     }
 
     const correo = String(req.body?.correo || '').trim().toLowerCase();
-    // Separar por ruta y correo evita que un intento sobre una cuenta bloquee otras.
-    const clave = `${req.ip}:${req.originalUrl}:${correo}`;
+    // La ruta declarada por Express no cambia con queries, mayúsculas o barra final.
+    const ruta = String(req.route?.path || req.originalUrl || '')
+      .split('?')[0].replace(/\/+$/, '').toLowerCase();
+    const clave = porIp ? req.ip : JSON.stringify([req.ip, ruta, correo]);
     let registro = intentos.get(clave);
 
     if (registro?.expira <= ahora) {
       intentos.delete(clave);
       registro = null;
+    }
+
+    // No expulsar contadores vigentes: llenar el mapa no debe levantar bloqueos.
+    if (!registro) {
+      if (!asegurarCapacidad(ahora)) {
+        const primeraExpiracion = Math.min(
+          ...Array.from(intentos.values(), (entrada) => entrada.expira)
+        );
+        res.setHeader('Retry-After', Math.max(1, Math.ceil((primeraExpiracion - ahora) / 1000)));
+        return res.status(429).json({ mensaje });
+      }
+      registro = { total: 0, expira: ahora + ventanaMs };
+      intentos.set(clave, registro);
     }
 
     if (registro?.total >= maxIntentos) {
@@ -58,21 +71,16 @@ function limitarIntentos({
       return res.status(429).json({ mensaje });
     }
 
-    // Contabilizar al terminar permite distinguir respuestas fallidas
-    // configurables de una operación correcta, que limpia los intentos acumulados.
-    res.on('finish', () => {
-      if (contarRespuesta(res.statusCode)) {
-        const momento = Date.now();
-        const vigente = intentos.get(clave);
+    // Reservar el intento antes de next evita que solicitudes simultáneas superen el límite.
+    registro.total++;
+    if (contarAlRecibir) return next();
 
-        if (!vigente || vigente.expira <= momento) {
-          asegurarCapacidad(momento);
-          intentos.set(clave, { total: 1, expira: momento + ventanaMs });
-        } else {
-          vigente.total += 1;
-        }
-      } else if (res.statusCode >= 200 && res.statusCode < 300) {
-        intentos.delete(clave);
+    // El límite por IP cuenta todo; el de credenciales solo conserva los fallos.
+    res.on('finish', () => {
+      if (intentos.get(clave) !== registro) return;
+      if (!contarRespuesta(res.statusCode)) {
+        registro.total = Math.max(0, registro.total - 1);
+        if (registro.total === 0) intentos.delete(clave);
       }
     });
 
@@ -80,6 +88,11 @@ function limitarIntentos({
   };
 }
 
+function limitarSolicitudesPorIp(opciones = {}) {
+  return limitarIntentos({ ...opciones, porIp: true, contarAlRecibir: true });
+}
+
 module.exports = {
   limitarIntentos,
+  limitarSolicitudesPorIp,
 };

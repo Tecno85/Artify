@@ -276,6 +276,8 @@ El zoom varía entre 50 % y 200 % y solo modifica la visualización; no cambia l
 
 La descarga refleja las transformaciones aplicadas. Cuando no se realiza una conversión explícita, Artify utiliza el formato y la calidad configurados como preferencia.
 
+La descarga utiliza las preferencias ya cargadas en el editor; si todavía no están disponibles, usa PNG y calidad alta. No necesita esperar al servidor. Si la sesión vence durante la edición y la API rechaza el acceso, Artify conserva la imagen en pantalla y muestra un aviso en **Propiedades**: descargue el resultado antes de volver a iniciar sesión. El registro de actividad puede quedar sin actualizar si el servidor no está disponible.
+
 ## 9. Configuración, perfil y sesión
 
 ### 9.1 Guardar preferencias
@@ -298,6 +300,8 @@ La descarga refleja las transformaciones aplicadas. Cuando no se realiza una con
 ### 9.2 Recuperar un trabajo autoguardado
 
 Cuando el autoguardado está activo, Artify conserva localmente la última copia del usuario durante un máximo de siete días.
+
+La copia se guarda en PNG a partir del último estado confirmado, incluidos **Deshacer** y **Rehacer**; las vistas previas de filtros no se respaldan. En **Propiedades** puede comprobar si el autoguardado está pendiente, actualizado o desactivado. Si no hay espacio disponible o falla el respaldo, aparece un aviso que indica descargar la imagen para conservar los cambios. Espere el mensaje de autoguardado actualizado antes de recargar la página.
 
 1. Ingrese nuevamente al editor desde el mismo navegador y cuenta.
 2. Si aparece **Recuperar trabajo**, revise la fecha de la copia.
@@ -322,6 +326,8 @@ Las estadísticas dependen de las operaciones que hayan podido registrarse en el
 4. Revise la advertencia y confirme **Cerrar Sesión**.
 
 Al salir se eliminan las credenciales de sesión y el respaldo local de edición. Los cambios no descargados pueden perderse.
+
+El cierre espera a que el servidor invalide el acceso. Si aparece un error de conexión, la sesión se conserva para reintentar: compruebe la conexión y pulse **Cerrar Sesión** de nuevo. Cuando el servidor confirma, ese token deja de funcionar también en las pestañas que lo comparten.
 
 ## 10. Flujo de trabajo recomendado
 

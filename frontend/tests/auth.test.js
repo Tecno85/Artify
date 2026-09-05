@@ -13,6 +13,44 @@ function crearTokenPrueba(payload) {
   return `e30.${body}.firma-prueba`;
 }
 
+test('logout espera confirmación del servidor antes de borrar credenciales', async () => {
+  let resolver;
+  const escenario = crearContextoFrontend({
+    sessionStorage: new AlmacenamientoSimulado({ artifyToken: 'token-salida', artifyUser: '{"id":7}' }),
+    fetch: () => new Promise((resolve) => { resolver = resolve; }),
+  });
+  ejecutarScript(escenario.contexto, 'auth.js');
+  const pendiente = evaluar(escenario.contexto, 'cerrarSesionAuth()');
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), 'token-salida');
+  resolver({ ok: true, status: 200, json: async () => ({ mensaje: 'Sesión de acceso cerrada' }) });
+  assert.equal(await pendiente, true);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), null);
+});
+
+test('logout conserva credenciales para reintentar si falla la revocación', async () => {
+  const escenario = crearContextoFrontend({
+    sessionStorage: new AlmacenamientoSimulado({ artifyToken: 'token-salida' }),
+    fetch: async () => ({ ok: false, status: 503 }),
+  });
+  ejecutarScript(escenario.contexto, 'auth.js');
+  assert.equal(await evaluar(escenario.contexto, 'cerrarSesionAuth()'), false);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), 'token-salida');
+});
+
+test('logout no borra una sesión nueva iniciada mientras esperaba la respuesta', async () => {
+  let resolver;
+  const escenario = crearContextoFrontend({
+    sessionStorage: new AlmacenamientoSimulado({ artifyToken: 'anterior' }),
+    fetch: () => new Promise((resolve) => { resolver = resolve; }),
+  });
+  ejecutarScript(escenario.contexto, 'auth.js');
+  const pendiente = evaluar(escenario.contexto, 'cerrarSesionAuth()');
+  escenario.sessionStorage.setItem('artifyToken', 'nueva');
+  resolver({ ok: true, status: 200, json: async () => ({ mensaje: 'Sesión de acceso cerrada' }) });
+  assert.equal(await pendiente, false);
+  assert.equal(escenario.sessionStorage.getItem('artifyToken'), 'nueva');
+});
+
 test('auth guarda el token y construye headers sin modificar el objeto original', () => {
   const { contexto, sessionStorage } = crearContextoFrontend();
   ejecutarScript(contexto, 'auth.js');

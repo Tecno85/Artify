@@ -707,6 +707,17 @@ header {
   position: relative;
 }
 
+#errorLogout {
+  color: var(--error);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin: 12px 0;
+}
+
+#errorLogout:empty {
+  display: none;
+}
+
 .status-item {
   display: flex;
   align-items: center;
